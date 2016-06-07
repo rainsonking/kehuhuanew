@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#3f000000"
+    android:id="@+id/rlayout_click_dismiss"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#ededed"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更多操作"
+            android:textSize="18sp"
+            android:textColor="#a3a3a3"
+            android:layout_marginTop="@dimen/text_size_12"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <ListView
+            android:id="@+id/buttonList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:divider="#00000000"
+            android:dividerHeight="10dp"
+            android:layout_marginTop="@dimen/text_size_15"
+            android:background="#ededed"
+            android:layout_marginBottom="10dp"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/tv_dismiss"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="返回"
+            android:textSize="19sp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:background="#ff6160"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

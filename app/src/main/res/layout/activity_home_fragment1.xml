@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000">
+    <FrameLayout
+        android:id="@+id/imageAd"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:orientation="vertical"
+        >
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/dot"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/firstFloor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="3dp"
+        android:padding="5dp"
+        android:background="@color/white"
+        >
+        <TextView
+
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:background="@color/blue"/>
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="快捷工具"
+            android:textColor="#5da6ff"
+            android:textSize="14sp"/>
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/secondFloor"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:background="#ffffff"
+        android:layout_below="@+id/firstFloor"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            >
+            <ImageView
+                android:id="@+id/iv_er_code"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:src="@drawable/home_saoma"
+                />
+            <ImageView
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:src="@drawable/home_my_center"
+                android:textColor="#ffffff"
+                />
+
+            <ImageView
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginBottom="30dp"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:src="@drawable/home_xiaoxi"
+                android:textColor="#808080" />
+            <ImageView
+                android:id="@+id/systemConfig"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginBottom="30dp"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:src="@drawable/home_setconfig"
+                android:textColor="#808080" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+            <TextView
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="扫码考勤"
+                android:textColor="#808080" />
+            <TextView
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="个人中心"
+                android:textColor="#808080" />
+
+            <TextView
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="消息提醒"
+                android:textColor="#808080" />
+
+            <TextView
+                android:id="@+id/systemConfig1"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="系统设置"
+                android:textColor="#808080" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/thirdFloor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:background="#f4f4f4"
+        >
+
+        <TextView
+            android:id="@+id/colum_name"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="功能菜单"
+            android:textColor="#dddddd"
+           android:layout_centerInParent="true"
+            android:textSize="14sp"/>
+        <TextView
+            android:layout_toStartOf="@+id/colum_name"
+            android:layout_width="90dp"
+            android:layout_height="2dp"
+            android:background="#dddddd"
+            android:layout_centerVertical="true" />
+        <TextView
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@id/colum_name"
+            android:layout_width="90dp"
+            android:layout_height="2dp"
+            android:background="#dddddd"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/forthFloor"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:background="#f4f4f4"
+        android:scrollbars="vertical">
+
+        <com.kwsoft.kehuhua.view.FunctionGridView
+            android:id="@+id/gridview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="1.0dip"
+            android:listSelector="@null"
+            android:numColumns="4"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+
+            android:verticalSpacing="1.0dip" />
+    </ScrollView>
+</LinearLayout>

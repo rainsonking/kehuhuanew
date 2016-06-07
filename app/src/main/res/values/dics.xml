@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="contains">
+        <item>包含</item>
+        <item>不包含</item>
+        <item>等于</item>
+        <item>起始字符</item>
+        <item>终止字符</item>
+        <item>为空</item>
+    </string-array>
+
+    <string-array name="contains2">
+        <item>包含</item>
+        <item>不包含</item>
+    </string-array>
+
+    <string-array name="num">
+        <item>大于</item>
+        <item>大于等于</item>
+        <item>等于</item>
+        <item>为空</item>
+    </string-array>
+
+    <string-array name="num2">
+        <item>小于</item>
+        <item>小于等于</item>
+        <item>等于</item>
+        <item>为空</item>
+    </string-array>
+
+
+</resources>

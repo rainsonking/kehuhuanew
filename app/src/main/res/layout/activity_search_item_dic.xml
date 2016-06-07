@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:descendantFocusability="afterDescendants"
+    android:layout_marginTop="10dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="10dp"
+    android:layout_marginBottom="10dp">
+    <TextView
+        android:id="@+id/tv_name_dic"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="姓名:  "
+        android:layout_centerVertical="true"
+        android:textSize="17sp"
+        android:textColor="#a3a3a3"/>
+    <TextView
+        android:id="@+id/tv_view_dic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/tv_name_dic"
+        android:layout_marginBottom="5dp"
+        android:textSize="17sp" />
+
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/tv_view_dic"
+        android:src="@drawable/home_second_menu_right_back"
+        android:layout_gravity="center_vertical">
+
+    </ImageView>
+
+</RelativeLayout>

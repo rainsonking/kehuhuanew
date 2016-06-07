@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    android:paddingTop="50dp"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/login_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:scaleX="0.7"
+        android:scaleY="0.7"/>
+
+    <!--下面是放置用户名和密码前面的图标-->
+    <RelativeLayout
+        android:id="@+id/image_user"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/headline"
+        android:layout_marginTop="50dp"
+        android:layout_toStartOf="@id/llayout"
+        android:layout_alignBottom="@id/llayout">
+
+        <TextView
+            android:id="@+id/zhanghu_ming"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="账号"
+            android:textSize="18sp"
+           android:layout_centerVertical="true" />
+        <EditText
+            android:id="@+id/mUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="15"
+            android:hint="请输入用户名"
+            android:layout_toEndOf="@+id/zhanghu_ming"
+            android:background="@drawable/shape_login_edit_text"
+            android:inputType="textPhonetic"
+            android:textColorHint="#e7e7e7"
+            android:labelFor="@id/mUserName"  />
+        <ImageView
+            android:id="@+id/select"
+            android:layout_width="20dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/mUserName"
+            android:background="@drawable/listuser"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/password_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/image_user"
+        >
+        <TextView
+            android:id="@+id/passWord_name"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="密码"
+            android:textSize="18sp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerVertical="true"
+            />
+        <EditText
+            android:id="@+id/mPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="15"
+            android:hint="请输入密码"
+            android:layout_toEndOf="@+id/passWord_name"
+            android:background="@drawable/shape_login_edit_text"
+            android:inputType="textPassword"
+            android:textColorHint="#e7e7e7"
+
+            android:labelFor="@id/mPassword"  />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/login_button"
+        android:text="登陆"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:layout_below="@+id/password_layout"
+
+        />
+
+
+</RelativeLayout>

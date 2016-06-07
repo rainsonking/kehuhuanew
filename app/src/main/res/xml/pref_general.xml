@@ -1,0 +1,51 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<SwitchPreference-->
+        <!--android:key="example_switch"-->
+        <!--android:title="@string/pref_title_social_recommendations"-->
+        <!--android:summary="@string/pref_description_social_recommendations"-->
+        <!--android:defaultValue="true" />-->
+
+    <PreferenceScreen
+        android:key="wifi_settings"
+        android:title="@string/pref_title_social_recommendations"
+        android:summary="@string/pref_description_social_recommendations" >
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="com.kwsoft.kehuhua.adcustom"
+            android:targetClass="com.kwsoft.kehuhua.adcustom.LoginActivity" />
+    </PreferenceScreen>
+
+     <!--NOTE: EditTextPreference accepts EditText attributes.-->
+     <!--NOTE: EditTextPreference's summary should be set to its value by the activity code.-->
+    <PreferenceScreen
+        android:key="example_text"
+        android:summary="@string/pref_default_display_name"
+        android:title="@string/pref_title_display_name"
+       />
+
+    <PreferenceScreen
+        android:key="feedback"
+        android:summary="@string/feedback_content"
+        android:title="@string/feedback"
+        >
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="com.kwsoft.kehuhua.adcustom"
+            android:targetClass="com.kwsoft.kehuhua.adcustom.FeedbackActivity"></intent>
+        </PreferenceScreen>
+</PreferenceScreen>
+
+    <!--&lt;!&ndash; NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to-->
+         <!--dismiss it. &ndash;&gt;-->
+    <!--&lt;!&ndash; NOTE: ListPreference's summary should be set to its value by the activity code. &ndash;&gt;-->
+    <!--<ListPreference-->
+        <!--android:key="example_list"-->
+        <!--android:title="@string/pref_title_add_friends_to_messages"-->
+        <!--android:defaultValue="-1"-->
+        <!--android:entries="@array/pref_example_list_titles"-->
+        <!--android:entryValues="@array/pref_example_list_values"-->
+        <!--android:negativeButtonText="@null"-->
+        <!--android:positiveButtonText="@null" />-->
+
+<!--</PreferenceScreen>-->

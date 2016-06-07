@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="5dp">
+
+
+    <!--公共控件，左侧显示名-->
+    <TextView
+        android:id="@+id/tv_left_name"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="姓名："
+        android:textSize="14sp"
+        android:minHeight="35dp"
+        />
+    <!--搜索所用控件:是否包含-->
+
+<LinearLayout
+    android:id="@+id/is_contain_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_toEndOf="@+id/tv_left_name"
+    android:orientation="vertical"
+    android:visibility="gone"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <Spinner
+            android:id="@+id/is_contain_spinner"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/contains"
+            android:dropDownWidth="150dp"
+            android:minHeight="35dp"
+            android:gravity="center"
+            android:dropDownSelector="@color/red"
+            android:background="@drawable/textview_bg">
+        </Spinner>
+        <EditText
+            android:id="@+id/is_contain_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:textSize="14sp"
+            android:minHeight="35dp"
+
+             />
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+    <!--搜索所用控件:数字区间-->
+
+    <RelativeLayout
+        android:id="@+id/is_num_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/tv_left_name"
+        android:visibility="gone"
+        >
+        <LinearLayout
+            android:id="@+id/first_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Spinner
+                android:id="@+id/is_num_spinner"
+                android:layout_marginStart="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/num"
+                android:minHeight="35dp"
+                android:gravity="center"
+                android:background="@drawable/textview_bg">
+            </Spinner>
+            <EditText
+                android:id="@+id/is_num_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:minHeight="35dp"
+                android:digits="0123456789."
+                android:hint="输入数字"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/first_spinner">
+            <Spinner
+                android:id="@+id/is_num_spinner2"
+                android:layout_marginStart="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/num2"
+                android:minHeight="35dp"
+                android:gravity="center"
+                android:background="@drawable/textview_bg">
+            </Spinner>
+
+            <EditText
+                android:id="@+id/is_num_edit2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="输入数字"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:minHeight="35dp"
+                android:digits="0123456789."
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <!--搜索所用控件:起止日期-->
+    <LinearLayout
+        android:id="@+id/is_date_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_toEndOf="@+id/tv_left_name"
+        android:visibility="gone"
+        >
+
+
+        <TextView
+            android:id="@+id/is_date1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:hint="起始日期"
+            android:layout_marginStart="15dp"
+            android:textSize="14sp"
+            android:minHeight="35dp"
+            android:gravity="center"
+            android:background="@drawable/textview_bg"
+             />
+
+        <TextView
+            android:id="@+id/is_date2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:hint="终止日期"
+            android:layout_marginStart="7dp"
+            android:textSize="14sp"
+            android:minHeight="35dp"
+            android:gravity="center"
+            android:background="@drawable/textview_bg"/>
+    </LinearLayout>
+
+    <!--搜索所用控件:内部对象多值-->
+
+    <LinearLayout
+        android:id="@+id/is_dic_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_toEndOf="@+id/tv_left_name"
+        android:visibility="gone">
+        <!--android:visibility="gone"-->
+
+        <Spinner
+            android:id="@+id/is_dic_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:minHeight="35dp"
+            android:gravity="center"
+            android:entries="@array/contains2"
+            android:background="@drawable/textview_bg"
+            />
+        <com.kwsoft.kehuhua.utils.MultiSpinner
+            android:id="@+id/is_dic_adapter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="15dp"
+            android:hint="请选择"
+            android:minHeight="35dp"
+            android:gravity="center"
+            android:background="@drawable/textview_bg"/>
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>
