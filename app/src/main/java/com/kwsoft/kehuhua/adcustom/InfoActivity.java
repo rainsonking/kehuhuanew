@@ -82,7 +82,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             infoDataList = JSON.parseObject(infoData,
                     new TypeReference<List<Map<String, String>>>() {
                     });
-
+            Log.e("TAG","infoData "+infoData);
             mainId=infoDataList.get(0).get("mainId");
             tableId=infoDataList.get(0).get("tableId");
             Constant.mainIdValue=mainId;
