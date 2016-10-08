@@ -83,6 +83,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                     new TypeReference<List<Map<String, String>>>() {
                     });
             Log.e("TAG","infoData "+infoData);
+            Log.e("TAG","infoData "+infoData);
             mainId=infoDataList.get(0).get("mainId");
             tableId=infoDataList.get(0).get("tableId");
             Constant.mainIdValue=mainId;
