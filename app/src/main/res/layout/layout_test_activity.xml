@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="31dp"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    tools:context="TestActivity">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:text="标题"
+        android:textColor="#333333"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="27dp"
+        >
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2016-06-02"
+            android:layout_marginLeft="@dimen/text_size_10"
+            android:textSize="@dimen/text_size_15"
+            android:textColor="#858585"
+            />
+
+        <TextView
+            android:id="@+id/tv_persion"
+            android:layout_marginLeft="@dimen/text_size_25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="销售01"
+            android:textSize="@dimen/text_size_15"
+            android:textColor="#4ca5ff"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#cccccc"
+        android:layout_marginTop="@dimen/text_size_21"
+        android:layout_marginLeft="@dimen/text_size_10"
+        android:layout_marginRight="@dimen/text_size_10"
+        />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:text="内容"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginRight="@dimen/text_size_10"
+        android:textColor="#858585"
+        />
+</LinearLayout>

@@ -82,8 +82,18 @@ public class TreeViewActivity extends AppCompatActivity {
         String idArrStr = intent.getStringExtra("idArrs");
         isMulti = String.valueOf(intent.getStringExtra("isMulti"));
         position= String.valueOf(intent.getStringExtra("position"));
-        Log.e("TAG", "传递到多选activity中多值的Id" + idArrStr);
-        if (!idArrStr.equals("")) {
+        String viewName=intent.getStringExtra("viewName");
+
+        treeTextViewTitle.setText(viewName);
+        String  needFilterListStr = String.valueOf(intent.getStringExtra("needFilterListStr"));
+
+        List<Map<String,String>> needFilterList=JSON.parseObject(needFilterListStr,
+                new TypeReference<List<Map<String, String>>>() {
+                });
+
+        Log.e("TAG", "传递到下拉树多选activity中多值的Id" + idArrStr);
+
+        try {
             String[] idArr = idArrStr.split(",");
             Integer[] idArrInt = new Integer[idArr.length];
 
@@ -92,13 +102,20 @@ public class TreeViewActivity extends AppCompatActivity {
             }
 
             Collections.addAll(idArrList, idArrInt);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
 
-        Log.e("TAG", "传递到多选activity中多值后转换的Id" + idArrList);
 
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
+        if (needFilterList!=null&&needFilterList.size()>0) {
+            for (int i=0;i<needFilterList.size();i++) {
+                paramsMap.putAll(needFilterList.get(i));
+            }
+        }
         paramsStr = JSON.toJSONString(paramsMap);
+
     }
 
 
@@ -106,8 +123,8 @@ public class TreeViewActivity extends AppCompatActivity {
         final String volleyUrl = Constant.sysUrl + Constant.requestTreeDialog;
 
         Log.e("TAG", "网络获取内多dataUrl " + volleyUrl);
-        Log.e("TAG", "网络获取内多table " + paramsMap.get("tableId"));
-        Log.e("TAG", "网络获取内多page " + paramsMap.get("pageId"));
+        Log.e("TAG", "网络获取下拉树参数 " + paramsMap.toString());
+
         //Log.e("TAG", "获取" + Constant.timeName + " " +dataTime);
         StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
                 new Response.Listener<String>() {
@@ -282,10 +299,14 @@ public class TreeViewActivity extends AppCompatActivity {
 
         String myValue = JSON.toJSONString(map);
         Intent intentTree = new Intent();
-        if (Constant.jumpNum == 1) {
+        if(Constant.jumpNum1==4){
+            intentTree.setClass(TreeViewActivity.this, AddTemplateDataActivity.class);
+        }else if (Constant.jumpNum==1) {
             intentTree.setClass(TreeViewActivity.this, AddItemsActivity.class);
-        } else if (Constant.jumpNum == 2) {
+        }else if(Constant.jumpNum==2){
             intentTree.setClass(TreeViewActivity.this, RowsEditActivity.class);
+        }else if(Constant.jumpNum==3){
+            intentTree.setClass(TreeViewActivity.this, RowsAddActivity.class);
         }
 
         Bundle bundle = new Bundle();

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    <solid android:color="#8488ff" />
+
+    <!--<stroke-->
+    <!--android:width="0.5dp"-->
+    <!--android:color="#e1e3e5" />-->
+
+    <!-- 这个可以不加，padding用不上
+    <padding
+        android:bottom="1dp"
+        android:left="0.5dp"
+        android:right="0.5dp"
+        android:top="0dp" /> -->
+    <!-- 圆角-->
+    <corners
+        android:bottomLeftRadius="15dp"
+        android:bottomRightRadius="15dp"
+        android:topLeftRadius="15dp"
+        android:topRightRadius="15dp" />
+
+</shape>

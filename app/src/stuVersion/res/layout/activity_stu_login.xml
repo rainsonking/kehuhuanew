@@ -1,0 +1,156 @@
+<RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    tools:context="com.kwsoft.version.StuLoginActivity">
+
+    <TextView
+        android:paddingTop="50dp"
+        android:id="@+id/headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="为学"
+        android:textSize="36sp"
+        android:textColor="@color/blue"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        />
+
+    <!--下面是放置用户名和密码前面的图标-->
+    <LinearLayout
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:id="@+id/image_user"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/headline"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/zhanghu_ming"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="账号"
+            android:textColor="@color/blue"
+            android:textSize="18sp" />
+        <com.kwsoft.kehuhua.view.ClearEditText
+            android:id="@+id/mUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="15"
+            android:hint="请输入用户名"
+
+            android:inputType="textPhonetic"
+            android:textColorHint="#e7e7e7"
+            android:labelFor="@id/mUserName"  />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:id="@+id/password_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/image_user"
+        >
+        <TextView
+            android:id="@+id/passWord_name"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="密码"
+            android:textColor="@color/blue"
+
+            android:textSize="18sp"
+            />
+        <com.kwsoft.kehuhua.view.ClearEditText
+            android:id="@+id/mPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="15"
+            android:hint="请输入密码"
+
+            android:inputType="numberPassword"
+            android:textColorHint="#e7e7e7"
+            android:labelFor="@id/mPassword"  />
+
+        <!--android:background="@drawable/shape_login_edit_text"-->
+        <!--android:background="@drawable/shape_login_edit_text"-->
+    </LinearLayout>
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/project_select_layout"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginEnd="30dp"-->
+    <!--android:layout_below="@+id/password_layout"-->
+    <!--android:layout_alignParentEnd="true">-->
+
+    <!--<Spinner-->
+
+    <!--android:id="@+id/project_select"-->
+    <!--android:layout_marginStart="25dp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginEnd="30dp"-->
+    <!--style="@style/Widget.AppCompat.DropDownItem.Spinner"-->
+    <!--&gt;-->
+    <!--</Spinner>-->
+
+
+
+
+    <!--</RelativeLayout>-->
+
+    <TextView
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/login_button"
+        android:text="登陆"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:layout_below="@+id/password_layout"
+
+        />
+    <RelativeLayout
+        android:id="@+id/avloadingIndicatorViewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#50323232"
+        android:visibility="gone" >
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:indicator="BallSpinFadeLoader"
+            app:indicator_color="@color/blue"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="地址设置"
+        android:id="@+id/buttonUrl"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <com.kwsoft.kehuhua.view.ClearEditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:hint="如有变更，请输入根地址"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/btnLogin"
+        android:layout_toEndOf="@+id/buttonUrl" />
+</RelativeLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/text_f5f8fa"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="124dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="功能菜单"
+                android:textColor="@color/text_7c8084"
+                android:textSize="17sp" />
+            <!--text_cbcbcb-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/text_cbcbcb"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:background="@color/white"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@color/no_color"
+                    android:divider="@color/text_e6e6e6"
+                    android:dividerHeight="1dip"
+                    android:scrollbars="none"
+                    tools:listitem="@layout/layout_first_menu_item">
+
+                </ListView>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+
+        <!--android:layout_marginTop="@+id/"/>-->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="12dp"
+    android:layout_marginLeft="9dp"
+    android:layout_marginRight="9dp"
+    android:orientation="vertical">
+        <GridView
+            android:id="@+id/next_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="2"
+            android:verticalSpacing="9dp"
+            android:horizontalSpacing="9dp"
+            tools:listitem="@layout/stu_next_menu_item">
+
+
+        </GridView>
+</LinearLayout>
+
+    </LinearLayout>
+
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@color/white"-->
+    <!--android:gravity="center" />-->
+</LinearLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.kwsoft.kehuhua.adcustom.AddTemplateDataActivity">
+    <RelativeLayout
+        android:id="@+id/add_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#393F4D">
+        <ImageView
+            android:id="@+id/unlimited_add_item_to_add"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentBottom="true"/>
+
+        <ImageView
+            android:id="@+id/unlimited_add_commit_item_tadd"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="16dp"
+            android:src="@drawable/edit_commit"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentBottom="true"
+            />
+
+        <TextView
+            android:id="@+id/unlimited_add_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="添加"
+            android:layout_marginTop="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/unlimited_add_toAdd_lv"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:dividerHeight="8dp"
+        android:divider="#f4f4f4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:smoothScrollbar="true"
+        />
+</LinearLayout>

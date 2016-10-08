@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#f4f4f4"
-    android:orientation="vertical"
-    >
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:background="#f7f7f7">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -22,18 +24,41 @@
             android:src="@drawable/back"
             android:layout_marginTop="20dp"
             android:layout_alignParentBottom="true"/>
-
+        <ImageView
+            android:id="@+id/IV_back_list"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentBottom="true"
+           />
 
         <ImageView
-            android:id="@+id/addItem"
+            android:id="@+id/button_set"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:padding="16dp"
-            android:src="@drawable/more_operate"
+            android:src="@mipmap/often_more"
             android:layout_marginTop="20dp"
             android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            />
+        <ImageView
+            android:id="@+id/button_set_delete_commint"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="16dp"
+            android:src="@drawable/edit_commit"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
             />
         <TextView
             android:id="@+id/textViewTitle"
@@ -41,140 +66,83 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="zzzz"
+            android:text="分页"
             android:textSize="21sp"
             android:textColor="@color/white"
             android:layout_marginTop="20dp"
             android:layout_centerVertical="true"
             android:layout_alignParentBottom="true"/>
-
-        <TextView
-            android:id="@+id/tv_cancle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="取消"
-            android:textSize="21sp"
-            android:textColor="@color/white"
-            android:layout_marginTop="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentBottom="true"
-            android:paddingLeft="@dimen/text_size_10"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_commit"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="提交"
-            android:textSize="21sp"
-            android:textColor="@color/white"
-            android:layout_marginTop="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/text_size_10"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_delete"
+        <ImageView
+            android:id="@+id/list_more_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="60dp"
-            android:text="删除"
-            android:textSize="18sp"
-            android:visibility="gone" />
+            android:src="@mipmap/often_drop"
+            android:scaleX="3"
+            android:scaleY="3"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/textViewTitle"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/tv_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:text="修改"
-            android:textSize="18dp"
-            android:visibility="gone" />
     </RelativeLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_below="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       >
+        <ImageView
+            android:id="@+id/searchButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/search_munion_item_selector"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            />
 
-
-
-           <ImageView
-               android:id="@+id/searchButton"
-               android:layout_width="match_parent"
-               android:layout_height="40dp"
-               android:layout_gravity="center"
-               android:src="@drawable/search_munion_item_selector"
-               android:scaleType="fitXY"
-               />
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="50" >
-
-        <com.kwsoft.kehuhua.view.RefreshListView
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
             android:id="@+id/lv"
-           android:layout_marginStart="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:dividerHeight="8dp"
             android:divider="#f4f4f4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:smoothScrollbar="true"
+            ptr:ptrMode="both"
 
-        </com.kwsoft.kehuhua.view.RefreshListView>
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/llayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        >
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:background="#00ff00"
-            android:gravity="center"
-            android:onClick="selectAll"
-            android:text="全选"
-            android:textColor="#ff0000"
-            android:textSize="15sp"
-            android:layout_marginLeft="5dp"
             />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:background="#00ff00"
-            android:gravity="center"
-            android:onClick="selectOppo"
-            android:text="反选"
-            android:textColor="#ff0000"
-            android:textSize="15sp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:background="#00ff00"
-            android:gravity="center"
-            android:onClick="cancle"
-            android:text="取消"
-            android:textColor="#ff0000"
-            android:textSize="15sp"
-            android:layout_marginRight="5dp"
-            />
+
+
 
     </LinearLayout>
-</LinearLayout>
+    <FrameLayout
+        android:layout_below="@+id/topBar"
+        android:id="@+id/listViewFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+         />
+
+
+    <RelativeLayout
+        android:id="@+id/avloadingIndicatorViewLayoutList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#50323232"
+android:visibility="gone"
+         >
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:indicator="LineScale"
+            app:indicator_color="@color/blue"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+</RelativeLayout>

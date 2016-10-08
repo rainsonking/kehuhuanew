@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/toolbar_leftButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/nav_scan_code"
+        />
+    <EditText
+        android:id="@+id/toolbar_searchview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:drawableStart="@mipmap/icon_search"
+        style="@style/search_view"
+        android:hint="请输入搜索内容"
+
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/often_drop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/child_toolbar_title"
+        android:src="@mipmap/often_drop"
+        android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/often_collect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/child_toolbar_title"
+        android:src="@mipmap/often_collect"
+        android:visibility="gone"/>
+    <ImageButton
+        android:id="@+id/toolbar_rightButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="15dp"
+        android:background="@mipmap/often_more"
+        />
+
+</RelativeLayout>

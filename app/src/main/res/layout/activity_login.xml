@@ -1,61 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="30dp"
-    android:paddingTop="50dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
-    <ImageView
+    <TextView
+        android:paddingTop="50dp"
         android:id="@+id/headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/login_name"
+        android:text="主项目"
+        android:textSize="36sp"
+        android:textColor="@color/blue"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:scaleX="0.7"
-        android:scaleY="0.7"/>
+        />
 
     <!--下面是放置用户名和密码前面的图标-->
-    <RelativeLayout
+    <LinearLayout
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:id="@+id/image_user"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/headline"
         android:layout_marginTop="50dp"
-        android:layout_toStartOf="@id/llayout"
-        android:layout_alignBottom="@id/llayout">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/zhanghu_ming"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="账号"
-            android:textSize="18sp"
-           android:layout_centerVertical="true" />
+            android:textColor="@color/blue"
+            android:textSize="18sp" />
         <EditText
             android:id="@+id/mUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="15"
             android:hint="请输入用户名"
-            android:layout_toEndOf="@+id/zhanghu_ming"
-            android:background="@drawable/shape_login_edit_text"
+
             android:inputType="textPhonetic"
             android:textColorHint="#e7e7e7"
             android:labelFor="@id/mUserName"  />
-        <ImageView
-            android:id="@+id/select"
-            android:layout_width="20dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@id/mUserName"
-            android:background="@drawable/listuser"
-            android:visibility="gone"
-            />
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:id="@+id/password_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -66,9 +61,9 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="密码"
+            android:textColor="@color/blue"
+
             android:textSize="18sp"
-            android:layout_marginBottom="10dp"
-            android:layout_centerVertical="true"
             />
         <EditText
             android:id="@+id/mPassword"
@@ -76,27 +71,69 @@
             android:layout_height="wrap_content"
             android:ems="15"
             android:hint="请输入密码"
-            android:layout_toEndOf="@+id/passWord_name"
-            android:background="@drawable/shape_login_edit_text"
-            android:inputType="textPassword"
-            android:textColorHint="#e7e7e7"
 
+            android:inputType="numberPassword"
+            android:textColorHint="#e7e7e7"
             android:labelFor="@id/mPassword"  />
-    </RelativeLayout>
+
+        <!--android:background="@drawable/shape_login_edit_text"-->
+        <!--android:background="@drawable/shape_login_edit_text"-->
+    </LinearLayout>
+<!--<RelativeLayout-->
+    <!--android:id="@+id/project_select_layout"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginEnd="30dp"-->
+    <!--android:layout_below="@+id/password_layout"-->
+    <!--android:layout_alignParentEnd="true">-->
+
+    <!--<Spinner-->
+
+        <!--android:id="@+id/project_select"-->
+        <!--android:layout_marginStart="25dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="30dp"-->
+        <!--style="@style/Widget.AppCompat.DropDownItem.Spinner"-->
+        <!--&gt;-->
+    <!--</Spinner>-->
+
+
+
+
+<!--</RelativeLayout>-->
 
     <TextView
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@drawable/login_button"
         android:text="登陆"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:layout_below="@+id/password_layout"
 
         />
+    <RelativeLayout
+        android:id="@+id/avloadingIndicatorViewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#50323232"
+        android:visibility="gone" >
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:indicator="BallSpinFadeLoader"
+            app:indicator_color="@color/blue"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
 
 
 </RelativeLayout>

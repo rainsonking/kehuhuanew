@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/normal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <include layout="@layout/activity_stu_title" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.handmark.pulltorefresh.library.PullToRefreshGridView
+                android:id="@+id/home_grid"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:background="#f3f3f3"
+                android:columnWidth="100dp"
+                android:divider="#ffffff"
+                android:gravity="center_horizontal"
+                android:horizontalSpacing="3dp"
+                android:numColumns="3"
+                android:smoothScrollbar="true"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="3dp" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

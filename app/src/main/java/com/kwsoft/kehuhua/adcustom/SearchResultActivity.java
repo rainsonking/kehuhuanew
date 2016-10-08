@@ -50,6 +50,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.kwsoft.kehuhua.config.Constant.topBarColor;
+
 public class SearchResultActivity extends AppCompatActivity {
 
     @Bind(R.id.back_search)
@@ -71,7 +73,7 @@ public class SearchResultActivity extends AppCompatActivity {
     private final int limit = 20;
     private String delIdStr = "";
     private List<String> delIdList;
-
+    private List<Map<String, Object>> childTabs=new ArrayList<>();
     private long dataTime = -1;
     private List<List<Map<String, String>>> setAndData = new ArrayList<>();
     private ListAdapter listAdapter;
@@ -172,6 +174,7 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
     public void getInfoData() {
+        topBarSearch.setBackgroundColor(getResources().getColor(topBarColor));
         Intent mIntent = this.getIntent();
         String searchData = "";
         try {
@@ -187,6 +190,8 @@ public class SearchResultActivity extends AppCompatActivity {
         }
 
         setStore(searchData);
+
+
     }
 
 
@@ -222,7 +227,19 @@ public class SearchResultActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+//获得子表格：childTabs
 
+            String childTabss= null;
+            try {
+                childTabss = String.valueOf(pageSet.get("childTabs"));
+                childTabs= JSON.parseObject(childTabss,
+                        new TypeReference<List<Map<String, Object>>>() {
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Log.e("TAG", "获得子表格：childTabs   " + childTabss);
 //数据左侧配置数据
 
             fieldSet = (List<Map<String, Object>>) pageSet.get("fieldSet");
@@ -308,7 +325,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
     public void toAdapter() {
         Log.e("TAG", "进入解析" + setAndData);
-        listAdapter = new ListAdapter(this, R.layout.activity_list_item, setAndData);
+        listAdapter = new ListAdapter(this, R.layout.activity_list_item, setAndData,childTabs);
         lvSearch.setAdapter(listAdapter);
     }
 

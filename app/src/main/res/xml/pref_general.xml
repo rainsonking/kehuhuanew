@@ -32,8 +32,20 @@
         <intent
             android:action="android.intent.action.MAIN"
             android:targetPackage="com.kwsoft.kehuhua.adcustom"
-            android:targetClass="com.kwsoft.kehuhua.adcustom.FeedbackActivity"></intent>
+            android:targetClass="com.kwsoft.kehuhua.adcustom.FeedbackActivity">
+
+        </intent>
         </PreferenceScreen>
+
+    <!--<PreferenceScreen-->
+        <!--android:key="demo"-->
+        <!--android:title="阶段添加demo"-->
+        <!--android:summary="点击按钮进行阶段添加demo演示" >-->
+        <!--<intent-->
+            <!--android:action="android.intent.action.MAIN"-->
+            <!--android:targetPackage="com.kwsoft.kehuhua.adcustom"-->
+            <!--android:targetClass="com.kwsoft.kehuhua.adcustom.ExpandableActivity" />-->
+    <!--</PreferenceScreen>-->
 </PreferenceScreen>
 
     <!--&lt;!&ndash; NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to-->

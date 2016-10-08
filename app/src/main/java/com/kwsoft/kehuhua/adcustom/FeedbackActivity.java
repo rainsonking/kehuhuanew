@@ -4,11 +4,28 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.widget.CommonToolbar;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.kwsoft.kehuhua.config.Constant.pageId;
+import static com.kwsoft.kehuhua.config.Constant.tableId;
 
 public class FeedbackActivity extends AppCompatActivity {
 
@@ -19,8 +36,16 @@ public class FeedbackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         edt_feedback=(EditText)findViewById(R.id.edt_feedback);
-
         setupActionBar();
+        CommonToolbar mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
+
+        mToolbar.setTitle("意见反馈");
+        mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     /**
@@ -48,6 +73,16 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     public void summit(View view){
+
+
+
+        requestAdd();
+
+
+
+
+
+
 
     }
 
@@ -90,6 +125,65 @@ public class FeedbackActivity extends AppCompatActivity {
         }
         return false;
     }
+    //请求
+    public void requestAdd() {
+        String volleyUrl = Constant.sysUrl + Constant.commitAdd;
+        final String text=edt_feedback.getText().toString();
+        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String jsonData) {//磁盘存储后转至处理
+                        Log.e("TAG", "网络获取添加数据" + jsonData);
+                        //DLCH.put(volleyUrl + paramsStr, jsonData);
+                        setStore(jsonData);
+                    }
 
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+               VolleySingleton.onErrorResponseMessege(FeedbackActivity.this, volleyError);
+            }
+        }
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> paramsMap=new HashMap<>();
+                paramsMap.put(tableId, "280");
+                paramsMap.put(pageId, "2575");
+                paramsMap.put("t0_au_280_2575_3573", text);
+                paramsMap.put("t0_au_280_2575_3571", Constant.USERID);
+                return paramsMap;
+            }
+
+            //重写getHeaders 默认的key为cookie，value则为localCookie
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("cookie", Constant.localCookie);
+                    //Log.d("调试", "headers----------------" + headers);
+                    return headers;
+                } else {
+                    return super.getHeaders();
+                }
+            }
+        };
+        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                loginInterfaceData);
+    }
+
+    private void setStore(String jsonData) {
+        if (jsonData.equals("1")) {
+
+            finish();
+            Toast.makeText(this, "提交成功", Toast.LENGTH_SHORT).show();
+
+
+
+        }else{
+            Toast.makeText(this, "提交失败", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

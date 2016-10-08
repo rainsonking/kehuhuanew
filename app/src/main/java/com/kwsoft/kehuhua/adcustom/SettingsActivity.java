@@ -94,7 +94,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 //    public void onHeaderClick(Header header, int position) {
 //
 //        if (position == android.R.id.home) {
-//            startActivity(new Intent(SettingsActivity.this, SettingsActivity.class));
+//            startActivity(new Intent(SettingsActivity.this, ExpandableActivity.class));
 //        }
 //    }
 

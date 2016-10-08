@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/lightblue">
 
     <CheckBox
         android:id="@+id/multi_item_cb"
@@ -20,11 +21,12 @@
 
     <TextView
         android:id="@+id/multi_item_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toEndOf="@+id/multi_item_cb"
         android:layout_marginStart="20dp"
-        android:text="haha"
+
+        android:textColor="@color/list_item_right"
         android:gravity="center_vertical"
         />
 </RelativeLayout>

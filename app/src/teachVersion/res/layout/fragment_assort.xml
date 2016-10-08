@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <!--<include layout="@layout/activity_stu_title" />-->
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipeRefreshLayout"
+        android:orientation="vertical">
+
+        <GridView
+            android:id="@+id/stu_home_grid"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:background="#f4f4f4"
+            android:columnWidth="100dp"
+            android:divider="#f4f4f4"
+            android:gravity="center_horizontal"
+            android:horizontalSpacing="1dp"
+            android:numColumns="3"
+            android:smoothScrollbar="true"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="1dp" />
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/white"-->
+        <!--android:gravity="center" />-->
+</LinearLayout>

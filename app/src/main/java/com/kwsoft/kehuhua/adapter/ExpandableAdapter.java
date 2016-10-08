@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * Created by vienan on 2015/9/17.
+ *
  */
 public class ExpandableAdapter extends BaseExpandableListAdapter {
     private LayoutInflater inflater = null;

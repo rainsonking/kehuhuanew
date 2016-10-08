@@ -1,25 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-   <TextView
-       android:id="@+id/tv_entity"
-       android:layout_width="70dp"
-       android:layout_height="wrap_content"
-       android:layout_centerVertical="true"
-       android:text="姓名:"
-       android:textSize="16sp"
-       />
+    <!--公共控件，左侧显示名-->
+    <TextView
+        android:id="@+id/add_item_name"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="姓名："
+        android:textColor="@color/list_item_left"
+        android:textSize="16sp"
+        />
+
     <EditText
-        android:id="@+id/et_input"
+        android:id="@+id/add_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/tv_entity"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
         android:layout_centerVertical="true"
+        android:maxLength="11"
+        android:layout_marginStart="25dp"
+        android:textColorHint="@color/gray"
+        android:layout_toEndOf="@+id/add_item_name"
+        android:visibility="invisible"
+        android:textSize="14sp"
+        android:textColor="@color/list_item_right"/>
+
+    <!--添加属性需要的控件-->
+
+
+    <TextView
+        android:id="@+id/tv_if_must"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_toEndOf="@+id/add_item_name"
+        android:gravity="center"
+        android:text="*"
+        android:textColor="@color/red"
         android:textSize="16sp"
-        android:textColor="#5b5b5b"
+        android:visibility="invisible" />
+
+
+
+    <TextView
+        android:id="@+id/add_general"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/tv_if_must"
+        android:layout_marginStart="25dp"
+        android:textSize="18sp"
+        android:textColor="@color/list_item_right"
+        android:visibility="gone" />
+
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/add_spinner"
+        android:layout_marginStart="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/tv_if_must"
+        android:visibility="gone"
+        >
+    </org.angmarch.views.NiceSpinner>
+
+    <Button
+        android:id="@+id/add_unlimited"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/tv_if_must"
+        android:text="进行操作"
+        android:visibility="gone"
         />
+
 
 </RelativeLayout>

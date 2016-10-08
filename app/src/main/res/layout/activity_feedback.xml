@@ -1,42 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kwsoft.kehuhua.adcustom.FeedbackActivity"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+    <com.kwsoft.kehuhua.widget.CommonToolbar
+        android:id="@+id/common_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="?attr/colorPrimary"
+        app:isShowRightButton="false"
+        app:isShowTitle="true">
+
+    </com.kwsoft.kehuhua.widget.CommonToolbar>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@drawable/feeback_edt_bg"
-        android:layout_margin="@dimen/text_size_10"
-        >
+        android:layout_margin="20dp"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#b2b2b2"
+            android:text=" 问题和意见"
+            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/edt_feedback"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"
-            android:layout_margin="@dimen/text_size_10"
-            android:hint="请输入您的意见或建议"
+            android:layout_marginTop="5dp"
+
             android:focusable="true"
             android:gravity="top"
-            android:textSize="18sp"
-            />
+            android:hint=" 请简要描述您的问题和意见"
+            android:textColorHint="@color/list_item_left"
+            android:background="@drawable/feeback_edt_bg"
+            android:textColor="#b6b6b6"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_feedback_commit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="提交"
-        android:layout_marginTop="@dimen/text_size_15"
         android:layout_marginLeft="@dimen/text_size_10"
         android:layout_marginRight="@dimen/text_size_10"
+        android:layout_marginTop="20dp"
         android:background="@drawable/leave_sumit_btn_selector"
         android:onClick="summit"
-        />
+        android:text="提交反馈" />
 
 </LinearLayout>

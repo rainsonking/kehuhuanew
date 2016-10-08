@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_course_view"
+    >
+
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_top_right"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@mipmap/course_top_right"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv_order_state"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="预"-->
+        <!--android:textSize="@dimen/text_size_14"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:textColor="#ffffff"-->
+        <!--/>-->
+
+    <TextView
+        android:id="@+id/tv_course_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="托福一对一"
+        android:textSize="14dp"
+        android:textColor="#ffffff"
+        android:layout_centerInParent="true"
+        />
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv_course_type"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="一对一"-->
+        <!--android:textSize="@dimen/text_size_13"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:paddingBottom="5dp"-->
+        <!--android:textColor="#3f51b5"-->
+        <!--/>-->
+
+</RelativeLayout>

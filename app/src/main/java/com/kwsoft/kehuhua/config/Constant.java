@@ -1,113 +1,152 @@
 package com.kwsoft.kehuhua.config;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
-import java.util.regex.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by Administrator on 2015/11/28 0028.
+ *
  */
 public class Constant {
-    //phoneAccount=15535211113&phonePassword=111111
-    //基础地址
+    /**
+     * 系统地址：http://192.168.6.46:8080/edus_auto/
+     * <p>
+     * 陈蒙地址：http://192.168.6.150:8081/edus_auto/
+     * <p>
+     * 阿里服务器地址  http://182.92.108.162:8124/edus_auto/
+     */
+//    public static String sysUrl = "http://192.168.6.117:8080/edus_auto/";//红伟电脑
+    public static String sysUrl = "http://192.168.6.150:8081/edus_auto/";//陈蒙电脑项目
+    public final static String sysLoginUrl = "login_interfaceProLogin.do";//项目选择方法
+    public final static String projectLoginUrl = "login_interfaceLogin.do";//登陆方法
+
+    public final static String requestListSet = "model_interfaceToList.do";//获得列表配置数据和data数据方法
+    public final static String requestListData = "model_ajaxList.do";//仅获得data数据方法
+    public final static String requestAdd = "add_interfaceToAdd.do";
+    public final static String commitAdd = "add_interfaceAdd.do";
+    public final static String requestRowsAdd = "addRelation_interfaceToAddRelationPage.do";
+
+    public final static String requestEdit = "update_interfaceToUpdate.do";
+    public final static String requestDelete = "delete_interfaceDelete.do";
+    public final static String commitEdit = "update_interfaceUpdate.do";
+
+    public final static String requestTreeDialog = "treeDialog_interfaceToList.do";
+    public final static String requestMaxRule = "add_interfaceAjaxGetMaxRule.do";
+
+    public final static String requestMessage = "mongoModel_interfaceSysMessList.do";
+
+    public static String tmpFieldId = "";
+
+    public static Map<String, String> commitPra;
+
+    public static Map<String, String> paramsMapSearch = new HashMap<>();
+
+    public final static String proIdName = "proId";
+
+    public static String loginName = "";
+    public static String menuData = "";
+    public static String proId = "";
+    public static String proName = "";
+//    public static String stuProId = "57159822f07e75084cb8a1fe";//陈蒙学员端
+    //public static String stuProId="5704e45c7cf6c0b2d9873da6";//主项目
+    public static String stuCourseTableId = "19";
+    public  static String stuCourseUserId="" ;
+
+    public static String timeName = "alterTime";
+    public static String menuTime = "";
+
+    public final static String sourceName = "source";
+    public final static String sourceInt = "1";
+
+
+    public final static String USER_NAME = "loginName";// 登录时用户名 ,即手机号
+    public final static String PASSWORD = "password";// 登录密码
+    public final static String loginUserId = "loginUserId";
+    public final static String delIds = "delIds";
+    public static String USERID;
+    public static int menuIsAlter = 0;
+    public static String menuAlterTime = "";
+
+
+    public static String localCookie1 = "";
+    public static String tempTableId;
+    public static String tempPageId;
+
+    public static volatile String localCookie = null;//session
+
+
     public final static String baseUrl = "http://182.92.108.162:8114/phone_edus_auto/";
-    //外网http://182.92.108.162:8114/
-    //内网http://192.168.6.46:8080/
-    public final static String ipAdress="http://192.168.6.46:8080/";
-    public final static String ipRootAdress=ipAdress+"phone_edus/";
+
+    public final static String ipAdress = "http://192.168.6.46:8080/";
+    public final static String ipRootAdress = ipAdress + "phone_edus/";
 
     /* 登录界面所需信息 */
     public final static String LOGIN_URL = "login_phoneAccLogin.do";// 登录界面链接
     /* 搜索地址所需信息 */
-    public final static String searchCommitUrl="http://192.168.6.46:8080/phone_edus_auto/model_ajaxList.do?";
+    public final static String searchCommitUrl = "http://192.168.6.46:8080/phone_edus_auto/model_ajaxList.do?";
 
 
-    public final static String USER_NAME = "phoneAccount";// 登录时用户名 ,即手机号
-    public final static String PASSWORD = "phonePassword";// 登录密码
     /*增加学员信息*/
     public final static String tableId = "tableId";// 菜单中潜在学员的tableId
     public final static String pageId = "pageId";//菜单pageId
 
-    public final static String MAINID = "mainId";
-    public final static String MAINTABLEID = "mainTableId";
+    public final static String mainId = "mainId";
+    public final static String mainTableId = "mainTableId";
+    public final static String mainPageId = "mainPageId";
+    public static String mainTableIdValue = "";
+    public static String mainPageIdValue = "";
+    public static String mainIdValue = "";
 
     /*增加学员信息中提交连接*/
     public static String USERNAME_ALL;
     public static String PASSWORD_ALL;
     public static String PREURL = baseUrl + LOGIN_URL + USER_NAME + "=" + USERNAME_ALL;
+    public static int jumpNum = 0;//1、修改  2、添加 3、关联添加
+    public static int jumpNum1 = 0;//
+
+    public static String relationFieldId;
+    public static int relationField;
+
+    public static List<Map<String, Object>> fieldSetTemp = new ArrayList<>();
+    public static String fieldSetStr = "";
+    public static List<Integer> idArrList;
+    public static int deleteNum;
 
 
-    public static int getViewType(int fieldRole) {
-        int viewType = 0;
-        switch (fieldRole) {
-            /*TextView: 25、26、27、28、23    0，1,2,5,8,11,12,13，18,19，，22,23,
-            EditView:3 、4、6、7、9、10、24、13
-            RadioButton:16、
-            多选checkBox：17、
-            时间 15
-            日期选择框：14、
-            内部对象多只 21
-            未正常分配：2:富文本
-                       0:主键
-                       23:星期 与16、17一类
-                       20:内部对象 22:父级引用
-            */
-            case 2://2:富文本
-            case 3:
-            case 4:
-            case 6:
-            case 7:
-            case 9:
-            case 10:
-            case 13:
-            case 20://20:内部对象
-            case 22://22:父级引用
-            case 24:
-                viewType = 2;
-                break;
-            //0，1,2,5,8,11,12,13，18,19，，22,23,
-            case 0://0:主键
-            case 1:
-            case 5:
-            case 8:
-            case 11:
-            case 12:
-            case 25:
+    //适配器固定变量
 
-            case 27:
+    public final static String primKey = "montageName";// 主key
+    public final static String itemValue = "true_defaultShowVal";// 适配器中每一项的默认值或新添加值、也可作为内部对象的默认值位置
 
-                viewType = 1;
-                break;
-            case 14://日期
-            case 26://创建日期
-            case 28://修改日期
-                viewType = 6;
-                break;
-            case 15://时间
-                viewType = 7;
-                break;
-            case 16://16:单值选择项
-            case 23://23:星期
-                viewType = 3;
-                break;
-            case 17://17:多值选择项
-                viewType = 4;
-                break;
-//            case 20:
-            case 21://21:内部对象多值
-                viewType = 5;
-                break;
-            case 18://18:单文档
-            case 19://19:多文档
-                viewType = 1;
-                break;
-            default:
-                break;
-        }
-        return viewType;
-    }
+
+    //    public final static String primValue = "montageValue";// 主value，只在内部对象中表示
+    public final static String secondKey = "montageName1";// 副key
+    public final static String itemName = "true_defaultShowValName";// 内部对象的名称集合
+    public final static String commitValue = "commitValue";// commitValue
+
+
+
+    public static int topBarColor;
+
+
+//学员端参数：
+
+    public static String stu_index = "";// 副key
+    public static String stu_homeSetId = "";// 副key
 
     public static void threadToast(Activity activity, String str) {
         Looper.prepare();
@@ -177,5 +216,50 @@ public class Constant {
         Pattern p = Pattern.compile(strPattern);
         Matcher m = p.matcher(strName);
         return m.matches();
+    }
+
+    /**
+     * @param context
+     */
+    public static void goHuaWeiSetting(Context context)  {
+        try {
+            //HUAWEI H60-l02 P8max测试通过
+            //Log.d(MainActivity.class.getSimpleName(), "进入指定app悬浮窗管理页面失败，自动进入所有app悬浮窗管理页面");
+            Intent intent = new Intent("com.kwsoft.version.fragment");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //   ComponentName comp = new ComponentName("com.huawei.systemmanager","com.huawei.permissionmanager.ui.MainActivity");//华为权限管理
+            //   ComponentName comp = new ComponentName("com.huawei.systemmanager",
+            //      "com.huawei.permissionmanager.ui.SingleAppActivity");//华为权限管理，跳转到本app的权限管理页面,这个需要华为接口权限，未解决
+            ComponentName comp = new ComponentName("com.huawei.systemmanager","com.huawei.systemmanager.addviewmonitor.AddViewMonitorActivity");//悬浮窗管理页面
+            intent.setComponent(comp);
+            context.startActivity(intent);
+
+        } catch (SecurityException e) {
+            Intent intent = new Intent("com.kwsoft.version.fragment");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //   ComponentName comp = new ComponentName("com.huawei.systemmanager","com.huawei.permissionmanager.ui.MainActivity");//华为权限管理
+            ComponentName comp = new ComponentName("com.huawei.systemmanager",
+                    "com.huawei.permissionmanager.ui.MainActivity");//华为权限管理，跳转到本app的权限管理页面,这个需要华为接口权限，未解决
+            //      ComponentName comp = new ComponentName("com.huawei.systemmanager","com.huawei.systemmanager.addviewmonitor.AddViewMonitorActivity");//悬浮窗管理页面
+            intent.setComponent(comp);
+            context.startActivity(intent);
+            //Log.d(MainActivity.class.getSimpleName(), "正在进入指定app悬浮窗开启位置..");
+        }catch(ActivityNotFoundException e){
+            /**
+             * 手机管家版本较低 HUAWEI SC-UL10
+             */
+            //   Toast.makeText(MainActivity.this, "act找不到", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent("com.kwsoft.version.fragment");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ComponentName comp = new ComponentName("com.android.settings","com.android.settings.permission.TabItem");//权限管理页面 android4.4
+            //   ComponentName comp = new ComponentName("com.android.settings","com.android.settings.permission.single_app_activity");//此处可跳转到指定app对应的权限管理页面，但是需要相关权限，未解决
+            intent.setComponent(comp);
+            context.startActivity(intent);
+            e.printStackTrace();
+        }
+        catch(Exception e){
+            //抛出异常时提示信息
+            Toast.makeText(context, "进入设置页面失败，请手动设置", Toast.LENGTH_LONG).show();
+        }
     }
 }

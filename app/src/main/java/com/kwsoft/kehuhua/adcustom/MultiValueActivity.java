@@ -107,6 +107,12 @@ public class MultiValueActivity extends AppCompatActivity {
         isMulti = String.valueOf(intent.getStringExtra("isMulti"));
         Log.e("TAG","position "+intent.getStringExtra("position"));
         position= String.valueOf(intent.getStringExtra("position"));
+
+        String viewName=intent.getStringExtra("viewName");
+
+        textViewTitle.setText(viewName);
+
+
         String  needFilterListStr = String.valueOf(intent.getStringExtra("needFilterListStr"));
 
         List<Map<String,String>> needFilterList=JSON.parseObject(needFilterListStr,
@@ -115,11 +121,15 @@ public class MultiValueActivity extends AppCompatActivity {
 
 
 
-        Log.e("TAG","传递到多选activity中多值的Id"+idArrStr);
-        if (!idArrStr.equals("")) {
+        Log.e("TAG","传递到普通多选activity中多值的Id"+idArrStr);
+
+        try {
             String[] idArr = idArrStr.split(",");
             Collections.addAll(idArrList, idArr);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         Log.e("TAG","传递到多选activity中多值后转换的Id"+idArrList);
 
@@ -302,10 +312,14 @@ public class MultiValueActivity extends AppCompatActivity {
 
         String myValue = JSON.toJSONString(map);
             Intent intent = new Intent();
-        if (Constant.jumpNum==1) {
+        if(Constant.jumpNum1==4){
+            intent.setClass(MultiValueActivity.this, AddTemplateDataActivity.class);
+        }else if (Constant.jumpNum==1) {
             intent.setClass(MultiValueActivity.this, AddItemsActivity.class);
         }else if(Constant.jumpNum==2){
             intent.setClass(MultiValueActivity.this, RowsEditActivity.class);
+        }else if(Constant.jumpNum==3){
+            intent.setClass(MultiValueActivity.this, RowsAddActivity.class);
         }
 
             Bundle bundle = new Bundle();

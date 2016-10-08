@@ -1,77 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        >
+    <FrameLayout
+        android:id="@+id/imageAd"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/tab_content"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.0"
-            android:background="#77557799"
-            />
+            android:layout_height="match_parent" />
 
-        <RadioGroup
-            android:id="@+id/tabs_rg"
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/dot"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/firstFloor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:paddingLeft="3dp">
+
+        <TextView
+
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:background="@color/blue" />
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="47dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@color/white">
-            <RadioButton
-                android:id="@+id/tab_rb_a"
-                android:layout_width="match_parent"
-                android:layout_height="74dp"
-                android:drawableTop="@drawable/footer_home_1"
-                android:button="@null"
-                android:text="首页"
-                android:scaleX="0.5"
-                android:scaleY="0.5"
-                android:textColor="@drawable/footer_home_text_color"
-                android:textSize="19sp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:checked="true"
-                />
-            <RadioButton
-                android:id="@+id/tab_rb_b"
-                android:layout_width="match_parent"
-                android:layout_height="74dp"
-                android:drawableTop="@drawable/footer_home_2"
-                android:button="@null"
-                android:text="课程表"
-                android:scaleX="0.5"
-                android:scaleY="0.5"
-                android:textColor="@drawable/footer_home_text_color"
-                android:textSize="19sp"
-                android:layout_weight="1.0"
-                android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="快捷工具"
+            android:textColor="#5da6ff"
+            android:textSize="14sp" />
 
-                />
-            <RadioButton
-                android:id="@+id/tab_rb_c"
-                android:layout_width="match_parent"
-                android:layout_height="74dp"
-                android:drawableTop="@drawable/footer_home_3"
-                android:button="@null"
-                android:text="我"
-                android:scaleX="0.5"
-                android:scaleY="0.5"
-                android:textColor="@drawable/footer_home_text_color"
-                android:textSize="19sp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:singleLine="true"
-                />
 
-        </RadioGroup>
     </LinearLayout>
-</RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/secondFloor"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_below="@+id/firstFloor"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:id="@+id/iv_er_code"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:src="@drawable/home_saoma" />
+
+            <ImageView
+                android:id="@+id/personalCenter"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:src="@drawable/home_my_center"
+                android:textColor="#ffffff" />
+
+            <ImageView
+                android:id="@+id/messageCenter"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginBottom="30dp"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:src="@drawable/home_xiaoxi"
+                android:textColor="#808080" />
+
+            <ImageView
+                android:id="@+id/systemConfig"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_marginBottom="30dp"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:src="@drawable/home_setconfig"
+                android:textColor="#808080" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <TextView
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="扫码考勤"
+                android:textColor="#808080" />
+
+            <TextView
+                android:id="@+id/personal_center_title1"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="个人中心"
+                android:textColor="#808080" />
+
+            <TextView
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="消息提醒"
+                android:textColor="#808080" />
+
+            <TextView
+                android:id="@+id/systemConfig1"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="系统设置"
+                android:textColor="#808080" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/thirdFloor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f4f4f4"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/colum_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="15dp"
+            android:text="功能菜单"
+            android:textColor="#dddddd"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="2dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/colum_name"
+            android:background="#dddddd" />
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="2dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@id/colum_name"
+            android:background="#dddddd" />
+    </RelativeLayout>
+
+    <!--<ScrollView-->
+    <!--android:id="@+id/forthFloor"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:fillViewport="true"-->
+    <!--android:background="#f4f4f4"-->
+    <!--android:scrollbars="vertical">-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.handmark.pulltorefresh.library.PullToRefreshGridView
+            android:id="@+id/home_grid"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:background="#f4f4f4"
+            android:columnWidth="100dp"
+            android:divider="#f4f4f4"
+            android:gravity="center_horizontal"
+            android:horizontalSpacing="3dp"
+            android:numColumns="4"
+            android:smoothScrollbar="true"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="3dp" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

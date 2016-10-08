@@ -1,12 +1,12 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    <!--</style>-->
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -22,7 +22,10 @@
         <item name="android:windowEnterAnimation">@anim/popshow_anim</item>
         <item name="android:windowExitAnimation">@anim/pophidden_anim</item>
     </style>
-
+    <style name="topMenuPopupWindowAnimation">
+        <item name="android:windowEnterAnimation">@anim/top_menu_popshow_anim</item>
+        <item name="android:windowExitAnimation">@anim/top_menu_pophidden_anim</item>
+    </style>
 
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->
@@ -32,4 +35,71 @@
         <!-- Used for the background -->
         <item name="android:background">#FFFFFF</item>
     </style>
+
+    <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+
+        <item name="android:button">@drawable/checkbox_selector</item>
+
+        <item name="android:paddingLeft">10.0dip</item>
+
+    </style>
+
+    <style name="divider_style" parent="android:style/Widget.ListView.DropDown">
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">5dp</item>
+    </style>
+
+    <style name="activity2_footer_radio">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/font_selector</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">1dp</item>
+    </style>
+
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+
+        <item name="colorPrimary">@color/prim_topBarColor</item>
+        <item name="colorPrimaryDark">@color/prim_topBarColor</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <!-- 窗口的背景颜色 -->
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--<item name="toolbarNavigationButtonStyle">@style/myToolbarNavigationButtonStyle</item>-->
+    </style>
+
+    <style name="search_view">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+
+        <item name="android:background">@drawable/selector_search_view</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingLeft">4dp</item>
+
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <!--<style name="myToolbarNavigationButtonStyle"-->
+        <!--parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">-->
+        <!--&lt;!&ndash;<item name="android:minWidth">0dp</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:layout_marginStart">50dp</item>&ndash;&gt;-->
+        <!--<item name="android:scaleX">2</item>-->
+        <!--<item name="android:scaleY">2</item>-->
+
+        <!--&lt;!&ndash;<item name="android:scaleType">fitStart</item>&ndash;&gt;-->
+    <!--</style>-->
 </resources>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.kwsoft.version.StuMainActivity">
+
+    <!--Toolbar-->
+    <com.kwsoft.kehuhua.widget.CnToolbar
+        android:id="@+id/stu_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@color/stu_topBarColor"
+        >
+    </com.kwsoft.kehuhua.widget.CnToolbar>
+
+    <!--app:isShowSearchView="false"-->
+    <!--android:minHeight="?attr/actionBarSize"-->
+    <!--app:navigationIcon="@drawable/nav_scan_code"-->
+    <!--fragment-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/c7c7" />
+<!--底层按钮-->
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@drawable/btn_bottom_navigation_bg"-->
+        <RadioButton
+            android:id="@+id/radio0"
+            style="@style/activity2_footer_radio"
+            android:checked="true"
+            android:drawablePadding="2dp"
+            android:drawableTop="@drawable/foot_first_selector"
+            android:text="看板" />
+
+        <RadioButton
+            android:id="@+id/radio3"
+            style="@style/activity2_footer_radio"
+            android:checked="true"
+            android:drawablePadding="2dp"
+            android:drawableTop="@drawable/foot_forth_selector"
+            android:text="分类" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            style="@style/activity2_footer_radio"
+            android:drawablePadding="2dp"
+            android:drawableTop="@drawable/foot_second_selector"
+            android:text="课程表" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            style="@style/activity2_footer_radio"
+            android:drawablePadding="2dp"
+            android:drawableTop="@drawable/foot_third_selector"
+            android:text="我的" />
+
+    </RadioGroup>
+    </LinearLayout>
+</LinearLayout>

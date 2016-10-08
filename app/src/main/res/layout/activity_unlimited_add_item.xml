@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/unlimited_add_item_name"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text=""
+        android:textColor="#a3a3a3"
+        android:layout_centerVertical="true"
+        />
+
+    <Button
+        android:id="@+id/unlimited_del_item_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="删除"/>
+    <TextView
+        android:id="@+id/unlimited_add_item_value"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/unlimited_add_item_name"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:textSize="18sp"
+        android:text=""
+        android:gravity="center_vertical"
+        android:textColor="#5b5b5b"
+        android:layout_toStartOf="@+id/unlimited_del_item_value"
+        />
+</RelativeLayout>

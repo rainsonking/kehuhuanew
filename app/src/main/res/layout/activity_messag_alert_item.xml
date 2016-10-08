@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+
+    <TextView
+        android:id="@+id/alert_item_title"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="销售-学员状态改为潜在学员通知销售经理"
+        android:textSize="18sp"
+        android:ellipsize="end"
+        android:singleLine="true"
+
+       />
+    <TextView
+        android:layout_below="@+id/alert_item_title"
+        android:id="@+id/alert_item_notice_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="销售经理01"
+        />
+
+    <TextView
+        android:layout_below="@+id/alert_item_notice_name"
+        android:id="@+id/alert_item_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="您好，有一个学员：Shangxindeyaosi   被市场部列为有效线索 转为潜在学员了，请尽快分配销售人员"
+        android:maxLength="40"
+        android:maxLines="2"
+        android:ellipsize="end"
+        />
+
+
+<TextView
+    android:id="@+id/alert_dashed_line"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/alert_item_content"
+    android:background="@drawable/shape_dashed_line"/>
+    <TextView
+        android:layout_below="@+id/alert_dashed_line"
+        android:id="@+id/alert_item_if_seeCn_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="阅读状态："
+        />
+    <TextView
+        android:layout_below="@+id/alert_dashed_line"
+       android:layout_toRightOf="@+id/alert_item_if_seeCn_title"
+        android:id="@+id/alert_item_if_seeCn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未阅读"
+        />
+    <TextView
+        android:layout_below="@+id/alert_dashed_line"
+        android:layout_alignParentRight="true"
+        android:id="@+id/alert_item_create_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2016-12-12"
+        />
+</RelativeLayout>

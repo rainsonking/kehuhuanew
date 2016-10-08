@@ -16,7 +16,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -29,7 +29,7 @@ import com.kwsoft.kehuhua.application.MyApplication;
  * @author xbb
  */
 
-public abstract class BaseActivity extends FragmentActivity implements IBaseActivity {
+public abstract class BaseActivity extends AppCompatActivity implements IBaseActivity {
     protected Context mContext = null;
     protected SharedPreferences preferences;
     protected MyApplication myApplication;
@@ -61,11 +61,13 @@ public abstract class BaseActivity extends FragmentActivity implements IBaseActi
     @Override
     protected void onResume() {
         super.onResume();
+       // JPushInterface.onResume(getApplicationContext());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        //JPushInterface.onPause(getApplicationContext());
     }
 
     @Override

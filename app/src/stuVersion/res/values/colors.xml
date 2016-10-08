@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#ef5152</color><!--toolbar颜色 -->
+    <color name="colorPrimaryDark">#ef5152</color><!--导航栏颜色 -->
+    <color name="prim_topBarColor">#ef5152</color>
+</resources>

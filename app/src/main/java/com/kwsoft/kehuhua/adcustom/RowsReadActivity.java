@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -16,7 +17,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 
@@ -29,6 +29,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.kwsoft.kehuhua.config.Constant.topBarColor;
+
 public class RowsReadActivity extends AppCompatActivity {
 
     @Bind(R.id.only_read_back_info)
@@ -36,9 +38,10 @@ public class RowsReadActivity extends AppCompatActivity {
     @Bind(R.id.topBar)
     RelativeLayout topBar;
     @Bind(R.id.lv_only_read)
-    PullToRefreshListView lvOnlyRead;
+    ListView lvOnlyRead;
     @Bind(R.id.only_read_title)
     TextView onlyReadTitle;
+
     private Map<String, String> paramsMap = new HashMap<>();
     private SimpleAdapter adapter;
 
@@ -61,6 +64,7 @@ public class RowsReadActivity extends AppCompatActivity {
 
 
     public void getInfoData() {
+        topBar.setBackgroundColor(getResources().getColor(topBarColor));
         Intent mIntent = this.getIntent();
         String infoData = mIntent.getStringExtra("editSet");
         Map<String, Object> editData = JSON.parseObject(infoData,
@@ -142,31 +146,20 @@ public class RowsReadActivity extends AppCompatActivity {
             List<Map<String, Object>> defaultValArrList = (List<Map<String, Object>>) defaultValArrMap.get(keyList);
             if (defaultValArrList.size() > 0) {
                 defaultValArr = defaultValArrList.get(0);
-            } }
+            }
+        }
 //展示数据
 
-        List<Map<String,String>> onlyReadData=new ArrayList<>();
+        List<Map<String, String>> onlyReadData = new ArrayList<>();
         if (fieldSet != null && fieldSet.size() > 0) {
-            Map<String,String> onlyReadDataMap=new HashMap<>();
-            for (int i=0;i<fieldSet.size();i++) {
-int fieldRole=Integer.valueOf(String.valueOf(fieldSet.get(i).get("fieldRole")));
-                if (fieldRole!=21) {
-                    onlyReadDataMap.put("key",String.valueOf(fieldSet.get(i).get("fieldCnName")));
-                    String fieldAliasName=  String.valueOf(fieldSet.get(i).get("fieldAliasName"));
+            Map<String, String> onlyReadDataMap = new HashMap<>();
+            for (int i = 0; i < fieldSet.size(); i++) {
+                int fieldRole = Integer.valueOf(String.valueOf(fieldSet.get(i).get("fieldRole")));
+                if (fieldRole != 21) {
+                    onlyReadDataMap.put("key", String.valueOf(fieldSet.get(i).get("fieldCnName")));
+                    String fieldAliasName = String.valueOf(fieldSet.get(i).get("fieldAliasName"));
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //            editAdapter = new RowsEditActivity.EditAdapter();

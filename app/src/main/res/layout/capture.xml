@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/capture_top_color"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="@color/gray" >

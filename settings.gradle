@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':datetimepicker-library', ':weekcalendar', ':nice-spinner-master'
+include ':library'

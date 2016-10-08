@@ -11,6 +11,7 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CloseActivityClass.activityList.add(this);
+        setContentView(R.layout.activity_main);
 
     }
 

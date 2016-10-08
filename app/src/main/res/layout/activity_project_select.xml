@@ -1,33 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="80dp"
-    android:orientation="vertical"
-   >
+    android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/app_sys_name"
+    <LinearLayout
+        android:id="@+id/up_choose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="请选择系统"
-        android:textSize="38sp"
-        android:textColor="@color/blue"
-        android:gravity="center"
-        android:layout_marginBottom="40dp"
-        />
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/project_list"
-        android:dividerHeight="8dp"
-        android:divider="#f4f4f4"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/app_sys_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="80dp"
+            android:text="滑动切换系统"
+            android:textColor="@color/blue"
+            android:textSize="30sp"
+
+            />
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/id_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@+id/up_choose"
+        android:paddingBottom="50dp"
+        android:paddingTop="50dp" />
+
+
+    <RelativeLayout
+
+        android:id="@+id/avLoadingIndicatorViewLayoutPro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:smoothScrollbar="true"
+        android:background="#50323232"
+        android:visibility="gone">
 
-        />
+        <com.wang.avi.AVLoadingIndicatorView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:indicator="LineScale"
+            app:indicator_color="@color/blue" />
+    </RelativeLayout>
+</RelativeLayout>
 
 
 
-</LinearLayout>
+
+
+    <!--</RelativeLayout>-->
+
+
+    <!--<RelativeLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_below="@+id/up_choose"-->
+
+    <!--&gt;-->
+
+
+    <!--<com.handmark.pulltorefresh.library.PullToRefreshListView-->
+
+    <!--android:id="@+id/project_list"--><!--android:dividerHeight="8dp"--><!--android:divider="#f4f4f4"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:smoothScrollbar="true"--><!--android:visibility="gone"--><!--/>-->

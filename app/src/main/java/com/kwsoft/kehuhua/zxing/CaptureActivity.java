@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -25,6 +26,8 @@ import com.kwsoft.kehuhua.adcustom.R;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+
+import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 
 public final class CaptureActivity extends Activity implements
@@ -63,6 +66,8 @@ public final class CaptureActivity extends Activity implements
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.capture);
+        RelativeLayout mRelative= (RelativeLayout) findViewById(R.id.capture_top_color);
+        mRelative.setBackgroundColor(getResources().getColor(topBarColor));
         btn_back = (Button) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new OnClickListener() {
             @Override

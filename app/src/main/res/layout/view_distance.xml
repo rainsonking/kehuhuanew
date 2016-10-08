@@ -14,7 +14,9 @@
         android:layout_alignParentTop="true"
         android:cacheColorHint="@color/no_color"
         android:divider="#dcdcdc"
-        android:dividerHeight="1px"></ListView>
+        android:dividerHeight="1px">
+
+    </ListView>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#393f4d</color>
-    <color name="colorPrimaryDark">#393f4d</color>
+
+    <!--<color name="colorPrimary">#ef5152</color>&lt;!&ndash;toolbar颜色 &ndash;&gt;-->
+    <!--<color name="colorPrimaryDark">#ef5152</color>&lt;!&ndash;导航栏颜色 &ndash;&gt;-->
     <color name="colorAccent">#FF4081</color>
 
+
+
+    <color name="stu_topBarColor">#ef5152</color>
     <color name="title_item_color">#363636</color>
     <color name="bg_normal">#f5f4f4</color>
     <color name="bg_normal_1">#f5f4f4</color>
@@ -167,6 +171,14 @@
     <color name="no_color">#00000000</color>
     <color name="two_title_text">#636363</color>
 
+    <color name="course_type_color1">#2359c7</color>
+    <color name="course_type_color2">#068866</color>
+    <color name="course_type_color3">#97700a</color>?
+    <color name="course_type_color4">#5a4dbb</color>
+    <color name="course_type_color5">#9f2a3b</color>
+    <color name="selectColor">#5ca7ff</color>
+    <color name="selectColorButtom">#ffeff1</color>
+
     <!--zxing-->
     <color name="bg_color">#EDEDED</color>
     <color name="contents_text">#ff000000</color>
@@ -198,5 +210,31 @@
     <color name="e7e7">#e7e7e7</color>
     <color name="d7d7">#d7d7d7</color>
     <color name="c7c7">#c7c7c7</color>
+
+    <color name="global_bg">#eeeff3</color>
+    <color name="moren_huise">#888888</color>
+    <color name="normal">#f3f3f3</color>
+    <color name="title_bg">#ef5152</color>
+    <color name="line_3">#E0E0E0</color>
+    <color name="normal_bg2">#f7f7f7</color>
+    <color name="text2">#333333</color>
+    <color name="text3">#afafaf</color>
+    <color name="text4">#787878</color>
+    <color name="kanban_line">#dddddd</color>
+    <color name="press_color">#ccd7000f</color>
+    <color name="text5">#C9C9C9</color>
+    <color name="text6">#A5A5A5</color>
+    <color name="tabtext1">#d7000f</color>
     <!--zxing-->
+    <color name="list_item_left">#858585</color>
+    <color name="list_item_right">#4c4c4c</color>
+    <color name="couse_time">#5b5b5b</color>
+    <color name="normal_bg3">#f5f8fa</color>
+    <color name="text_1f7b">#1f7b8c</color>
+    <color name="text_a1abb3">#a1abb3</color>
+    <color name="text_7c8084">#7c8084</color>
+    <color name="text_e6e6e6">#e6e6e6</color>
+    <color name="text_f5f8fa">#f5f8fa</color>
+    <color name="text_cbcbcb">#cbcbcb</color>
+    <color name="text_ff9c00">#ff9c00</color>
 </resources>

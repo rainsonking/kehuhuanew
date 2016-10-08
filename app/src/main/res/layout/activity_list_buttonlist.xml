@@ -14,15 +14,16 @@
         android:background="#ededed"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="更多操作"
-            android:textSize="18sp"
-            android:textColor="#a3a3a3"
-            android:layout_marginTop="@dimen/text_size_12"
-            android:layout_gravity="center_horizontal"
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/moreOperate"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="更多操作"-->
+            <!--android:textSize="18sp"-->
+            <!--android:textColor="#a3a3a3"-->
+            <!--android:layout_marginTop="@dimen/text_size_12"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--/>-->
 
         <ListView
             android:id="@+id/buttonList"
@@ -42,7 +43,7 @@
             android:id="@+id/tv_dismiss"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="返回"
+            android:text="取消操作"
             android:textSize="19sp"
             android:textColor="#ffffff"
             android:gravity="center"

@@ -11,10 +11,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +35,30 @@ public class Utils {
         return 1;
     }
 
+    //版本名
+    public static String getVersionName(Context context) {
+        return getPackageInfo(context).versionName;
+    }
 
+    //版本号
+    public static int getVersionCode(Context context) {
+        return getPackageInfo(context).versionCode;
+    }
+
+    private static PackageInfo getPackageInfo(Context context) {
+        PackageInfo pi = null;
+
+        try {
+            PackageManager pm = context.getPackageManager();
+            pi = pm.getPackageInfo(context.getPackageName(),
+                    PackageManager.GET_CONFIGURATIONS);
+            return pi;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pi;
+    }
     public static String hashKeyForDisk(String key) {
         String cacheKey;
         try {
@@ -144,4 +173,51 @@ public class Utils {
         }
         return temp;
     }
+
+    /**
+     * 获取控件的高度或者宽度  isHeight=true则为测量该控件的高度，isHeight=false则为测量该控件的宽度
+     * @param view
+     * @param isHeight
+     * @return
+     */
+    public static int getViewHeight(View view, boolean isHeight){
+        int result;
+        if(view==null)return 0;
+        if(isHeight){
+            int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+            view.measure(h,0);
+            result =view.getMeasuredHeight();
+        }else{
+            int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+            view.measure(0,w);
+            result =view.getMeasuredWidth();
+        }
+        return result;
+    }
+
+    public static long ObjectTOLong(Object longObj)
+    {
+        return Long.valueOf(String.valueOf(longObj));
+    }
+
+    public static long getAlterTime(String diskString){
+
+        Map map= JSON.parseObject(diskString, Map.class);//获取配置数据
+
+        return Utils.ObjectTOLong(map.get("alterTime"));
+    }
+
+    public static Map<String,Object> str2map(String jsonData){
+        Map<String,Object>  dataMap=new HashMap<>();
+        if (jsonData!=null) {
+            dataMap = JSON.parseObject(jsonData,
+                    new TypeReference<Map<String, Object>>() {
+                    });
+        }
+        return dataMap;
+
+    }
+
+
+
 }

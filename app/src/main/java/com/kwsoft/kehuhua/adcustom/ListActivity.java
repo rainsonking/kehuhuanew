@@ -5,7 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -23,172 +23,320 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.TypeReference;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.kwsoft.kehuhua.adapter.StudentAdapter;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.kwsoft.kehuhua.adapter.ListAdapter;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
-import com.kwsoft.kehuhua.bean.Time;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.kehuhua.model.OnDataListener;
-import com.kwsoft.kehuhua.model.OnRefreshListener;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DiskLruCacheHelper;
+import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
-import com.kwsoft.kehuhua.view.RefreshListView;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+import static com.kwsoft.kehuhua.adcustom.R.id.topBar;
+import static com.kwsoft.kehuhua.config.Constant.topBarColor;
+
 
 /**
  * 展示列表页面对应类
- *
  */
-public class ListActivity extends BaseActivity implements OnDataListener, View.OnClickListener, OnRefreshListener,PopupWindow.OnDismissListener {
-    private RefreshListView refreshListView;
-    private StudentAdapter listAdapter;
-    private boolean isMulChoice = false; //是否多选
-    private LinearLayout linearLayout;
-    private ImageView iv_back, buttonList;//返回按钮
-    private TextView tv_cancle;
-    private TextView tv_commit;
-    private String timeInterface,titleName;//请求时间
-    public static boolean isForeground = false;
-    private Map<String,Object> phoneFieldSetMap;//解析取到的配置数据
-    private Map<String,Object> phoneDataListMap;//解析取到的列表data数据
-    private List<Map<String,Object>> phoneOperaButtonList;//解析取到的列表data数据
-    private List<List<Map<String, String>>> listMapUnion;//解析完毕且整理好的数据
-    private String timeData;
-    private String operaButtonData;
+public class ListActivity extends BaseActivity implements  View.OnClickListener {
 
-    // 以下为磁盘存储变量
-
-    private DiskLruCacheHelper DLCH;
-    private int dataTableId,dataPageId;
-    public String timeUrlAField,timeUrlAOperaButton,timeUrlAButton,timeUrlAData,deleteButtonTurnUrl,addButtonCommitUrlV,addButtonCommitUrl;
-    public List<Map<String,Object>> phoneButtonSetList;
-    public long buttonTime,dataTime,fieldTime,operaButtonTime;
-    private Time time;
-    private boolean isBatchDelete;//批量删除权限
-    private String str="";//删除ID列表字符串
-    private String delIds;//实际删除ID列表
-
-
-    //弹窗搜索变量
-    private String  searchSetUrl;//搜索接口url
-    private Map<String, String> paramsMap;
-    private String paramsString;
-
-
-    //上拉分页加载
-    private int start=0;
-    private int limit=20;
-    private boolean isLastData;//判断分页加载是否已经是最后一条数据
-
+    private String titleName;//请求时间
+    //磁盘存储变量
+    private DiskLruCacheHelper diskLruCache;
     //右上角下拉按钮
-    private RelativeLayout rlTopBar;
-    private PopupWindow toolList;
+    private PopupWindow toolListPop,childListPop;
+    //新接口梳理变量
+    private Map<String, String> paramsMap;
+    private String paramsStr;
+    private String tableId, pageId;
+    private ListAdapter listAdapter;
+    private List<Map<String, Object>> fieldSet = new ArrayList<>();
+    private List<Map<String, Object>> dataList = new ArrayList<>();
+    private String operaButtonSet;
+    private String searchSet = "";
+    private List<List<Map<String, String>>> setAndData = new ArrayList<>();
+    //整个列表数据
+    private List<Map<String, Object>> buttonSet;//按钮列表数据
+
+    private List<Map<String, Object>> childTabs=new ArrayList<>();
+    //上拉分页加载
+    private int start = 0;
+    private final int limit = 20;
+    private String delIdStr = "";
+
+    private long dataTime = -1;
+    @Bind(R.id.button_set)
+    ImageView button_set_view;
+    @Bind(R.id.button_set_delete_commint)
+    ImageView deleteCommit;
+    @Bind(R.id.searchButton)
+    ImageView search_title;
+    @Bind(R.id.IV_back_list)
+    ImageView backList;
+    @Bind(R.id.backMenu)
+    ImageView backMenu;
+    @Bind(topBar)
+    RelativeLayout rlTopBar;
+    @Bind(R.id.lv)
+    PullToRefreshListView refreshListView;
+    @Bind(R.id.list_more_menu)
+    ImageView list_more_menu;
+
+    @Bind(R.id.textViewTitle)
+    TextView tv_title;
+
+    private List<Map<String, Object>> childList = new ArrayList<>();
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                listAdapter.notifyDataSetChanged();
+                refreshListView.onRefreshComplete();
+                diskLruCache.put(Constant.sysUrl + Constant.requestListSet +
+                                Constant.USERNAME_ALL + paramsStr,
+                        JSONArray.toJSONString(setAndData));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        ButterKnife.bind(this);
         CloseActivityClass.activityList.add(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         try {
-            DLCH = new DiskLruCacheHelper(ListActivity.this);
+            diskLruCache = new DiskLruCacheHelper(ListActivity.this);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        startAnim();
         getDataIntent();//获取菜单数据
         init();
-        allTimeDataAnalysisDisk();//先获取本地的时间接口数据
-        requestAllTimeInterface(timeInterface);//请求网络的时间接口
+        try {
+            requestSet();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        refreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                pullDownToRefresh();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+                pullUpToRefresh();
+            }
+        });
+        Log.e("TAG", "检查点：点击子项");
+
+
         refreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                if (isMulChoice) {
-                    List<Map<String, String>> student = listMapUnion.get(position - 1);
-                    StudentAdapter.ViewHolder holder = (StudentAdapter.ViewHolder) view.getTag();
-                    if (student.get(0).get("check").equals("true")) {
-                        student.get(0).put("check", "false");
-                        holder.cb.setChecked(false);
-
-                    } else {
-                        student.get(0).put("check", "true");
-                        holder.cb.setChecked(true);
-                    }
-                } else {
-                    Intent intent = new Intent(ListActivity.this, InfoActivity.class);
-                    Bundle bundle = new Bundle();
-                    String itemInfo = JSON.toJSONString(listMapUnion.get(position - 1));
-                    Log.e("TAG", "向属性页面传递的元素" + itemInfo);
-                    bundle.putString("itemInfo", itemInfo);
-                    bundle.putString("operaButtonData", operaButtonData);
-                    //bundle.putString("operaButtonData", listMapUnion.get(position - 1).get(1).get("fieldCnName"));
-                    bundle.putString("tableId", dataTableId + "");
-                    bundle.putString("pageId", dataPageId + "");
-                    bundle.putString("parameters", JSON.toJSONString(paramsMap));
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //将需要的数据打包：需要展示的子项属性，operabutton数据
+                List<Map<String, String>> itemData = new ArrayList<>();
+                if (position > 0) {
+                    itemData = setAndData.get(position - 1);
                 }
-            }
-        });
-
-        refreshListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ListActivity.this, "请点选删除",
-                        Toast.LENGTH_SHORT).show();
-
-                return true;
-            }
-        });
-        tv_commit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i < listMapUnion.size(); i++) {
-                    if ("true".equals(listMapUnion.get(i).get(0).get("check"))) {
-                        str += listMapUnion.get(i).get(0).get("stu_id") + ",";
-                    }
-                }
-
-                if (str.length() > 0) {
-                    delIds = str.substring(0, str.length() - 1);
-                    Log.e("TAG", "删除的id列表" + delIds);
-                    deleteDialog();
-                } else {
-                    Toast.makeText(ListActivity.this, "至少选择一项删除！", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        tv_cancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tv_cancle.setVisibility(View.GONE);
-                tv_commit.setVisibility(View.GONE);
-                iv_back.setVisibility(View.VISIBLE);
-                buttonList.setVisibility(View.VISIBLE);
-                isMulChoice = false;
-                refreshListView.setMulChoice(isMulChoice);
-                refreshListView.setLoadingMore(isMulChoice);
-                listAdapter.setIsMulChoice(isMulChoice);
-                for (List<Map<String, String>> student : listMapUnion) {
-                    student.get(0).put("check", "false");
-                }
-                listAdapter.notifyDataSetChanged();
+                toItem(itemData);
             }
         });
     }
+
+    /**
+     * 接收菜单传递过来的模块数据包
+     */
+    public void getDataIntent() {
+        Map<String, Object> itemMap = new HashMap<>();
+
+        Intent intent = getIntent();
+        String itemData = intent.getStringExtra("itemData");
+
+        if (intent.getStringExtra("childData")!=null) {
+
+            String childData = intent.getStringExtra("childData");
+            childList=JSON.parseObject(childData,
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
+        }
+        try {
+            itemMap = JSON.parseObject(itemData,
+                    new TypeReference<Map<String, Object>>() {
+                    });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (childList.size()>0) {
+            tableId = childList.get(0).get("tableId") + "";
+            pageId = childList.get(0).get("pageId") + "";
+            titleName = childList.get(0).get("menuName") + "";
+            list_more_menu.setVisibility(View.VISIBLE);
+        }else{
+            tableId = itemMap.get("tableId") + "";
+            Log.e("TAG", "List_tableId " + tableId);
+            pageId = itemMap.get("pageId") + "";
+            titleName = itemMap.get("menuName") + "";
+        }
+
+        paramsMap = new HashMap<>();
+        paramsMap.put(Constant.tableId, tableId);
+        paramsMap.put(Constant.pageId, pageId);
+        paramsMap.put(Constant.timeName, dataTime + "");
+        paramsStr = JSON.toJSONString(paramsMap);
+        Constant.paramsMapSearch=paramsMap;
+        Constant.mainTableIdValue=tableId;
+        Constant.mainPageIdValue=pageId;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.textViewTitle:
+                childChose();
+                break;
+
+
+            case R.id.button_set:
+                buttonList();
+                break;
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.IV_back_list:
+                setVisible();
+                break;
+
+            case R.id.searchButton:
+                toSearchActivity();
+                break;
+            case R.id.backMenu:
+                finish();
+                break;
+            case R.id.button_set_delete_commint:
+                listDeleteCommit();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void listDeleteCommit() {
+        List<String> delIdList = new ArrayList<>();
+        for (int i = 0; i < setAndData.size(); i++) {
+            if (setAndData.get(i).get(0).get("isCheck").equals("true")) {
+                delIdList.add(setAndData.get(i).get(0).get("mainId"));
+            }
+        }
+        String str = delIdList.toString();
+        delIdStr = str.substring(1, str.length() - 1).replace(" ", "");
+        Log.e("TAG", "delIdStr:" + delIdStr);
+//准备请求删除
+        if (delIdList.size() == 0) {
+            Toast.makeText(ListActivity.this, "请选择", Toast.LENGTH_SHORT).show();
+        } else {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("数据库中会同步删除");
+        builder.setTitle("删除学员");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                deleteItems();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+        }
+    }
+
+    private void deleteItems() {
+        final String volleyUrl = Constant.sysUrl + Constant.requestDelete;
+        Log.e("TAG", "获取dataUrl " + volleyUrl);
+        Log.e("TAG", "获取tableId " + tableId);
+        Log.e("TAG", "获取pageId " + pageId);
+        Log.e("TAG", "获取delIds " + delIdStr);
+        Log.e("TAG", "获取buttonType " + 3);
+
+        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String jsonData) {//磁盘存储后转至处理
+                        Log.e("TAG", "删除返回数据" + jsonData);
+
+                        Toast.makeText(ListActivity.this, jsonData, Toast.LENGTH_SHORT).show();
+
+                        setVisible();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                //refreshListView.hideFooterView();
+                VolleySingleton.onErrorResponseMessege(ListActivity.this, volleyError);
+
+            }
+        }
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put(Constant.tableId, tableId);
+                map.put(Constant.pageId, pageId);
+                map.put(Constant.delIds, delIdStr);
+                map.put("buttonType", "3");
+                return map;
+            }
+
+            //重写getHeaders 默认的key为cookie，value则为localCookie
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("cookie", Constant.localCookie);
+                    return headers;
+                } else {
+                    return super.getHeaders();
+                }
+            }
+        };
+        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                loginInterfaceData);
+    }
+
 
     @Override
     public void initView() {
@@ -197,857 +345,741 @@ public class ListActivity extends BaseActivity implements OnDataListener, View.O
 
 
     public void init() {
-        linearLayout = (LinearLayout) findViewById(R.id.llayout);
-        ImageView search_title= (ImageView) findViewById(R.id.searchButton);
+
+        deleteCommit.setOnClickListener(this);
         search_title.setOnClickListener(this);
-
-        rlTopBar= (RelativeLayout) findViewById(R.id.topBar);
-        iv_back = (ImageView) findViewById(R.id.backMenu);
-        tv_cancle = (TextView) findViewById(R.id.tv_cancle);
-//        ImageView searchButton = (ImageView) findViewById(R.id.searchButton);
-//        searchButton.setOnClickListener(this);
-        iv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        TextView tv_title = (TextView) findViewById(R.id.textViewTitle);
+        backMenu.setOnClickListener(this);
+        backList.setOnClickListener(this);
+        button_set_view.setOnClickListener(this);
+        tv_title.setOnClickListener(this);
         tv_title.setText(titleName);
-        buttonList = (ImageView) findViewById(R.id.addItem);
-        buttonList.setOnClickListener(this);
-        tv_commit = (TextView) findViewById(R.id.tv_commit);
-        refreshListView = (RefreshListView) findViewById(R.id.lv);
-        refreshListView.setOnRefreshListener(this);
-        paramsMap=new HashMap<>();
-        paramsMap.put(Constant.USER_NAME, Constant.USERNAME_ALL);//"15535211113"
-        paramsMap.put(Constant.PASSWORD, Constant.PASSWORD_ALL);//"111111"
-        paramsMap.put(Constant.tableId, dataTableId + "");
-        paramsMap.put(Constant.pageId, dataPageId + "");
-        paramsString=paramsMap.toString();
+        rlTopBar.setBackgroundColor(getResources().getColor(topBarColor));
+//        diskCheck();
 
     }
-
-
-
-
-
-    /**
-     * 收集整合用户选择的条件方法，提交搜索的时候调用
-     *
-     */
-
-
-
-
-    /**
-     * 删除提示对话框
-     */
-    protected void deleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext,R.style.MyAlertDialogStyle);
-        builder.setMessage("注意:当你点删除时，数据库中也会同步删除");
-
-        builder.setTitle("是否确认删除");
-
-        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                batchDeleteCommit1(delIds);
-            }
-        });
-        builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.create().show();
-    }
-
-    /**
-     * 接收菜单传递过来的时间接口以及tableId和pageId
-     */
-    public void getDataIntent() {
-        Intent intent = getIntent();
-
-        String  volleyUrl = intent.getStringExtra("timeInterface");
-        timeInterface= volleyUrl.replaceFirst("10.252.46.80","182.92.108.162");
-        dataTableId = Integer.parseInt(intent.getStringExtra("tableId"));
-        dataPageId = Integer.parseInt(intent.getStringExtra("phonePageId"));
-        titleName=intent.getStringExtra("titleName");
-    }
-
-    @Override
-    protected void onResume() {
-        isForeground = true;
-        super.onResume();
-        if(!isSearch){requestAllTimeInterface(timeInterface);}
-        //请求时间接口
-        isSearch=false;
-    }
-
-    @Override
-    protected void onPause() {
-        isForeground = false;
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        //unregisterReceiver(mMessageReceiver);
-        super.onDestroy();
-    }
-
-
-
-    /**
-     * 初始化所有控件
-     */
-
-
-    /**
-     * 列表全选操作
-     *
-     * @param view
-     */
-
-    public void selectAll(View view) {
-
-        for (List<Map<String,String>> student: listMapUnion) {
-            student.get(0).put("check","true");
-        }
-        listAdapter.notifyDataSetChanged();
-
-    }
-
-    /**
-     * 勾选学员删除操作
-     *
-     * @param view
-     */
-
-    public void selectOppo(View view) {
-        for (List<Map<String, String>> student : listMapUnion) {
-            if (student.get(0).get("check").equals("true")) {
-                student.get(0).put("check", "false");
-            } else {
-                student.get(0).put("check", "true");
-            }
-        }
-        listAdapter.notifyDataSetChanged();
-    }
-
-
-    @Override
-    public void onLoadingMore() {
-        if (!isLastData) {
-            start+=limit;
-        }
-        Log.e("TAG","onloadingmore");
-        requestListData(time.getDataListUrl().replaceFirst("10.252.46.80","182.92.108.162"));
-    }
-
-    /**
-     * 取消批量选择操作
-     *
-     * @param view
-     */
-
-    public void cancle(View view) {
-        linearLayout.setVisibility(View.GONE);
-        tv_commit.setVisibility(View.GONE);
-        isMulChoice = false;
-        listAdapter.setIsMulChoice(isMulChoice);
-        for (List<Map<String, String>> student : listMapUnion) {
-            student.get(0).put("check", "false");
-        }
-        listAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onGetDataSuccess(String jsonData) {
-        int requestTag = 0;
-        if (requestTag == 3) {
-            batchDeleteReturn(jsonData);
-        }
-    }
-
-
-    /**
-     * 删除成功返回处理
-     */
-    public void batchDeleteReturn(String jsonData) {
-        Log.e("TAG", "删除成功返回数据" + jsonData);
-        tv_commit.setVisibility(View.GONE);
-        tv_cancle.setVisibility(View.GONE);
-        iv_back.setVisibility(View.VISIBLE);
-        isMulChoice = false;
-        refreshListView.setMulChoice(isMulChoice);
-        refreshListView.setLoadingMore(isMulChoice);
-        listAdapter.setIsMulChoice(isMulChoice);
-        for (List<Map<String, String>> student : listMapUnion) {
-            student.get(0).put("check", "false");
-        }
-        listAdapter.notifyDataSetChanged();
-        getProgressDialog().setMessage("删除成功");
-        getProgressDialog().show();
-
-        Toast.makeText(mContext, jsonData, Toast.LENGTH_SHORT).show();
-
-        requestAllTimeInterface(timeInterface);
-    }
-
-    @Override
-    public void onGetDataError() {
-        refreshListView.hideHeaderView();
-        getProgressDialog().dismiss();
-    }
-
-    @Override
-    public void onLoading(long total, long current) {
-
-    }
-
-
     /**
      * 1、顶栏右侧添加学员和返回按钮事件
      * 2、顶栏左侧返回上级页面
      * 3、搜索弹窗重置条件按钮
      * 4、搜索弹窗之搜索按钮
-     *
-     *
-     *   //右上角下拉按钮
-     private RelativeLayout rlTopBar;
-     private PopupWindow toolList;
-     private View toolLayout;
-     private ListView toolListView;
-     private List<Map<String, String>> toolListData;
-     *
-     * @param view
      */
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.addItem:
-                try{
-                    if (toolList != null && toolList.isShowing()) {
-                        toolList.dismiss();
-                    } else {
-                        final View toolLayout = getLayoutInflater().inflate(
-                                R.layout.activity_list_buttonlist, null);
-                        ListView toolListView = (ListView) toolLayout
-                                .findViewById(R.id.buttonList);
 
-                        TextView tv_dismiss=(TextView)toolLayout.findViewById(R.id.tv_dismiss);
-                        tv_dismiss.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                toolList.dismiss();
-                            }
-                        });
 
-                        final SimpleAdapter adapter = new SimpleAdapter(
-                                this,
-                                phoneButtonSetList,
-                                R.layout.activity_list_buttonlist_item,
-                                new String[] { "phoneButtonName" },
-                                new int[] { R.id.listItem });
-                        toolListView.setAdapter(adapter);
+    public void toSearchActivity() {
+        try {
+            Intent intent=new Intent();
+            intent.setClass(ListActivity.this, SearchActivity.class);
+            Bundle  bundle=new Bundle();
+            bundle.putString("searchSet", searchSet);
+            bundle.putString("paramsStr", paramsStr);
+            intent.putExtras(bundle);
+            startActivity(intent);//这里采用startActivityForResult来做跳转，此处的0为一个依据，可以写其他的值，但一定要>=0
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-                        // 点击listview中item的处理
-                        toolListView
-                                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    public void buttonList() {
+        try {
+            if (buttonSet != null && buttonSet.size() > 0) {
 
-                                    @Override
-                                    public void onItemClick(AdapterView<?> arg0,
-                                                            View arg1, int arg2, long arg3) {
-                                            //分类型跳到不同的页面
-                                            int phoneButtonType= (int) phoneButtonSetList.get(arg2).get("phoneButtonType");
-                                            Log.e("TAG","phoneButtonType===>"+phoneButtonType);
-                                            switch (phoneButtonType){
-                                                case 0://添加页面
-                                                            Intent intent = new Intent(ListActivity.this, AddActivity.class);
-                                                            intent.putExtra("phoneButtonAdd", (Serializable) phoneButtonSetList.get(arg2));
-                                                            intent.putExtra("tableId", dataTableId+"");
-                                                         startActivity(intent);
+                if (toolListPop != null && toolListPop.isShowing()) {
+                    toolListPop.dismiss();
+                } else {
+                    final View toolLayout = getLayoutInflater().inflate(
+                            R.layout.activity_list_buttonlist, null);
+                    ListView toolListPopView = (ListView) toolLayout
+                            .findViewById(R.id.buttonList);
+                    TextView tv_dismiss = (TextView) toolLayout.findViewById(R.id.tv_dismiss);
+                    tv_dismiss.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            toolListPop.dismiss();
+                        }
+                    });
+                    final SimpleAdapter adapter = new SimpleAdapter(
+                            this,
+                            buttonSet,
+                            R.layout.activity_list_buttonlist_item,
+                            new String[]{"buttonName"},
+                            new int[]{R.id.listItem});
+                    toolListPopView.setAdapter(adapter);
+                    // 点击listview中item的处理
+                    toolListPopView
+                            .setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                                                    break;
-                                                case 3://批量删除操作
-                                                    deleteButtonTurnUrl=phoneButtonSetList.get(arg2).get("buttonTurnUrl")+"";
-                                                    buttonList.setVisibility(View.GONE);
-                                                    tv_commit.setVisibility(View.VISIBLE);
-                                                    tv_commit.setText("删除");
-                                                    iv_back.setVisibility(View.GONE);
-                                                    tv_cancle.setVisibility(View.VISIBLE);
-                                                    isMulChoice = true;
-                                                    refreshListView.setMulChoice(isMulChoice);
-                                                    refreshListView.setLoadingMore(isMulChoice);
-                                                    listAdapter.setIsMulChoice(isMulChoice);
-                                                    listAdapter.notifyDataSetChanged();
-                                                    break;
-                                            }
-                                            // 隐藏弹出窗口
-                                            if (toolList != null && toolList.isShowing()) {
-                                                toolList.dismiss();
-                                            }
-                                        }
-                                });
-                        // 创建弹出窗口
-                        // 窗口内容为layoutLeft，里面包含一个ListView
-                        // 窗口宽度跟tvLeft一样
-                        toolList = new PopupWindow(toolLayout, ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
+                                @Override
+                                public void onItemClick(AdapterView<?> arg0,
+                                                        View arg1, int arg2, long arg3) {
+                                    //分类型跳到不同的页面
+                                    int buttonType = (int) buttonSet.get(arg2).get("buttonType");
+                                    Map<String, Object> buttonSetItem = buttonSet.get(arg2);
+                                    String buttonSetItemStr = JSON.toJSONString(buttonSetItem);
 
-                        ColorDrawable cd = new ColorDrawable(0b1);
-                        toolList.setBackgroundDrawable(cd);
-                        toolList.setAnimationStyle(R.style.PopupWindowAnimation);
-                        //设置半透明
-                        WindowManager.LayoutParams params=getWindow().getAttributes();
-                        params.alpha=0.7f;
-                        getWindow().setAttributes(params);
-
-                        toolList.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                            @Override
-                            public void onDismiss() {
-                                WindowManager.LayoutParams params=getWindow().getAttributes();
-                                params.alpha=1f;
-                                getWindow().setAttributes(params);
-                            }
-                        });
-                        toolList.update();
-                        toolList.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                        toolList.setTouchable(true); // 设置popupwindow可点击
-                        toolList.setOutsideTouchable(true); // 设置popupwindow外部可点击
-                        toolList.setFocusable(true); // 获取焦点
-                        toolList.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                        toolList.showAtLocation(toolLayout,Gravity.BOTTOM,0,0);
-
-                        // 设置popupwindow的位置（相对tvLeft的位置）
-                        int topBarHeight = rlTopBar.getBottom();
-                        toolList.showAsDropDown(buttonList, 0,
-                                (topBarHeight - buttonList.getHeight()) / 2);
-
-                        toolList.setTouchInterceptor(new View.OnTouchListener() {
-
-                            @Override
-                            public boolean onTouch(View v, MotionEvent event) {
-                                // 如果点击了popupwindow的外部，popupwindow也会消失
-                                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                                    toolList.dismiss();
-                                    return true;
+                                    switch (buttonType) {
+                                        case 0://添加页面
+                                            Intent intent = new Intent(ListActivity.this, AddItemsActivity.class);
+                                            intent.putExtra("buttonSetItemStr", buttonSetItemStr);
+                                            startActivityForResult(intent,5);
+                                            break;
+                                        case 3://批量删除操作
+                                            listAdapter.flag = true;
+                                            listAdapter.notifyDataSetChanged();
+                                            setGone();
+                                            break;
+                                    }
+                                    // 隐藏弹出窗口
+                                    if (toolListPop != null && toolListPop.isShowing()) {
+                                        toolListPop.dismiss();
+                                    }
                                 }
-                                return false;
+                            });
+                    // 创建弹出窗口
+                    // 窗口内容为layoutLeft，里面包含一个ListView
+                    // 窗口宽度跟tvLeft一样
+                    toolListPop = new PopupWindow(toolLayout, ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    ColorDrawable cd = new ColorDrawable(0b1);
+                    toolListPop.setBackgroundDrawable(cd);
+                    toolListPop.setAnimationStyle(R.style.PopupWindowAnimation);
+                    //设置半透明
+                    WindowManager.LayoutParams params = getWindow().getAttributes();
+                    params.alpha = 0.7f;
+                    getWindow().setAttributes(params);
+
+                    toolListPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            WindowManager.LayoutParams params = getWindow().getAttributes();
+                            params.alpha = 1f;
+                            getWindow().setAttributes(params);
+                        }
+                    });
+                    toolListPop.update();
+                    toolListPop.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                    toolListPop.setTouchable(true); // 设置popupwindow可点击
+                    toolListPop.setOutsideTouchable(true); // 设置popupwindow外部可点击
+                    toolListPop.setFocusable(true); // 获取焦点
+                    toolListPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                    toolListPop.showAtLocation(toolLayout, Gravity.BOTTOM, 0, 0);
+
+                    // 设置popupwindow的位置（相对tvLeft的位置）
+                    int topBarHeight = rlTopBar.getBottom();
+                    toolListPop.showAsDropDown(toolListPopView, 0,
+                            (topBarHeight - toolListPopView.getHeight()) / 2);
+
+                    toolListPop.setTouchInterceptor(new View.OnTouchListener() {
+
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // 如果点击了popupwindow的外部，popupwindow也会消失
+                            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                                toolListPop.dismiss();
+                                return true;
                             }
-                        });
-
-                    }}catch (Exception e){
-                    Toast.makeText(ListActivity.this, "按钮数据未下载，检查网络！", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.iv_back:
-                finish();
-                break;
-            case R.id.searchButton:
-                try{Intent intent = new Intent(ListActivity.this, SearchActivity.class);
-                intent.putExtra("searchSetUrl", searchSetUrl);
-                intent.putExtra("searchParameter", JSON.toJSONString(paramsMap));
-                startActivityForResult(intent,REQUEST_CODE);}
-                catch (Exception e){
+                            return false;
+                        }
+                    });
 
                 }
-                break;
-
-
-            default:
-                break;
-        }
-    }
-    final int RESULT_CODE=101;
-    final int REQUEST_CODE=1;
-    /**
-     * 下拉刷新方法
-     */
-    @Override
-    public void onDownPullRefresh() {
-        start=0;
-        isLastData=false;
-        Log.e("TAG","开始下拉刷新");
-        allTimeDataAnalysisDisk();//先获取本地的时间接口数据
-        requestAllTimeInterface(timeInterface);//请求网络的时间接口
-    }
-
-
-    /**
-     *
-     * 1、获取时间接口数据,如果没有网络或者其他情况则读取本地
-     *
-     * @param volleyUrl
-     */
-
-    public void requestAllTimeInterface(final String volleyUrl) {
-        Log.e("TAG", "tableId" + dataTableId);
-        Log.e("TAG", "pageId" + dataPageId);
-        Log.e("TAG", "userName" + Constant.USERNAME_ALL);
-        Log.e("TAG", "passWord" + Constant.PASSWORD_ALL);
-        Log.e("TAG", "获取时间接口数据地址" + volleyUrl);
-        String volleyUrl1= volleyUrl.replaceFirst("10.252.46.80","182.92.108.162");
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl1,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {//磁盘存储
-                        DLCH.put(volleyUrl+paramsString, jsonData);
-                        Log.e("TAG", "获取时间总口" + jsonData);
-                        timeData=jsonData;
-                        allTimeDataAnalysis(jsonData);//解析并转至字段数据请求
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {//失败后读取本地
-                VolleySingleton.onErrorResponseMessege(ListActivity.this, volleyError);
-                String diskData = DLCH.getAsString(volleyUrl+paramsString);
-                timeData=diskData;
-                allTimeDataAnalysis(diskData);
+            } else {
+                Toast.makeText(this, "请联系管理员分配权限", Toast.LENGTH_SHORT).show();
             }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = paramsMap;
-                return map;
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
-    }
-
-    /**
-     * 2、处理时间接口数据,方法 下一步请求字段数据
-     *
-     */
-
-    public void allTimeDataAnalysisDisk() {
-        String diskData = DLCH.getAsString(timeInterface+paramsString);
-        Log.e("TAG", "列表页：本地获取解析时间接口数据" + diskData);
-        if (diskData != null) {
-            Time timeDisk = JSON.parseObject(diskData, Time.class);
-            fieldTime= timeDisk.getFieldTime();
-            timeUrlAField = timeDisk.getFieldUrl();
-            buttonTime= timeDisk.getButtonTime();
-            timeUrlAButton = timeDisk.getButtonUrl();
-            dataTime= timeDisk.getDataTime();
-            timeUrlAData = timeDisk.getDataListUrl();
-            operaButtonTime= timeDisk.getOperaButtonTime();
-            timeUrlAOperaButton = timeDisk.getOperaButtonUrl();
+        } catch (Exception e) {
+            Toast.makeText(ListActivity.this, "无按钮数据", Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * 判断本地时间是否与服务器时间一致
-     * @param jsonData
-     */
-    public void allTimeDataAnalysis(String jsonData) {
-        //1、方法参数获取网络时间接口数据jsonData，并解析四个时间
-        Log.e("TAG", "列表页：网络获取解析时间接口数据" + jsonData);
-        if (jsonData != null) {
-            time = JSON.parseObject(jsonData, Time.class);
-            //判断本地字段
-            if(fieldTime!=time.getFieldTime()){
-                requestFields1(time.getFieldUrl());
-            }else{//否则直接读取本地数据
-                String diskData1 = DLCH.getAsString(time.getFieldUrl()+paramsString);
-                if(diskData1!=null){
-                    Log.e("TAG", "field直接进入解析");
-                    fieldsAnalysis(diskData1);
-                }else {
-                    requestFields1(time.getFieldUrl());
-                }
-            }
-            //判断本地页面级按钮
-            if(buttonTime!=time.getButtonTime()){
-                requestButtonSet(time.getButtonUrl());
-            }else{//否则直接读取本地数据
-                String diskData2 = DLCH.getAsString(time.getButtonUrl()+paramsString);
-                if(diskData2!=null){
-                    Log.e("TAG", "直接读取本地页面按钮数据");
-                    buttonSetAnalysis(diskData2);
-                }else {
-                    requestButtonSet(time.getButtonUrl());
-                }
-            }
-            //判断本地列表数据
-            if(operaButtonTime!=time.getDataTime()){
-                requestListData(time.getDataListUrl());
-            }else{//否则直接读取本地数据
-                String diskData3 = DLCH.getAsString(time.getDataListUrl()+paramsString);
-                if(diskData3!=null){
-                    listDataAnalysis(diskData3);
-                }else {//如果本地数据也为空，则仍从网络下载
-                    requestListData(time.getDataListUrl());
-                }
-            }
+    //顶部展开popwindow 选择子菜单切换
+    public void childChose() {
+        Log.e("TAG", "展开子菜单popWindow");
+        try {
+            if (childList.size() > 0) {
 
-            //判断按钮数据
-            if(dataTime!=time.getOperaButtonTime()){
-                requestOperaButton(time.getOperaButtonUrl());
-            }else{//否则直接读取本地数据
-                String diskData4 = DLCH.getAsString(time.getOperaButtonUrl()+paramsString);
-                if(diskData4!=null){
-                    //listDataAnalysis(diskData4);解析按钮数据
-                }else {//如果本地数据也为空，则仍从网络下载
-                    requestOperaButton(time.getOperaButtonUrl());
+                if (childListPop != null && childListPop.isShowing()) {
+                    childListPop.dismiss();
+                } else {
+
+
+
+                    final View toolLayout = getLayoutInflater().inflate(
+                            R.layout.activity_list_childlist, null);
+                    ListView childListPopView = (ListView) toolLayout
+                            .findViewById(R.id.child_menu_List);
+
+                    final SimpleAdapter adapter = new SimpleAdapter(
+                            this,
+                            childList,
+                            R.layout.activity_list_childlist_item,
+                            new String[]{"image","menuName"},
+                            new int[]{R.id.childListItemImg,R.id.childListItemName});
+                    childListPopView.setAdapter(adapter);
+                    // 点击listview中item的处理
+                    childListPopView
+                            .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> arg0,
+                                                        View arg1, int arg2, long arg3) {
+                                    //
+                                    Map<String, Object> childItem=childList.get(arg2);
+
+                                        tableId = childList.get(arg2).get("tableId") + "";
+                                        pageId = childList.get(arg2).get("pageId") + "";
+                                        titleName = childList.get(arg2).get("menuName") + "";
+                                    //重新设置顶部名称
+                                        tv_title.setText(titleName);
+                                //重设参数值
+                                    paramsMap.put(Constant.tableId, tableId);
+                                    paramsMap.put(Constant.pageId, pageId);
+                                    paramsStr = JSON.toJSONString(paramsMap);
+                                    Constant.paramsMapSearch=paramsMap;
+                                    Constant.mainTableIdValue=tableId;
+                                    Constant.mainPageIdValue=pageId;
+
+                                    //重新刷新页面并装填数据
+
+                                    refreshListView();
+
+                                    // 隐藏弹出窗口
+                                    if (childListPop != null && childListPop.isShowing()) {
+                                        childListPop.dismiss();
+                                    }
+                                }
+                            });
+                    // 创建弹出窗口
+                    // 窗口内容为layoutLeft，里面包含一个ListView
+                    // 窗口宽度跟tvLeft一样
+                    childListPop = new PopupWindow(toolLayout, ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    //设置颜色
+                    ColorDrawable cd = new ColorDrawable(0b1);
+                    childListPop.setBackgroundDrawable(cd);
+                    //设置半透明
+                    WindowManager.LayoutParams params = getWindow().getAttributes();
+                    params.alpha = 0.7f;
+                    getWindow().setAttributes(params);
+
+                    childListPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            WindowManager.LayoutParams params = getWindow().getAttributes();
+                            params.alpha = 1f;
+                            getWindow().setAttributes(params);
+                        }
+                    });
+
+//                    childListPop.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                    childListPop.setTouchable(true); // 设置popupwindow可点击
+                    childListPop.setOutsideTouchable(true); // 设置popupwindow外部可点击
+                    childListPop.setFocusable(true); // 获取焦点
+//                    childListPop.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+                    // 设置popupwindow的位置（位于顶栏下方）
+
+                    childListPop.update();
+
+                    toolLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                    int popupWidth = toolLayout.getMeasuredWidth();
+
+                    Log.e("TAG","popupWidth "+popupWidth);
+
+
+                    //获取两者的宽度
+//                    int childListPopWith=Utils.getViewHeight(toolLayout, false);
+
+                    int rlTopBarWith=rlTopBar.getWidth();
+                    Log.e("TAG","rlTopBarWith "+rlTopBarWith);
+
+
+                    int delta=(rlTopBarWith-popupWidth)/8;
+                    Log.e("TAG","X偏移量 "+delta);
+                    childListPop.showAsDropDown(rlTopBar,delta,0);
+
+                    childListPop.setTouchInterceptor(new View.OnTouchListener() {
+
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // 如果点击了popupwindow的外部，popupwindow也会消失
+                            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                                childListPop.dismiss();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+
                 }
             }
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+    }
+    public void setGone() {
+        search_title.setVisibility(View.GONE);
+        button_set_view.setVisibility(View.GONE);
+        backMenu.setVisibility(View.GONE);
 
-            searchSetUrl=time.getSearchSetUrl();
-            operaButtonTime=time.getOperaButtonTime();
-            timeUrlAOperaButton = time.getOperaButtonUrl();
-            if (!TextUtils.isEmpty(searchSetUrl)){
-                //请求筛选条件
-                //requestScreenData();
-            }
-        }else{
-            try{requestFields1(timeUrlAField);
-            requestButtonSet(timeUrlAButton);
-            requestListData(timeUrlAData);}
-            catch (Exception e){
+        deleteCommit.setVisibility(View.VISIBLE);
+        backList.setVisibility(View.VISIBLE);
 
-            }
+    }
+
+    public void setVisible() {
+        search_title.setVisibility(View.VISIBLE);
+        button_set_view.setVisibility(View.VISIBLE);
+        backMenu.setVisibility(View.VISIBLE);
+        deleteCommit.setVisibility(View.GONE);
+        backList.setVisibility(View.GONE);
+        if (listAdapter!=null) {
+            listAdapter.flag = false;
+        }
+
+        pullDownToRefresh();
+    }
+
+
+    public void diskCheck() {
+
+        String data1 = diskLruCache.getAsString(Constant.sysUrl + Constant.requestListSet + Constant.USERNAME_ALL + paramsStr);
+        if (data1 != null) {
+            dataTime = Utils.getAlterTime(data1);
         }
     }
 
+
     /**
-     *
      * 3、获取字段接口数据,如果没有网络或者其他情况则读取本地
-     * @param volleyUrl
      */
+    @SuppressWarnings("unchecked")
+    public void requestSet() {
 
-    public void requestFields1(final String volleyUrl) {
-        String volleyUrl1= volleyUrl.replaceFirst("10.252.46.80","182.92.108.162");
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl1,
+        final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
+        Log.e("TAG", "列表请求地址："+volleyUrl);
+
+        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        DLCH.put(volleyUrl+paramsString, jsonData);
-                        Log.e("TAG", "获取字段数据" + jsonData);
-                        fieldsAnalysis(jsonData);
+                        Log.e("TAG", "获取set" + jsonData);
+
+                        setStore(jsonData);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 VolleySingleton.onErrorResponseMessege(ListActivity.this, volleyError);
+                Log.e("TAG", "获取本地");
+                String data1 = diskLruCache.getAsString(Constant.sysUrl + Constant.requestListSet + Constant.USERNAME_ALL + paramsStr);
+                if (data1 != null) {
+                    try {
+                        setAndData = (List<List<Map<String, String>>>) JSONArray.parse(data1);
+                        Log.e("TAG", "开始适配器启动");
+                        toAdapter();
+                        Log.e("TAG", "启动完成");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    stopAnim();
+                }
             }
         }
         ) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = paramsMap;
-                return map;
+                paramsMap.put("start", start + "");
+                if (!Constant.stu_index.equals("")) {
+                    paramsMap.put("ctType",Constant.stu_index);
+                    paramsMap.put("SourceDataId",Constant.stu_homeSetId);
+                    paramsMap.put("pageType","1");
+                    Log.e("TAG", "走了学员端请求");
+                }
+
+                paramsMap.put("limit", limit + "");
+                Log.e("TAG", "列表请求参数："+paramsMap.toString());
+                return paramsMap;
+            }
+
+            //重写getHeaders 默认的key为cookie，value则为localCookie
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("cookie", Constant.localCookie);
+                    //Log.d("调试", "headers----------------" + headers);
+                    return headers;
+                } else {
+                    return super.getHeaders();
+                }
             }
         };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
+        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                loginInterfaceData);
     }
+
     /**
      * 4、处理字段接口数据,方法 下一步请求列表数据
      */
-    public void fieldsAnalysis(String jsonData) {
-        Log.e("TAG", "解析字段数据" + jsonData);
-        phoneFieldSetMap=JSON.parseObject(jsonData, Map.class);//获取配置数据
+    @SuppressWarnings("unchecked")
+    public void setStore(String jsonData) {
+        Log.e("TAG", "解析set" + jsonData);
+        try {
+            Map<String, Object> setMap = JSON.parseObject(jsonData,
+                    new TypeReference<Map<String, Object>>() {
+                    });
+            //获取fieldSet
+            Map<String, Object> pageSet = (Map<String, Object>) setMap.get("pageSet");
+////时间戳
+//            if (setMap.get("alterTime") != null) {
+//                dataTime = Utils.ObjectTOLong(setMap.get("alterTime"));
+//                //Constant.dataTime= (long) pageSet.get("alterTime");
+//                Log.e("TAG", "获取Constant.dataTime" + dataTime);
+//            }
+//
+////条目数
+//            if (setMap.get("dataCount") != null) {
+//                int dataCount = Integer.valueOf(String.valueOf(setMap.get("dataCount")));
+//                Log.e("TAG", "获取dataCount" + dataCount);
+//            }
+//            }
+//搜索数据
+            //如果有搜索数据但是仅仅是方括号没内容则隐藏搜索框
+            if (pageSet.get("serachSet") != null) {
+                try {
+                    List<Map<String, Object>> searchSetList = (List<Map<String, Object>>) pageSet.get("serachSet");
+                    searchSet = JSONArray.toJSONString(searchSetList);
+                    //暂时设置搜索按钮为隐藏，以后做好了再展现
+//                    if (searchSetList.size()==0) {
+                        search_title.setVisibility(View.GONE);
+//                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.e("TAG", "获取serachSet" + searchSet);
+            }else{//如果彻底无搜索字段则隐藏搜索框
+                search_title.setVisibility(View.GONE);
+            }
+
+//行级按钮数据 for 下个页面
+            if (pageSet.get("operaButtonSet") != null) {
+                try {
+
+                    List<Map<String, Object>> operaButtonSetList = (List<Map<String, Object>>) pageSet.get("operaButtonSet");
+                    operaButtonSet = JSONArray.toJSONString(operaButtonSetList);
+                    Log.e("TAG", "获取operaButtonSet" + operaButtonSet);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+//获得子表格：childTabs
+
+            String childTabss= null;
+
+            if (pageSet.get("childTabs")!=null) {
+
+                childTabss = String.valueOf(pageSet.get("childTabs"));
+                childTabs= JSON.parseObject(childTabss,
+                        new TypeReference<List<Map<String, Object>>>() {
+                        });
+            }
+
+
+
+//数据左侧配置数据
+
+            fieldSet = (List<Map<String, Object>>) pageSet.get("fieldSet");
+            Log.e("TAG", "获取fieldSet" + fieldSet.toString());
+            if (pageSet.get("buttonSet") != null) {
+                buttonSet = (List<Map<String, Object>>) pageSet.get("buttonSet");//初始化下拉按钮数据
+                Log.e("TAG", "获取buttonSet" + buttonSet);
+                if (buttonSet.size()>0) {
+                    button_set_view.setVisibility(View.VISIBLE);
+                }
+            }
+//获取dataList
+
+            dataList = (List<Map<String, Object>>) setMap.get("dataList");
+            Log.e("TAG", "获取dataList" + dataList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (dataList != null && dataList.size() > 0) {
+                unionAnalysis(dataList);
+            } else {
+                String data1 = diskLruCache.getAsString(Constant.sysUrl + Constant.requestListSet + Constant.USERNAME_ALL + paramsStr);
+                if (data1 != null) {
+
+                    setAndData = (List<List<Map<String, String>>>) JSONArray.parse(data1);
+                    toAdapter();
+                } else {
+                    stopAnim();
+                    Toast.makeText(ListActivity.this, "列表无数据",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     *
      * 5、获取列表接口数据,如果没有网络或者其他情况则读取本地
-     * @param volleyUrl
      */
 
-    public void requestListData(final String volleyUrl) {
-        String volleyUrl1= volleyUrl.replaceFirst("10.252.46.80","182.92.108.162");
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl1,
+    public void requestData() {
+        final String volleyUrl = Constant.sysUrl + Constant.requestListData;
+
+
+        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        if (start==0){
-                            DLCH.put(volleyUrl+paramsString, jsonData);
-                        }
-                        Log.e("TAG", "获取列表数据" + jsonData);
-                        listDataAnalysis(jsonData);
+                        Log.e("TAG", "单独获取的获取列表数据" + jsonData);
+                        dataStore(jsonData);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                refreshListView.hideFooterView();
+                //refreshListView.hideFooterView();
                 VolleySingleton.onErrorResponseMessege(ListActivity.this, volleyError);
+
             }
         }
         ) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> map = paramsMap;
-                map.put("limit",limit+"");
-                map.put("start",start+"");
-                return map;
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
-    }
-
-    /**
-     * 6、处理列表接口数据,方法 下一步请求页面级权限数据
-     * @param jsonData
-     */
-    public void listDataAnalysis(String jsonData) {
-        refreshListView.hideFooterView();
-        Log.e("TAG", "解析列表数据" + jsonData);
-        Log.e("TAG", "start=====>" + start);
-        phoneDataListMap=JSON.parseObject(jsonData, Map.class);//获取列表数据
-        List<List<Map<String,String>>> union=unionVision();
-        if (union!=null&&union.size()==0) {
-            isLastData=true;
-        }
-        if (start==0) {
-            if (listMapUnion!=null){
-                listMapUnion.clear();
-                listMapUnion.addAll(union);
-            }else {
-                listMapUnion=union;
-            }
-        } else {
-            listMapUnion.addAll(union);
-        }
-        Log.e("TAG", "listMapUnion=====>" + listMapUnion);
-        refreshListView.hideHeaderView();
-        if (listMapUnion != null&& listAdapter ==null) {
-            listAdapter = new StudentAdapter(this, R.layout.activity_list_item, listMapUnion);
-            refreshListView.setAdapter(listAdapter);
-        }else if(listMapUnion!=null){
-            listAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     *
-     * 联合解析配置数据和data数据
-     * @return
-     */
-    public List<List<Map<String,String>>> unionVision() {
-
-        if(phoneFieldSetMap!=null&&phoneDataListMap!=null){
-            //将配置表打包成ListMap
-            Log.e("TAG","配置表源数据"+phoneFieldSetMap.toString());
-            List<Map<String, Object>> mapSet = (List<Map<String, Object>>) phoneFieldSetMap.get("phoneFieldSet");
-            Log.e("TAG","配置表"+mapSet.toString());
-            //将数据表打包成ListMap
-            List<Map<String, Object>> mapData = (List<Map<String, Object>>) phoneDataListMap.get("rows");
-            List<List<Map<String,String>>> union=new ArrayList<>();
-
-            for (int j = 0; j < mapData.size(); j++) {//列表元素个数决定循环次数
-
-                List<Map<String, String>> listItem=new ArrayList<>();
-                Map<String, String> mapCheck=new HashMap<>();
-                int stu_id=0;
-                listItem.add(mapCheck);
-                for (int i = 0; i < mapSet.size(); i++) {//决定元素属性个数
-                    Map<String, String> mapItem=new HashMap<>();
-                    String fieldCnName = (String) mapSet.get(i).get("fieldCnName");
-                    String fieldAliasName = (String) mapSet.get(i).get("fieldAliasName");
-                    mapItem.put("fieldCnName",fieldCnName);
-                    int fieldRole = (int) mapSet.get(i).get("fieldRole");
-                    String fieldCnName2;
-                    stu_id = (int) mapData.get(j).get("T_"+mapSet.get(i).get("tableId")+"_0");
-                    if(fieldRole == 16){
-                        if(mapData.get(j).get("DIC_"+fieldAliasName)!=null){
-                            fieldCnName2 = ""+mapData.get(j).get("DIC_"+fieldAliasName);}else{
-                            fieldCnName2="";
-                        }
-                    }else if(fieldRole == 14){
-                        if(mapData.get(j).get(fieldAliasName)!=null&&!mapData.get(j).get(fieldAliasName).equals("")){
-                            String dateString=""+ mapData.get(j).get(fieldAliasName);
-                            String[] dateData=dateString.split(" ");
-                            if(dateData[1].equals("00:00:00")){
-                                fieldCnName2 = ""+ dateData[0];}else{
-                                fieldCnName2 = ""+mapData.get(j).get(fieldAliasName);
-                            }
-                        }else{
-                            fieldCnName2="";
-                        }
-                    }else{
-                        if(mapData.get(j).get(fieldAliasName)!=null){
-                            fieldCnName2 = ""+ mapData.get(j).get(fieldAliasName);}else{
-                            fieldCnName2="";
-                        }
-                    }
-                    mapItem.put("fieldCnName2",fieldCnName2);
-
-                    listItem.add(mapItem);
+                map.put("limit", limit + "");
+                map.put("start", start + "");
+                if (!Constant.stu_index.equals("")) {
+                    map.put("index",Constant.stu_index);
+                    map.put("homeSetId",Constant.stu_homeSetId);
                 }
-                mapCheck.put("check", "false");
-                mapCheck.put("stu_id",stu_id + "");
-                union.add(listItem);
-            }
-            Log.e("TAG","列表页面打印Listlist"+union.toString());
-            return union;
-        }
-        return null;
-    }
-
-    /**
-     * 7、获取页面级权限接口数据,如果没有网络或者其他情况则读取本地
-     * @param volleyUrl
-     */
-
-    public void requestButtonSet(final String volleyUrl) {
-        String volleyUrl1= volleyUrl.replaceFirst("10.252.46.80","182.92.108.162");
-        Log.e("TAG", "页面级按钮权限数据网址" + volleyUrl);
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl1,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        DLCH.put(volleyUrl+paramsString, jsonData);
-                        Log.e("TAG", "获取页面级按钮权限数据" + jsonData);
-                        buttonSetAnalysis(jsonData);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {//读取本地后也转至处理
-                VolleySingleton.onErrorResponseMessege(ListActivity.this, volleyError);
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map =paramsMap;
+                map.put(Constant.timeName, dataTime + "");
                 return map;
             }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
-    }
 
-
-    /**
-     * 8、处理页面级权限接口数据,方法
-     * @param jsonData
-     */
-
-    public void buttonSetAnalysis(String jsonData) {
-
-        assert jsonData!=null;
-        Map buttonSetMap = JSON.parseObject(jsonData, Map.class);
-        Log.e("TAG", "解析页面级按钮权限数据" + jsonData);
-        getProgressDialog().dismiss();
-        //解析listmap按钮数据
-        phoneButtonSetList = (List<Map<String, Object>>) buttonSetMap.get("phoneButtonSet");
-        //匹配按钮
-
-
-
-
-
-
-
-    }
-
-    /**
-     *
-     * 批量；批量删除操作
-     * @param delIds
-     */
-
-    public void batchDeleteCommit1(String delIds) {
-        final String delIdList=delIds;
-        getProgressDialog().setMessage("正在删除中...");
-        getProgressDialog().show();
-        Log.e("TAG", "删除数据提交地址" + deleteButtonTurnUrl);
-        String volleyUrl1= deleteButtonTurnUrl.replaceFirst("10.252.46.80","182.92.108.162");
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST,volleyUrl1,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "删除成功返回数据" + jsonData);
-                        batchDeleteReturn(jsonData);
-                    }
-                }, new Response.ErrorListener() {
+            //重写getHeaders 默认的key为cookie，value则为localCookie
             @Override
-            public void onErrorResponse(VolleyError volleyError) {//读取本地后也转至处理
-                VolleySingleton.onErrorResponseMessege(ListActivity.this, volleyError);
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("cookie", Constant.localCookie);
+                    Log.d("调试", "headers----------------" + headers);
+                    return headers;
+                } else {
+                    return super.getHeaders();
+                }
+            }
+        };
+        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                loginInterfaceData);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void dataStore(String jsonData) {
+
+        try {
+            Map<String, Object> dataMap = JSON.parseObject(jsonData,
+                    new TypeReference<Map<String, Object>>() {
+                    });
+
+            if (dataMap.get("rows") == null) {
+
+                Toast.makeText(ListActivity.this, "获取失败",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e("TAG", "下拉刷新" + dataMap);
+                List<Map<String, Object>> dataList1 =
+                        (List<Map<String, Object>>) dataMap.get("rows");
+                if (dataList1.size() > 0) {
+                    unionAnalysis(dataList1);
+
+                } else {
+                    Toast.makeText(ListActivity.this, "无更多数据",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unionAnalysis(List<Map<String, Object>> dataListMap) {
+        Log.e("TAG", "进入联合解析" + dataListMap.toString());
+        int flag = 0;
+        if (setAndData.size() != 0) {
+            flag = 1;
+        }
+        if (fieldSet != null && dataListMap.size() > 0 && fieldSet.size() > 0) {
+            for (int i = 0; i < dataListMap.size(); i++) {
+                List<Map<String, String>> itemNum = new ArrayList<>();
+                for (int j = 0; j < fieldSet.size(); j++) {
+
+                    Map<String, String> property = new HashMap<>();
+                    if (j == 0) {
+                        property.put("isCheck", "false");
+
+                        String mainId = "T_" + tableId + "_0";
+                        if (dataListMap.get(i).get(mainId) != null) {
+                            property.put("mainId", String.valueOf(dataListMap.get(i).get(mainId)));
+
+                        } else {
+                            property.put("mainId", "");
+
+                        }
+                        property.put("tableId", tableId);
+                        property.put("allItemData", dataListMap.get(i).toString());
+
+                    }
+                    property.put("fieldCnName", String.valueOf(fieldSet.get(j).get("fieldCnName")));
+                    String fieldAliasName = String.valueOf(fieldSet.get(j).get("fieldAliasName"));
+
+                    String fieldCnName2 = "";
+                    if (dataListMap.get(i).get(fieldAliasName) != null) {
+                        fieldCnName2 = String.valueOf(dataListMap.get(i).get(fieldAliasName));
+                    }
+                    property.put("fieldCnName2", fieldCnName2);
+                    itemNum.add(property);
+                }
+                setAndData.add(itemNum);
+            }
+            Log.e("TAG", "获取的增加的setAndData" + setAndData.toString());
+
+            diskLruCache.put(Constant.sysUrl + Constant.requestListSet + Constant.USERNAME_ALL + paramsStr, JSON.toJSONString(setAndData));
+            //放到adapter中展示
+            if (flag == 0) {
+                toAdapter();
+            }else{
+                Log.e("TAG", "提醒适配器更新数据1");
+                listAdapter.notifyDataSetChanged();
+                Log.e("TAG", "提醒适配器更新数据2");
+                refreshListView.onRefreshComplete();
+                Log.e("TAG", "提醒适配器更新数据3");
+            }
+
+        } else {
+            Toast.makeText(this, "列表中无数据", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void toAdapter() {
+        Log.e("TAG", "准备进入适配器：setAndData " + setAndData.toString());
+        Log.e("TAG", "获得子表格：childTabs " + childTabs.toString());
+        listAdapter = new ListAdapter(this, R.layout.activity_list_item, setAndData,childTabs);
+        refreshListView.setAdapter(listAdapter);
+        stopAnim();
+    }
+
+    //适配方法
+
+
+    /**
+     * 下拉刷新
+     */
+    private void pullDownToRefresh() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                refreshListView();
+            }
+        }).start();
+    }
+
+    /**
+     * 上拉加载
+     */
+    private void pullUpToRefresh() {
+
+                if (null != Utils.getActiveNetwork(ListActivity.this)) {
+                    try {
+                        Thread.sleep(1000);
+                        start += limit;
+                        requestData();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+        mHandler.sendEmptyMessage(0);
+
+
+    }
+
+    /**
+     * 跳转至子菜单列表
+     */
+    public void toItem(List<Map<String, String>> itemData) {
+
+        try {
+            String childData = JSONArray.toJSONString(itemData);
+            Intent intent = new Intent();
+            intent.setClass(this, InfoActivity.class);
+            intent.putExtra("childData", childData);
+            intent.putExtra("tableId", tableId);
+            intent.putExtra("operaButtonSet", operaButtonSet);
+            Log.e("TAG", "operaButtonSet"+operaButtonSet);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//刷新主列表通用方法
+
+    public void refreshListView(){
+        if (null != Utils.getActiveNetwork(ListActivity.this)) {
+            try {
+
+                if (setAndData != null) {
+                    setAndData.clear();
+                    dataTime = -1;
+                    start=0;
+                    Log.e("TAG", "clear成功");
+
+                } else {
+
+                    Log.e("TAG", "没有clear功");
+                }
+                dataTime = 0;
+                try {
+                    requestSet();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map =paramsMap;
-                map.put("delIds", delIdList+"");
-                map.put("buttonType", "3");
-                return map;
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
+        mHandler.sendEmptyMessage(0);
     }
+
+//    @Override
+//    protected void onResume() {
+//
+//        pullDownToRefresh();
+//        super.onResume();
+//    }
+
     @Override
-    public void onDismiss() {
-
+    protected void onRestart() {
+        listAdapter.notifyDataSetChanged();
+        super.onRestart();
     }
 
-    /**
-     * 请求按钮数据
-     * @param jsonData
-     */
-
-    public void requestOperaButton(String jsonData) {//与列表请求重复，传过来就可以了
-        final String  volleyUrl1=jsonData.replaceFirst("10.252.46.80","182.92.108.162");
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl1,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        DLCH.put(volleyUrl1+paramsString, jsonData);
-                        Log.e("TAG", "button数据" + jsonData);
-                        operaButtonData=jsonData;
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {//读取本地后也转至处理
-                VolleySingleton.onErrorResponseMessege(ListActivity.this, volleyError);
-                String diskData = DLCH.getAsString(volleyUrl1+paramsString);
-                operaButtonData=diskData;
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = paramsMap;
-                return map;
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
+    void startAnim() {
+        findViewById(R.id.avloadingIndicatorViewLayoutList).setVisibility(View.VISIBLE);
     }
 
-   private boolean isSearch;
-    /**
-     * 收到搜索activity返回的信息
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==REQUEST_CODE) {
-            if(resultCode==RESULT_CODE) {
-                //result即为搜索结果
-                String result=data.getStringExtra("second");
-                isSearch=data.getBooleanExtra("isSearch",false);
-                listMapUnion.clear();
-                listDataAnalysis(result);
-
-            }
-        }
-
-
-
-
-
-
-        super.onActivityResult(requestCode, resultCode, data);
+    void stopAnim() {
+        findViewById(R.id.avloadingIndicatorViewLayoutList).setVisibility(View.GONE);
     }
 }

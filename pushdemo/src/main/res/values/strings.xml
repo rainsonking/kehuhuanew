@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">推送Demo</string>
+    <string name="error_alias_empty">alias不能为空</string>
+    <string name="error_tag_empty">tag不能为空</string>
+    <string name="error_tag_gs_empty">格式不对</string>
+    <string name="loading">加载中...</string>
+</resources>

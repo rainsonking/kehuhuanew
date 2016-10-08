@@ -1,71 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_list_item_background"
-    android:orientation="vertical"
-    android:padding="15dp"
+    android:paddingTop="15dp"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:paddingBottom="20dp"
     >
 
 
-
+    <CheckBox
+        android:id="@+id/checkbox_operate_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="6dp"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="7dp"
+        android:layout_toEndOf="@+id/checkbox_operate_data"
         >
+        <RelativeLayout
+            android:id="@+id/title_name"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            >
 
-        <TextView
-            android:layout_width="3dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="14dp"
-            android:layout_marginTop="14dp"
-            android:background="@color/blue" />
+            <TextView
+                android:id="@+id/list_item_vertical_line"
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="14dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/blue" />
 
-        <TextView
-            android:id="@+id/stu_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:layout_marginStart="15dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:text="赵小雪"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
-        <ImageView
-            android:id="@+id/iv_nextpage"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/info_go_item"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="center_vertical"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <CheckBox
-            android:id="@+id/cb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:clickable="false"
-            android:focusable="false"
-            android:button="@null"
-            android:background="@drawable/stu_list_checkbox"
-            android:focusableInTouchMode="false"
-            android:visibility="gone"
-            />
+            <TextView
+                android:id="@+id/stu_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="8dp"
+                android:text="赵小雪"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/iv_nextpage"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:src="@mipmap/basics_into"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center_vertical"/>
+        </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/list_item_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_below="@+id/title_name"
             >
 
             <LinearLayout
@@ -78,14 +83,17 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="手机号"/>
+                    android:textSize="17sp"
+                    android:textColor="@color/list_item_left"
+                    android:visibility="gone"/>
                 <TextView
                     android:id="@+id/right1"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="13303051213"
-                    android:textColor="@color/black"/>
+                    android:textSize="18sp"
+                    android:textColor="@color/list_item_right"
+                    android:visibility="gone"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -97,14 +105,17 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="手机号"/>
+                    android:textSize="17sp"
+                    android:textColor="@color/list_item_left"
+                    android:visibility="gone"/>
                 <TextView
                     android:id="@+id/right2"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="13303051213"
-                    android:textColor="@color/black"/>
+                    android:textSize="18sp"
+                    android:textColor="@color/list_item_right"
+                    android:visibility="gone"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -116,14 +127,17 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="手机号"/>
+                    android:textSize="17sp"
+                    android:textColor="@color/list_item_left"
+                    android:visibility="gone"/>
                 <TextView
                     android:id="@+id/right3"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="13303051213"
-                    android:textColor="@color/black"/>
+                    android:textSize="18sp"
+                    android:textColor="@color/list_item_right"
+                    android:visibility="gone"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,21 +149,93 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="手机号"/>
+                    android:textSize="17sp"
+                    android:textColor="@color/list_item_left"
+                    android:visibility="gone"/>
                 <TextView
                     android:id="@+id/right4"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="13303051213"
-                    android:textColor="@color/black"/>
+                    android:textSize="18sp"
+                    android:textColor="@color/list_item_right"
+                    android:visibility="gone"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/left5"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:textSize="17sp"
+                    android:textColor="@color/list_item_left"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/right5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/list_item_right"
+                    android:visibility="gone"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/left6"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:textSize="17sp"
+                    android:textColor="@color/list_item_left"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/right6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/list_item_right"
+                    android:visibility="gone"/>
             </LinearLayout>
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/click_open"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_below="@+id/list_item_content"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/click_open_btn"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:text="查看相关列表"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:paddingTop="3dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/shape_text_border"/>
+
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
 
-</LinearLayout>
+
+</RelativeLayout>
 
 

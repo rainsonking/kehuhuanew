@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CnToolbar">
+
+        <attr name="rightButtonIcon" format="reference"/>
+        <attr name="leftButtonIcon" format="reference"/>
+        <attr name="isShowSearchView" format="boolean"/>
+
+    </declare-styleable>
+
+
+    <declare-styleable name="CommonToolbar">
+
+        <attr name="common_rightButtonIcon" format="reference"/>
+        <attr name="common_leftButtonIcon" format="reference"/>
+        <attr name="isShowRightButton" format="boolean"/>
+        <attr name="isHideLeftButton" format="boolean"/>
+        <attr name="isShowTitle" format="boolean"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/normal_bg2"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <!--<include layout="@layout/activity_stu_title" />-->
+    <!--<TextView-->
+    <!--android:layout_width="239dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+    <!--android:text="Large Text"-->
+    <!--android:id="@+id/textView3"-->
+    <!--android:layout_gravity="right"-->
+    <!--android:layout_weight="0.05" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1sp"
+            android:background="@color/light_gray" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="118sp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp">
+
+            <ImageView
+                android:id="@+id/stu_head_image"
+                android:layout_width="84sp"
+                android:layout_height="84sp"
+                android:src="@drawable/stuhead" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="84sp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/stu_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14sp"
+                    android:layout_marginTop="7dp"
+                    android:text="李小明"
+                    android:textColor="@color/text2"
+                    android:textSize="17sp" />
+
+                <LinearLayout
+                    android:id="@+id/stu_phone_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/stu_name"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/my_phone" />
+
+                    <TextView
+                        android:id="@+id/stu_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:text="18899993333"
+                        android:textColor="@color/list_item_right"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/stu_phone_line"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="bottom"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/my_position" />
+
+                    <TextView
+                        android:id="@+id/stu_school_area"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:text="武汉校区"
+                        android:textColor="@color/list_item_right"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1sp"
+            android:background="@color/light_gray" />
+    </LinearLayout>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:scrollbars="none">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10sp"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1sp"
+                android:background="@color/light_gray" />
+
+               <!--个人资料-->
+                <LinearLayout
+                    android:id="@+id/stu_info_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50sp">
+
+                        <ImageView
+                            android:id="@+id/stu_info_image"
+                            android:layout_width="23dp"
+                            android:layout_height="19dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/my_information" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="12sp"
+                            android:layout_toRightOf="@+id/stu_info_image"
+                            android:text="个人资料"
+                            android:textColor="@color/text2"
+                            android:textSize="17sp" />
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="12dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="10sp"
+                            android:src="@drawable/often_into" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1sp"
+                        android:background="@color/normal_bg2" />
+
+
+                </LinearLayout>
+
+                <!--修改密码-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/stu_resetPwd"
+                        android:layout_width="match_parent"
+                        android:layout_height="50sp">
+
+                        <ImageView
+                            android:id="@+id/stu_passWord_image"
+                            android:layout_width="23dp"
+                            android:layout_height="19dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/my_password" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="12sp"
+                            android:layout_toRightOf="@+id/stu_passWord_image"
+                            android:text="修改密码"
+                            android:textColor="@color/text2"
+                            android:textSize="17sp" />
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="12dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="10sp"
+                            android:src="@drawable/often_into" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1sp"
+                        android:background="@color/normal_bg2" />
+
+
+                </LinearLayout>
+
+                <!--意见反馈-->
+                <LinearLayout
+                    android:id="@+id/ll_stu_feedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_feedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="50sp">
+
+                        <ImageView
+                            android:id="@+id/stu_suggest_image"
+                            android:layout_width="23dp"
+                            android:layout_height="19dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/my_opinion" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="12sp"
+                            android:layout_toRightOf="@+id/stu_suggest_image"
+                            android:text="意见反馈"
+                            android:textColor="@color/text2"
+                            android:textSize="17sp" />
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="12dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="10sp"
+                            android:src="@drawable/often_into" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1sp"
+                        android:background="@color/normal_bg2" />
+
+
+                </LinearLayout>
+                <!--清除缓存-->
+                <LinearLayout
+                    android:id="@+id/ll_stu_clear_cache"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50sp">
+
+                        <ImageView
+                            android:id="@+id/stu_clear_cache"
+                            android:layout_width="23dp"
+                            android:layout_height="19dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/my_cache" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="12sp"
+                            android:layout_toRightOf="@+id/stu_clear_cache"
+                            android:text="清除缓存"
+                            android:textColor="@color/text2"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/tv_clean_cache"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="10sp"
+                            android:text="0M"
+                            android:textColor="@color/list_item_right"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1sp"
+                        android:background="@color/normal_bg2" />
+
+
+                </LinearLayout>
+                <!--查询当前版本-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50sp">
+
+                        <ImageView
+                            android:id="@+id/stu_version_image"
+                            android:layout_width="23dp"
+                            android:layout_height="19dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/my_news" />
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="12sp"
+                            android:layout_toRightOf="@+id/stu_version_image"
+                            android:text="当前版本"
+                            android:textColor="@color/text2"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/stu_version"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="10sp"
+                            android:text="V.1.2"
+                            android:textColor="@color/list_item_right"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1sp"
+                        android:background="@color/normal_bg2" />
+
+                </LinearLayout>
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/stu_log_out"
+            android:layout_width="match_parent"
+            android:layout_height="41sp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/shape_stu_logout"
+            android:gravity="center"
+            android:layout_marginLeft="15sp"
+            android:layout_marginRight="15sp"
+            android:text="退出登陆"
+            android:layout_marginBottom="10sp"
+            android:textColor="@color/title_bg"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+</ScrollView>
+
+
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1sp"-->
+        <!--android:layout_marginTop="10sp"-->
+        <!--android:background="@color/light_gray" />-->
+</LinearLayout>

@@ -8,6 +8,8 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class MyApplication extends Application {
     Context mContext;
     public static List<Activity> mActivityList = new ArrayList<Activity>();
@@ -18,7 +20,8 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-
+        JPushInterface.setDebugMode(false); 	// 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);     		// 初始化 JPush
     }
 
     public static MyApplication getInstance() {

@@ -1,12 +1,8 @@
 package com.kwsoft.kehuhua.adcustom;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,209 +10,194 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DiskLruCacheHelper;
+import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.widget.CommonToolbar;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SearchActivity extends Activity implements View.OnClickListener{
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-    private String searchSetUrl;
-    private Map<String,String> searchParameter;
+import static com.kwsoft.kehuhua.config.Constant.topBarColor;
+
+public class SearchActivity extends FragmentActivity {
+
+
+    @Bind(R.id.lv_search)
+    ListView lvSearch;
+
+    private List<Map<String, Object>> searchSet;
+    private CommonToolbar mToolbar;
     private DiskLruCacheHelper DLCH;
-    private String searchParameterString;
-    private List<Map<String, Object>> mList;
-    private ListView mListView;
-    private HashMap<Integer, String> hashMap = new HashMap<>();
-    private HashMap<Integer, String> hashMap1 = new HashMap<>();
-    private int index;
-
+    private Map<String, String> paramsMap;
+    private Map<String, String> paramsMapNew = new HashMap<>();
+    public static final String DATEPICKER_TAG = "datepicker";
+    public static final String TIMEPICKER_TAG = "timepicker";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        ButterKnife.bind(this);
 
         try {
             DLCH = new DiskLruCacheHelper(SearchActivity.this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        Constant.commitPra = new HashMap<>();
         getDataIntent();
-        initView();
-        requestSearchData(searchSetUrl);
+        //parseSearchSet();
+        mySearch();
     }
 
-    public void initView() {
-        mListView= (ListView) findViewById(R.id.lv_search);
-        TextView cancel = (TextView) findViewById(R.id.tv_search_cancel);
-        TextView commit = (TextView) findViewById(R.id.tv_commit_search);
-        commit.setOnClickListener(this);
-        cancel.setOnClickListener(this);
-    }
+
     public void getDataIntent() {
-        Intent intent = getIntent();
-        searchSetUrl = intent.getStringExtra("searchSetUrl");
-        searchParameterString = intent.getStringExtra("searchParameter");
-        searchParameter= JSON.parseObject(searchParameterString,Map.class);
-    }
-//获取请求数据
-private void requestSearchData(String volleyUrl) {
-    Log.e("TAG","是否能运行到此3");
-    final String volleyUrl1= volleyUrl.replaceFirst("10.252.46.80","182.92.108.162");
-    StringRequest mStringRequest = new StringRequest(Request.Method.POST, volleyUrl1,
-            new Response.Listener<String>() {
+        Bundle  bundle = this.getIntent().getExtras();
+        String searchSetStr = bundle.getString("searchSet");
+        searchSet = JSON.parseObject(searchSetStr,
+                new TypeReference<List<Map<String, Object>>>() {
+                });
+        String paramsStr = bundle.getString("paramsStr");
+
+        paramsMap = JSON.parseObject(paramsStr,
+                new TypeReference<Map<String, String>>() {
+                });
+
+        mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
+
+        mToolbar.setTitle("条件筛选");
+        mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
+
+        //左侧返回按钮
+        mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+            mToolbar.showRightImageButton();
+            //右侧下拉按钮
+            mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onResponse(String jsonData) {
-                    DLCH.put(volleyUrl1+searchParameterString,jsonData);
-                    Log.i("jsonData", jsonData);
-                    //解析筛选条件jsonData数据
-                    parseJsonData(jsonData);
+                public void onClick(View view) {
+                    searchCommit();
                 }
-            }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            String diskData=DLCH.getAsString(volleyUrl1+searchParameterString);
-            parseJsonData(diskData);
-        }
+            });
+
     }
-    ) {
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            return searchParameter;
-        }
-    };
-    VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(mStringRequest);
-}
 
-    private void parseJsonData(String jsonData) {
 
-        Map<String, Object> mMap = JSON.parseObject(jsonData, Map.class);
-        mList= (List<Map<String, Object>>) mMap.get("phoneSearchSet");
-        Log.e("TAG","搜索返回配置数据"+mList.toString());
-        if(mList!=null){
-            for(int i=0;i<mList.size();i++){
-                mList.get(i).put("tempValue","");
-                int fieldRole= (int) mList.get(i).get("fieldRole");
-                int fieldType= (int) mList.get(i).get("fieldType");
+    //展示搜索数据
+    public void mySearch() {
+        Log.e("TAG", "展示搜索数据" + searchSet);
+        SearchAdapter addAdapter = new SearchAdapter();
+        lvSearch.setAdapter(addAdapter);
+    }
 
-                if(fieldRole==16){
-                    //拼接第1个参数（逻辑与），写死的
+    private void searchCommit() {
+        Log.e("TAG", "筛选提交参数列表" + Constant.commitPra.toString());
+        paramsMapNew.putAll(paramsMap);
+        paramsMapNew.putAll(Constant.commitPra);
+        paramsMapNew.put("mainTableId","");
+        paramsMapNew.put("mainPageId","");
+        paramsMapNew.put("mainId","");
+        paramsMapNew.put("defaultSearchSetSelect","0");
+        paramsMapNew.remove("alterTime");
+        requestSearch();
 
-                    String key1=mList.get(i).get("fieldSearchName")+"_d"+"_andOr";
-                    mList.get(i).put("isAndOrKey",key1);
-                    //拼接第2个参数（包含关系），也是写死的
-                    String tempW=mList.get(i).get("fieldSearchName")+"";
-                    String[] data= tempW.split("__");
-                    if(data.length>1){
-                        mList.get(i).put("valueKey",data[1]+"strCond_dic");}else{
-                        mList.get(i).put("valueKey","");
+
+    }
+
+    private void requestSearch() {
+        String volleyUrl = Constant.sysUrl + Constant.requestListSet;
+        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String jsonData) {//磁盘存储后转至处理
+                        Log.e("TAG", "搜索请求返回结果打印" + jsonData);
+                        toResult(jsonData);
                     }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                VolleySingleton.onErrorResponseMessege(SearchActivity.this, volleyError);
+            }
+        }
+        ) {
 
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return paramsMapNew;
+            }
 
-                }else if(fieldType==2){//字符串
-                    //拼接第1个参数（逻辑与），写死的
-
-                    String key1=mList.get(i).get("fieldSearchName")+"_"+mList.get(i).get("fieldType")+"_andOr";
-                    //拼接第2个参数（包含关系），也是写死的
-                    String key2=mList.get(i).get("fieldSearchName")+"_strCond_pld";
-                    //拼接第3个Key名称，也是写死的
-                    String key3=mList.get(i).get("fieldSearchName")+"_strVal_pld";
-                    mList.get(i).put("isAndOrKey",key1);
-                    mList.get(i).put("logicContainKey",key2);
-                    mList.get(i).put("valueKey",key3);
-                }else if(fieldType==1){//数字
-                    //拼接第1个参数（逻辑与），写死的
-                    String key1=mList.get(i).get("fieldSearchName")+"_"+mList.get(i).get("fieldType")+"_andOr";
-                    //拼接第2个参数（包含关系），也是写死的
-                    String key2=mList.get(i).get("fieldSearchName")+"_numCondOne_pld";
-                    //拼接第3个Key名称，也是写死的
-                    String key3=mList.get(i).get("fieldSearchName")+"_numValOne_pld";
-                    mList.get(i).put("isAndOrKey",key1);
-                    mList.get(i).put("logicContainKey",key2);
-                    mList.get(i).put("valueKey",key3);
-
-                }else if(fieldType==3) {//日期
-                    //拼接第1个参数（逻辑与），写死的
-                    String key1=mList.get(i).get("fieldSearchName")+"_"+mList.get(i).get("fieldType")+"_andOr";
-                    //拼接第2个参数（包含关系），也是写死的
-                    String key2=mList.get(i).get("fieldSearchName")+"_startDates_pld";
-                    //拼接第3个Key名称，也是写死的
-                    String key3=mList.get(i).get("fieldSearchName")+"_endDates_pld";
-                    mList.get(i).put("isAndOrKey",key1);
-                    mList.get(i).put("logicContainKey",key2);
-                    mList.get(i).put("valueKey",key3);
-                    mList.get(i).put("tempValue2","");
+            //重写getHeaders 默认的key为cookie，value则为localCookie
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("cookie", Constant.localCookie);
+                    //Log.d("调试", "headers----------------" + headers);
+                    return headers;
+                } else {
+                    return super.getHeaders();
                 }
-            }}
-
-        if (mList != null) {
-            SearchAdapter searchAdapter = new SearchAdapter(SearchActivity.this);
-            mListView.setAdapter(searchAdapter);
-        }
-
-
+            }
+        };
+        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                loginInterfaceData);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_commit_search:
-                searchCommit(Constant.searchCommitUrl);
-                break;
-            case R.id.tv_search_cancel:
-                this.finish();
-                break;
-        }
-    }
-
-
-    /**
-     * popupWindow适配器adapter
-     *
-     *
-     */
 
     public class SearchAdapter extends BaseAdapter {
-        private Context mContext;
+        private LayoutInflater mInflater;
+        private HashMap<Integer, String> hashMap = new HashMap<>();
+        private Integer index = -1;
+        private HashMap<Integer, String> hashMap1 = new HashMap<>();
+        private Integer index1 = -1;
+        private HashMap<Integer, String> hashMap2 = new HashMap<>();
+        private Integer index2 = -1;
 
-        public SearchAdapter(Context mContext) {
-            this.mContext = mContext;
+
+        public SearchAdapter() {
+            mInflater = LayoutInflater.from(SearchActivity.this);
         }
 
         @Override
         public int getCount() {
-            return mList.size();
+            return searchSet.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mList.get(position);
+            return searchSet.get(position);
         }
 
         @Override
@@ -224,110 +205,45 @@ private void requestSearchData(String volleyUrl) {
             return position;
         }
 
+
         @Override
+        @SuppressWarnings("unchecked")
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            //Spinner searchSpinner= (Spinner) convertView.findViewById(R.id.chooseDic);
-            //判断右侧展示的属性数据是否为字典或者时间选择
-            if((int)mList.get(position).get("fieldRole")==16){
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_search_item_date, null);
-                TextView tv = (TextView) convertView.findViewById(R.id.tv_name_dic);
-                tv.setText(mList.get(position).get("fieldCnName") + ":");
-                //设置右侧默认值
-                final TextView tv2= (TextView) convertView.findViewById(R.id.tv_view_dic);
-                String s1= (String) mList.get(position).get("dicOptions");
-                com.alibaba.fastjson.JSONArray ja = JSON.parseArray(s1);
-                final List<Map<String, Object>> dicMap = new ArrayList<>();
-                List<String> dicArrayList=new ArrayList();
+            final int fieldType = Integer.valueOf(String.valueOf(searchSet.get(position).get("fieldType")));
+            String fieldCnName = String.valueOf(searchSet.get(position).get("fieldCnName"));
+            final String fieldAliasName = String.valueOf(searchSet.get(position).get("fieldAliasName"));
 
-                for (int k = 0; ja.size() > k; k++) {
-                    String str = ja.get(k).toString();
-                    Map<String, Object> mapDicItem = JSON.parseObject(str, Map.class);
-                    dicArrayList.add((String) mapDicItem.get("DIC_NAME"));
-                    dicMap.add(mapDicItem);
-                }
-                tv2.setText("请选择");
-                tv2.setTextColor(getResources().getColor(R.color.gray));
-                //mList.get(position).put("tempValue", "" + dicMap.get(0).get("DIC_NAME"));
-                Log.e("TAG", "右侧完毕：" + s1);
-                final String[] dicIdOptions = dicArrayList.toArray(new String[dicArrayList.size()]);
-                //Log.e("TAG", "词典值" + dicIdOptions[0] + dicIdOptions[1] + dicIdOptions[2]);
-                tv2.setOnClickListener(new View.OnClickListener() {
+            convertView = mInflater.inflate(R.layout.activity_search_item, null);
+            TextView textView = (TextView) convertView.findViewById(R.id.tv_left_name);
+            textView.setText(fieldCnName);
+//开始判断fieldType
+            if (fieldType == 2) {
+                LinearLayout is_contain_layout = (LinearLayout) convertView.findViewById(R.id.is_contain_layout);
+                Spinner is_contain_spinner = (Spinner) convertView.findViewById(R.id.is_contain_spinner);
+                EditText is_contain_edit = (EditText) convertView.findViewById(R.id.is_contain_edit);
+///拼接key，每项提交均有三个参数  1、参数类型  2、参数所属下拉ID  3、参数值
+
+//1、 5项选择+输入框
+                Constant.commitPra.put(fieldAliasName + "_" + fieldType + "_andOr", "0");
+
+
+                is_contain_layout.setVisibility(View.VISIBLE);
+                is_contain_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-
-                        builder.setSingleChoiceItems(dicIdOptions, -1, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                tv2.setText(dicMap.get(which).get("DIC_NAME") + "");
-                                mList.get(position).put("tempValue", dicMap.get(which).get("DIC_ID") + "");
-                                dialog.dismiss();
-                            }
-                        });
-                        builder.show();
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Constant.commitPra.put(fieldAliasName + "_strCond_pld", String.valueOf(position));
                     }
-                });
-            }else if((int)mList.get(position).get("fieldType")==3){
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_search_item_date, null);
-                TextView tv = (TextView) convertView.findViewById(R.id.tv_name_date);
-                tv.setText(mList.get(position).get("fieldCnName") + ":");
-                final TextView date3=(TextView) convertView.findViewById(R.id.tv_date_start);
-                final TextView date4=(TextView) convertView.findViewById(R.id.tv_date_end);
-                date3.setOnClickListener(new View.OnClickListener() {
+
                     @Override
-                    public void onClick(View v) {
-//                                               Date date = new Date();
-//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
-//                        DatePickDialogUtil timeWindow = new DatePickDialogUtil(ListActivity.this, sdf.format(date));
-//                        timeWindow.dateTimePicKDialog(date3,position,mList,"tempValue");
-                        Calendar c = Calendar.getInstance();
-                        new DatePickerDialog(SearchActivity.this,
-                                new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker dp, int year, int mounth, int day) {
-                                        String dateTime=year + "-" + (mounth+1) + "-" + day;
-                                        date3.setText(dateTime);
-                                        mList.get(position).put("tempValue", dateTime);
-                                    }
-                                },
-                                c.get(Calendar.YEAR),
-                                c.get(Calendar.MONTH),
-                                c.get(Calendar.DAY_OF_MONTH)).show();
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        Constant.commitPra.put(fieldAliasName + "_strCond_pld", "0");
                     }
                 });
 
-                date4.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        Date date = new Date();
-//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
-//                        DatePickDialogUtil timeWindow = new DatePickDialogUtil(ListActivity.this, sdf.format(date));
-//                        timeWindow.dateTimePicKDialog(date4,position,mList,"tempValue2");
-                        Calendar c = Calendar.getInstance();
-                        new DatePickerDialog(SearchActivity.this,
-                                new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker dp, int year, int mounth, int day) {
-                                        String dateTime=year + "-" + (mounth+1) + "-" + day;
-                                        date4.setText(dateTime);
-                                        mList.get(position).put("tempValue2", dateTime);
-                                    }
-                                },
-                                c.get(Calendar.YEAR),
-                                c.get(Calendar.MONTH),
-                                c.get(Calendar.DAY_OF_MONTH)).show();
-                    }
-                });
-            }else if((int)mList.get(position).get("fieldType")==2){
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_search_item_edit, null);
-                TextView tv = (TextView) convertView.findViewById(R.id.tv_name_edit);
-                tv.setText(mList.get(position).get("fieldCnName") + ":");
-                EditText editText = (EditText) convertView.findViewById(R.id.ed_input);
-                editText.setHint("请输入"+mList.get(position).get("fieldCnName"));
                 //为editText设置TextChangedListener，每次改变的值设置到hashMap
                 //我们要拿到里面的值根据position拿值
-                editText.setOnTouchListener(new View.OnTouchListener() {
+                is_contain_edit.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -337,12 +253,12 @@ private void requestSearchData(String volleyUrl) {
                     }
                 });
 
-                editText.clearFocus();
+                is_contain_edit.clearFocus();
                 if (index != -1 && index == position) {
                     // 如果当前的行下标和点击事件中保存的index一致，手动为EditText设置焦点。
-                    editText.requestFocus();
+                    is_contain_edit.requestFocus();
                 }
-                editText.addTextChangedListener(new TextWatcher() {
+                is_contain_edit.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -358,42 +274,293 @@ private void requestSearchData(String volleyUrl) {
                     public void afterTextChanged(Editable s) {
                         //将editText中改变的值设置的HashMap中
                         hashMap.put(position, s.toString());
-                        mList.get(position).put("tempValue", s.toString());
                     }
                 });
 
                 //如果hashMap不为空，就设置的editText
-                if(hashMap.get(position) != null){
-                    editText.setText(hashMap.get(position));
+                if (hashMap.get(position) != null) {
+                    is_contain_edit.setText(hashMap.get(position));
+                    Constant.commitPra.put(fieldAliasName + "_strVal_pld",hashMap.get(position));
+                } else {
+                    Constant.commitPra.put(fieldAliasName + "_strVal_pld", "");
+                }
+                is_contain_edit.setSelection(is_contain_edit.getText().length());
+
+//日期时间类
+            } else if (fieldType == 3) {
+                LinearLayout linearLayoutDate = (LinearLayout) convertView.findViewById(R.id.is_date_layout);
+                final TextView date1 = (TextView) convertView.findViewById(R.id.is_date1);
+                final TextView date2 = (TextView) convertView.findViewById(R.id.is_date2);
+                Constant.commitPra.put(fieldAliasName + "_" + fieldType + "_andOr", "0");
+
+                if(Constant.commitPra.get(fieldAliasName + "_endDates_pld")==null){
+                    Log.e("TAG", "检查点日期赋值为空e");
+                    Constant.commitPra.put(fieldAliasName + "_endDates_pld", "");
+                }
+                if(Constant.commitPra.get(fieldAliasName + "_startDates_pld")==null){
+                    Log.e("TAG", "检查点日期赋值为空s");
+                    Constant.commitPra.put(fieldAliasName + "_startDates_pld", "");
                 }
 
-                editText.setSelection(editText.getText().length());
+
+                int fieldRole = Integer.valueOf(String.valueOf(searchSet.get(position).get("fieldRole")));
+                if (fieldRole == 14 || fieldRole == 26 || fieldRole == 28) {
+//日期类
+                    linearLayoutDate.setVisibility(View.VISIBLE);
+                    date1.setHint("开始日期");
+                    date2.setHint("结束日期");
+                    Constant.commitPra.put(fieldAliasName + "_dateType", "yyyy-MM-dd");
+
+                    date1.setOnClickListener(new NoDoubleClickListener() {
+                        @Override
+                        public void onNoDoubleClick(View v) {
+
+                            final Calendar c = Calendar.getInstance();
+                            c.setTimeInMillis(System.currentTimeMillis());
+                            //默认选中当前时间
+                            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+                                            String monthNew=String.valueOf(month);
+                                            String dayNew=String.valueOf(day);
+                                            if (month + 1<10) {
+                                                monthNew="0"+String.valueOf(month + 1);
+                                            }
+                                            if (day<10) {
+                                                dayNew="0"+String.valueOf(day);
+                                            }
+                                            String dateTime = year + "-" + monthNew + "-" + dayNew;
+                                            date1.setText(dateTime);
+                                            Constant.commitPra.put(fieldAliasName + "_startDates_pld", dateTime);
+                                            Log.e("TAG", "检查点日期赋值startDates："+dateTime);
+                                        }
+                                    }),
+                                    c.get(Calendar.YEAR),
+                                    c.get(Calendar.MONTH),
+                                    c.get(Calendar.DAY_OF_MONTH),
+                                    true);
+                            datePickerDialog.setVibrate(true);
+                            datePickerDialog.setYearRange(1983, 2030);
+                            datePickerDialog.setCloseOnSingleTapDay(false);
+                            datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+                        }
+                    });
+
+                    date2.setOnClickListener(new NoDoubleClickListener() {
+                        @Override
+                        public void onNoDoubleClick(View v) {
 
 
-            }else if((int)mList.get(position).get("fieldType")==1){
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.filter_screen_item, null);
-                Log.e("TAG", "editText");
-                TextView tv = (TextView) convertView.findViewById(R.id.tv_term_name);
-                tv.setText(mList.get(position).get("fieldCnName") + ":");
-                EditText editText = (EditText) convertView.findViewById(R.id.ed_input_term);
-                //为editText设置TextChangedListener，每次改变的值设置到hashMap
+                            final Calendar c = Calendar.getInstance();
+                            c.setTimeInMillis(System.currentTimeMillis());
+                            //默认选中当前时间
+                            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+                                             String monthNew=String.valueOf(month);
+                                             String dayNew=String.valueOf(day);
+                                            if (month + 1<10) {
+                                                monthNew="0"+String.valueOf(month + 1);
+                                            }
+                                            if (day<10) {
+                                                dayNew="0"+String.valueOf(day);
+                                            }
+                                            String dateTime = year + "-" + monthNew + "-" + dayNew;
+                                            date2.setText(dateTime);
+                                            Constant.commitPra.put(fieldAliasName + "_endDates_pld", dateTime);
+                                            Log.e("TAG", "检查点日期赋值endDates："+dateTime);
+                                        }
+                                    }),
+                                    c.get(Calendar.YEAR),
+                                    c.get(Calendar.MONTH),
+                                    c.get(Calendar.DAY_OF_MONTH),
+                                    true);
+                            datePickerDialog.setVibrate(true);
+                            datePickerDialog.setYearRange(1983, 2030);
+                            datePickerDialog.setCloseOnSingleTapDay(false);
+                            datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+                        }
+                    });
+//时间类
+                } else {
+                    Constant.commitPra.put(fieldAliasName + "_dateType", "yyyy-MM-dd" + " " + "HH:mm");
+
+                    if(Constant.commitPra.get(fieldAliasName + "_endDates_pld")==null){
+                        Constant.commitPra.put(fieldAliasName + "_endDates_pld", "");
+                    }
+                    if(Constant.commitPra.get(fieldAliasName + "_startDates_pld")==null){
+                        Constant.commitPra.put(fieldAliasName + "_startDates_pld", "");
+                    }
+
+                    linearLayoutDate.setVisibility(View.VISIBLE);
+                    date1.setHint("开始时间");
+                    date2.setHint("结束时间");
+                    date1.setOnClickListener(new NoDoubleClickListener() {
+                        @Override
+                        public void onNoDoubleClick(View v) {
+                            final Calendar c = Calendar.getInstance();
+                            c.setTimeInMillis(System.currentTimeMillis());
+                            //默认选中当前时间
+                            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+                                            String monthNew=String.valueOf(month);
+                                            String dayNew=String.valueOf(day);
+                                            if (month + 1<10) {
+                                                monthNew="0"+String.valueOf(month + 1);
+                                            }
+                                            if (day<10) {
+                                                dayNew="0"+String.valueOf(day);
+                                            }
+                                            String dateTime = year + "-" + monthNew + "-" + dayNew;
+                                            date1.setText(dateTime);
+                                            final String dateData =dateTime;
+                                            TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                                                    (new TimePickerDialog.OnTimeSetListener() {
+                                                        @Override
+                                                        public void onTimeSet(RadialPickerLayout view, int hour, int minute) {
+                                                            String hourNew=String.valueOf(hour);
+                                                            String minuteNew=String.valueOf(minute);
+                                                            if (hour<10) {
+                                                                hourNew="0"+String.valueOf(hour);
+                                                            }
+                                                            if (minute<10) {
+                                                                minuteNew="0"+String.valueOf(minute);
+                                                            }
+                                                            String dateData2 = dateData + " " + hourNew + ":" + minuteNew;
+                                                            date1.setText(dateData2);
+                                                            Constant.commitPra.put(fieldAliasName + "_startDates_pld", dateData2);
+                                                        }
+                                                    }), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
+                                                    false, false);
+                                            timePickerDialog.setVibrate(true);
+                                            timePickerDialog.setCloseOnSingleTapMinute(false);
+                                            timePickerDialog.show(getSupportFragmentManager(), TIMEPICKER_TAG);
+                                        }
+                                    }),
+                                    c.get(Calendar.YEAR),
+                                    c.get(Calendar.MONTH),
+                                    c.get(Calendar.DAY_OF_MONTH),
+                                    true);
+                            datePickerDialog.setVibrate(true);
+                            datePickerDialog.setYearRange(1983, 2030);
+                            datePickerDialog.setCloseOnSingleTapDay(false);
+                            datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+                        }
+                    });
+
+                    date2.setOnClickListener(new NoDoubleClickListener() {
+                        @Override
+                        public void onNoDoubleClick(View v) {
+                            final Calendar c = Calendar.getInstance();
+                            c.setTimeInMillis(System.currentTimeMillis());
+                            //默认选中当前时间
+                            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+
+                                            String monthNew=String.valueOf(month);
+                                            String dayNew=String.valueOf(day);
+                                            if (month + 1<10) {
+                                                monthNew="0"+String.valueOf(month + 1);
+                                            }
+                                            if (day<10) {
+                                                dayNew="0"+String.valueOf(day);
+                                            }
+                                            final String dateTime = year + "-" + monthNew + "-" + dayNew;
+
+                                            date2.setText(dateTime);
+                                            final String dateTime2=year + "-" + monthNew + "-" + dayNew;
+
+                                            TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                                                    (new TimePickerDialog.OnTimeSetListener() {
+                                                        @Override
+                                                        public void onTimeSet(RadialPickerLayout view, int hour, int minute) {
+                                                            String hourNew=String.valueOf(hour);
+                                                            String minuteNew=String.valueOf(minute);
+                                                            if (hour<10) {
+                                                                hourNew="0"+String.valueOf(hour);
+                                                            }
+                                                            if (minute<10) {
+                                                                minuteNew="0"+String.valueOf(minute);
+                                                            }
+                                                            String dateData2 = dateTime2 + " " + hourNew + ":" + minuteNew;
+                                                            date2.setText(dateData2);
+                                                            Constant.commitPra.put(fieldAliasName + "_endDates_pld", dateData2);
+                                                        }
+                                                    }), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
+                                                    false, false);
+                                            timePickerDialog.setVibrate(true);
+                                            timePickerDialog.setCloseOnSingleTapMinute(false);
+                                            timePickerDialog.show(getSupportFragmentManager(), TIMEPICKER_TAG);
+                                        }
+                                    }),
+                                    c.get(Calendar.YEAR),
+                                    c.get(Calendar.MONTH),
+                                    c.get(Calendar.DAY_OF_MONTH),
+                                    true);
+                            datePickerDialog.setVibrate(true);
+                            datePickerDialog.setYearRange(1983, 2030);
+                            datePickerDialog.setCloseOnSingleTapDay(false);
+                            datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+                        }
+                    });
+                }
+            } else if (fieldType == 1) {
+                Constant.commitPra.put(fieldAliasName + "_"+fieldType+"_andOr", "0");
+                Constant.commitPra.put(fieldAliasName + "_numCondOne_pld", "2");
+                Constant.commitPra.put(fieldAliasName + "_numCondTwo_pld", "2");
+                Constant.commitPra.put(fieldAliasName + "_numValOne_pld", "");
+                Constant.commitPra.put(fieldAliasName + "_numValTwo_pld", "");
+                RelativeLayout relativeLayoutNum = (RelativeLayout) convertView.findViewById(R.id.is_num_layout);
+                Spinner is_num_spinner = (Spinner) convertView.findViewById(R.id.is_num_spinner);
+                Spinner is_num_spinner2 = (Spinner) convertView.findViewById(R.id.is_num_spinner2);
+                EditText is_num_edit = (EditText) convertView.findViewById(R.id.is_num_edit);
+                EditText is_num_edit2 = (EditText) convertView.findViewById(R.id.is_num_edit2);
+                relativeLayoutNum.setVisibility(View.VISIBLE);
+                is_num_spinner.setSelection(0);
+                is_num_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Constant.commitPra.put(fieldAliasName + "_numCondOne_pld", String.valueOf(position));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+                is_num_spinner2.setSelection(0);
+                is_num_spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Constant.commitPra.put(fieldAliasName + "_numCondTwo_pld", String.valueOf(position));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+//为editText设置TextChangedListener，每次改变的值设置到hashMap1
                 //我们要拿到里面的值根据position拿值
-                editText.setOnTouchListener(new View.OnTouchListener() {
+                is_num_edit.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         if (event.getAction() == MotionEvent.ACTION_UP) {
-                            index = position;
+                            index1 = position;
                         }
                         return false;
                     }
                 });
 
-                editText.clearFocus();
-                if (index != -1 && index == position) {
-                    // 如果当前的行下标和点击事件中保存的index一致，手动为EditText设置焦点。
-                    editText.requestFocus();
+                is_num_edit.clearFocus();
+                if (index1 != -1 && index1 == position) {
+                    // 如果当前的行下标和点击事件中保存的index1一致，手动为EditText设置焦点。
+                    is_num_edit.requestFocus();
                 }
-                editText.addTextChangedListener(new TextWatcher() {
+                is_num_edit.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -407,99 +574,147 @@ private void requestSearchData(String volleyUrl) {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        //将editText中改变的值设置的HashMap中
+                        //将editText中改变的值设置的hashMap1中
                         hashMap1.put(position, s.toString());
-                        mList.get(position).put("tempValue", s.toString());
                     }
                 });
 
-                //如果hashMap不为空，就设置的editText
-                if(hashMap1.get(position) != null){
-                    editText.setText(hashMap1.get(position));
+                //如果hashMap1不为空，就设置的editText
+                if (hashMap1.get(position) != null) {
+                    is_num_edit.setText(hashMap1.get(position));
+                    Constant.commitPra.put(fieldAliasName + "_numValOne_pld", hashMap1.get(position));
+
+                } else {
+                    Constant.commitPra.put(fieldAliasName + "_numValOne_pld", "");
                 }
-                editText.setSelection(editText.getText().length());
+                is_num_edit.setSelection(is_num_edit.getText().length());
+
+//为editText设置TextChangedListener，每次改变的值设置到hashMap2
+                //我们要拿到里面的值根据position拿值
+                is_num_edit2.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            index2 = position;
+                        }
+                        return false;
+                    }
+                });
+
+                is_num_edit2.clearFocus();
+                if (index2 != -1 && index2 == position) {
+                    // 如果当前的行下标和点击事件中保存的index2一致，手动为EditText设置焦点。
+                    is_num_edit2.requestFocus();
+                }
+                is_num_edit2.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start,
+                                                  int count, int after) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        //将editText中改变的值设置的hashMap2中
+                        hashMap2.put(position, s.toString());
+                    }
+                });
+
+                //如果hashMap2不为空，就设置的editText
+                if (hashMap2.get(position) != null) {
+                    is_num_edit2.setText(hashMap2.get(position));
+
+                    Constant.commitPra.put(fieldAliasName + "_numValTwo_pld", hashMap2.get(position));
+                } else {
+                    Constant.commitPra.put(fieldAliasName + "_numValTwo_pld", "");
+                }
+                is_num_edit2.setSelection(is_num_edit2.getText().length());
+
+
+//是否包含+多值类
             }
+//            else if (fieldType == 4) {
+//                LinearLayout is_dic_layout = (LinearLayout) convertView.findViewById(R.id.is_dic_layout);
+//                Spinner is_dic_spinner = (Spinner) convertView.findViewById(R.id.is_dic_spinner);
+//                MultiSpinner is_dic_adapter = (MultiSpinner) convertView.findViewById(R.id.is_dic_adapter);
+//                is_dic_layout.setVisibility(View.VISIBLE);
+//                //选择包含与否
+//                Constant.commitPra.put(fieldAliasName + "_d_andOr", "0");
+//                Constant.commitPra.put(fieldAliasName + "_d_dicCond_pld", "0");
+//                Constant.commitPra.put(fieldAliasName + "strCond_dic", "");
+//
+//                is_dic_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        Constant.commitPra.put(fieldAliasName + "_d_dicCond_pld", String.valueOf(position));
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//                    }
+//                });
+//
+//                //选择数据
+//                List<Map<String, Object>> dicList=new ArrayList<>();
+//                try{
+//                    dicList =
+//                            (List<Map<String, Object>>) searchSet.get(position).get("dicList");
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//                //删除无用字典值数据
+//
+//                    String dicChildShow= String.valueOf(searchSet.get(position).get("dicChildShow"));
+//                    List<Integer> dicChildShowList=new ArrayList<>();
+//
+//                if (dicChildShow!=null&&!dicChildShow.equals("")) {
+//                //将字符串类型数组转换为int型集合
+//                    String[] dicChildShowStrArr=dicChildShow.split(",");
+//                    for (String aDicChildShowStrArr : dicChildShowStrArr) {
+//                        dicChildShowList.add(Integer.parseInt(aDicChildShowStrArr));
+//                    }
+//                }
+//                   //将字典列表遍历的过程中比较，并删除不存在的id项
+//                if (dicList.size()>0) {
+//                    for (int i=0;i<dicList.size();i++) {
+//                       int dicIdTemp=Integer.valueOf(String.valueOf(dicList.get(i).get("DIC_ID")));
+//                        if (!dicChildShowList.contains(dicIdTemp)) {
+//                            dicList.remove(i);
+//                        }
+//                    }
+//
+//                    is_dic_adapter.setTitle(" ");
+//                    is_dic_adapter.setPosition(fieldAliasName + "strCond_dic");
+//                    ArrayList multiSpinnerList=new ArrayList();//数据装入目标
+//                    for(int i=0;i<dicList.size();i++){//装入数据个数
+//                        SimpleSpinnerOption option=new SimpleSpinnerOption();//每个数据分为2个，分别放入名称和标识
+//                        if (dicList.get(i).get("DIC_NAME")!=null&&dicList.get(i).get("DIC_ID")!=null) {
+//                            option.setName(String.valueOf(dicList.get(i).get("DIC_NAME")));
+//                            option.setValue(Integer.valueOf(String.valueOf(dicList.get(i).get("DIC_ID"))));
+//                            multiSpinnerList.add(option);
+//                        }
+//                    }
+//                    is_dic_adapter.setDataList(multiSpinnerList);
+//
+//                }else{
+//                    Toast.makeText(SearchActivity.this, "无数据", Toast.LENGTH_SHORT).show();
+//                }
+//            }
             return convertView;
         }
     }
-    private void searchCommit(String volleyUrl){
+    public void toResult(String result_search) {
+        String paramsNext= JSON.toJSONString(paramsMapNew);
+        Intent intent = new Intent(this, SearchResultActivity.class);
+        intent.putExtra("result_search", result_search);
+        intent.putExtra("paramsNext", paramsNext);
 
-        Log.e("TAG", "搜索配置数据" + mList.toString());
-
-        Map<String,String> mapSearchCommit=new HashMap<>();
-        mapSearchCommit.putAll(searchParameter);
-        for(int i=0;i<mList.size();i++){
-            if(mList.get(i).get("tempValue")!=null&&!mList.get(i).get("tempValue").equals("")){
-                int fieldRole= (int) mList.get(i).get("fieldRole");
-                int fieldType= (int) mList.get(i).get("fieldType");
-                if(fieldRole==16){//字典
-                    mapSearchCommit.put(""+mList.get(i).get("isAndOrKey"),0+"");
-
-                    Log.e("TAG", "字典数据：" + "第一个值"+mList.get(i).get("valueKey")+"第二个值"+mList.get(i).get("tempValue"));
-                    mapSearchCommit.put(""+mList.get(i).get("valueKey"),""+mList.get(i).get("tempValue"));
-
-                }else if(fieldType==2||fieldType==1){//字符串+数字
-
-                    mapSearchCommit.put(""+mList.get(i).get("isAndOrKey"),0+"");
-                    mapSearchCommit.put(""+mList.get(i).get("logicContainKey"),0+"");
-                    mapSearchCommit.put(""+mList.get(i).get("valueKey"),""+mList.get(i).get("tempValue"));
-                }else if(fieldType==3){//日期
-                    mapSearchCommit.put(""+mList.get(i).get("isAndOrKey"),0+"");
-                    mapSearchCommit.put(""+mList.get(i).get("logicContainKey"),""+mList.get(i).get("tempValue"));
-                    mapSearchCommit.put(""+mList.get(i).get("valueKey"),""+mList.get(i).get("tempValue2"));
-                    SimpleDateFormat sdf =   new SimpleDateFormat("yyyy-MM-dd");
-                    String date1=""+mList.get(i).get("tempValue");
-                    String date2=""+mList.get(i).get("tempValue2");
-                    Date firstDate;
-                    Date secondDate;
-                    try {
-                        firstDate = sdf.parse(date1);
-                        secondDate = sdf.parse(date2);
-                        boolean flag = firstDate.before(secondDate);
-                        if(!flag){
-                            Toast.makeText(SearchActivity.this,"起始日期必须要小于截止日期",Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }}
-
-        Log.e("TAG", "搜索输入结果数据" + hashMap.toString());
-        final Map<String,String> map=mapSearchCommit;
-        Log.e("TAG", "搜索所有请求参数" + mapSearchCommit.toString());
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        backList(jsonData);
-                        Log.e("TAG", "搜索请求返回结果打印" + jsonData);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(SearchActivity.this, volleyError);
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return map;
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
-    }
-
-    final int RESULT_CODE=101;
-
-    public void backList(String result_search) {
-        Intent intent=new Intent(this,ListActivity.class);
-        intent.putExtra("second", result_search);
-        intent.putExtra("isSearch", true);
-        setResult(RESULT_CODE, intent);
+        startActivity(intent);
         finish();
     }
 }
