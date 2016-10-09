@@ -276,6 +276,7 @@ public class Add_EditAdapter extends BaseAdapter {
 //2、单值选择项&星期
         } else if (fieldRole == 16 || fieldRole == 23) {
             Log.e("TAG", "字典适配开始 ");
+            Log.e("TAG", "字典适配开始 ");
             if (isShow) {
                 add_spinner.setVisibility(View.VISIBLE);
             }
