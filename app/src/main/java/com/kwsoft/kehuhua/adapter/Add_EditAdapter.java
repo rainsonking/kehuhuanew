@@ -238,6 +238,7 @@ public class Add_EditAdapter extends BaseAdapter {
             if (fieldRole == 8) {//订单编号
                 Constant.tmpFieldId = String.valueOf(fieldSet.get(position).get("tmpFieldId"));
                 Log.e("TAG", "Constant.tmpFieldId " + Constant.tmpFieldId);
+                Log.e("TAG", "Constant.tmpFieldId " + Constant.tmpFieldId);
             }
             if (isShow) {
                 add_edit_text.setVisibility(View.VISIBLE);
