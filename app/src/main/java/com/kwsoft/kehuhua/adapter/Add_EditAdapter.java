@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,8 +58,8 @@ public class Add_EditAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;
     private List<Map<String, Object>> fieldSet;
     private Context context;
-    public static final String DATEPICKER_TAG = "datepicker";
-    public static final String TIMEPICKER_TAG = "timepicker";
+    private static final String DATEPICKER_TAG = "datepicker";
+    private static final String TIMEPICKER_TAG = "timepicker";
     private HashMap<Integer, String> hashMap = new HashMap<>();
     private Activity mActivity;
     private Map<String, String> paramsMap = new HashMap<>();
@@ -127,6 +128,12 @@ public class Add_EditAdapter extends BaseAdapter {
         if (fieldSet.get(position).get("ifMust") != null) {
             ifMust = Integer.valueOf(String.valueOf(fieldSet.get(position).get("ifMust")));
         }
+//初始化是否可修改标志
+        int ifUpdate = 0;
+        if (fieldSet.get(position).get("ifMust") != null) {
+            ifUpdate = Integer.valueOf(String.valueOf(fieldSet.get(position).get("ifUpdate")));
+        }
+
         convertView = inflater.inflate(R.layout.activity_add_item, null);
 //初始化左侧名称
         TextView textView = (TextView) convertView.findViewById(R.id.add_item_name);
@@ -141,6 +148,14 @@ public class Add_EditAdapter extends BaseAdapter {
         if (ifMust == 1) {
             textViewIfMust.setVisibility(View.VISIBLE);
         }
+        RelativeLayout list_item_cover = (RelativeLayout) convertView.findViewById(R.id.list_item_cover);
+//设置控件不可点击
+        if (ifUpdate == 0) {
+            list_item_cover.setVisibility(View.VISIBLE);
+
+        }
+
+
 //初始化编辑框
         EditText add_edit_text = (EditText) convertView.findViewById(R.id.add_edit_text);
 //初始化日期选、时间、内部对象多值选择器
@@ -674,7 +689,6 @@ public class Add_EditAdapter extends BaseAdapter {
 
 
         }
-
 
         return convertView;
 
