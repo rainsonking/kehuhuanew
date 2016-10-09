@@ -104,6 +104,7 @@ public class AddItemsActivity extends AppCompatActivity {
         String volleyUrl = Constant.sysUrl + Constant.requestAdd;
         Log.e("TAG", "网络获取添加Url " + volleyUrl);
         Log.e("TAG", "网络获取添加参数：" + paramsMap.toString());
+        Log.e("TAG", "网络获取添加参数：" + paramsMap.toString());
         StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
                 new Response.Listener<String>() {
                     @Override
