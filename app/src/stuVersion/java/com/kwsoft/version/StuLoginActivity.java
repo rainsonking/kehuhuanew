@@ -202,7 +202,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
         } else {
             final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
-            proDia.setTitle("正在登陆。。。");
+            proDia.setTitle("正在登陆...");
             proDia.show();
             nameValue = mUserName.getText().toString();//trim去掉首尾空格
             pwdValue = mPassword.getText().toString();
