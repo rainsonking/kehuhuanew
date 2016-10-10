@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.kwsoft.kehuhua.adcustom.CourseActivity;
 import com.kwsoft.kehuhua.adcustom.ListActivity;
 import com.kwsoft.kehuhua.adcustom.R;
+import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.version.StuPra;
 import com.kwsoft.version.TextAdapter;
 
@@ -38,9 +38,7 @@ public class MenuFragment extends Fragment {
     //    private TextView rightView;
 //    private ArrayList<String> groups = new ArrayList<String>();
     private TextAdapter earaListViewAdapter;
-    private Bundle menuBundle;
-    private LinearLayout lastTextView;
-    private List<Map<String, Object>> menuListMap, parentList;
+    private List<Map<String, Object>> parentList;
     private List<Map<String, Object>> childList = new ArrayList<>();
     private SimpleAdapter nextAdapter;
 
@@ -72,16 +70,16 @@ public class MenuFragment extends Fragment {
     }
 
     private void getIntentData() {
-        menuBundle = getArguments();
+        Bundle menuBundle = getArguments();
 
         String menuStr = menuBundle.getString("menuDataMap");
         if (menuStr != null) {
-            menuListMap = JSON.parseObject(menuStr,
+            List<Map<String, Object>> menuListMap = JSON.parseObject(menuStr,
                     new TypeReference<List<Map<String, Object>>>() {
                     });
             if (menuListMap.size() > 0) {
-                parentList = menuListMap;
-                addParentImage();
+                parentList = DataProcess.noPhoneList(menuListMap);
+
             } else {
                 Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
             }

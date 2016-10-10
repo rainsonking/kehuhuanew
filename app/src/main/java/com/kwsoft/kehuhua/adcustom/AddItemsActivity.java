@@ -58,7 +58,7 @@ public class AddItemsActivity extends AppCompatActivity {
     private Add_EditAdapter adapter;
     private String hideFieldParagram = "";
     private String keyRelation = "";
-//    private Map<String, Object> defaultValArr;
+//  private Map<String, Object> defaultValArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +103,6 @@ public class AddItemsActivity extends AppCompatActivity {
     public void requestAdd() {
         String volleyUrl = Constant.sysUrl + Constant.requestAdd;
         Log.e("TAG", "网络获取添加Url " + volleyUrl);
-        Log.e("TAG", "网络获取添加参数：" + paramsMap.toString());
         Log.e("TAG", "网络获取添加参数：" + paramsMap.toString());
         StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
                 new Response.Listener<String>() {

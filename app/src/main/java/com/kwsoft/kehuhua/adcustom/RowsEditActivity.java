@@ -1,7 +1,9 @@
 package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -66,6 +68,7 @@ public class RowsEditActivity extends AppCompatActivity {
     private List<Map<String, Object>> fieldSet = new ArrayList<>();
     private Add_EditAdapter adapter;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

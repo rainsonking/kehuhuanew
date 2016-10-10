@@ -625,7 +625,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
     }
 
     public void setVisible() {
-        search_title.setVisibility(View.VISIBLE);
+//        search_title.setVisibility(View.VISIBLE);
         button_set_view.setVisibility(View.VISIBLE);
         backMenu.setVisibility(View.VISIBLE);
         deleteCommit.setVisibility(View.GONE);

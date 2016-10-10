@@ -6,12 +6,13 @@ import android.widget.Toast;
 
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.version.StuPra;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.kwsoft.version.StuPra.imgs;
 
 /**
  * Created by Administrator on 2016/7/27 0027.
@@ -60,7 +61,7 @@ public class DataProcess {
         //去掉手机端三个字
         for (int m = 0; m < parentListTemp.size(); m++) {
             String menuNameNew = String.valueOf(parentListTemp.get(m).get("menuName")).replace("手机端", "");
-            parentListTemp.get(m).put("image", StuPra.imgs[m]);
+            parentListTemp.get(m).put("image", imgs[m]);
             parentListTemp.get(m).put("menuName", menuNameNew);
         }
         Log.e("TAG", "parentList去掉手机端 " + parentListTemp.toString());
@@ -75,7 +76,7 @@ public class DataProcess {
         //去掉手机端三个字
         for (int m = 0; m < mDataList.size(); m++) {
             String menuNameNew = String.valueOf(mDataList.get(m).get("menuName")).replace("手机端", "");
-            mDataList.get(m).put("image", StuPra.imgs[m]);
+            mDataList.get(m).put("image", imgs[m]);
             mDataList.get(m).put("menuName", menuNameNew);
         }
         Log.e("TAG", "parentList去掉手机端 " + mDataList.toString());
@@ -148,7 +149,16 @@ public class DataProcess {
 
     }
 
+    public static List<Map<String, Object>> noPhoneList(List<Map<String, Object>> mDataList) {
 
+        for (int k = 0; k < mDataList.size(); k++) {
+            String menuNameNew = String.valueOf(mDataList.get(k).get("menuName")).replace("手机端", "");
+            mDataList.get(k).put("menuName", menuNameNew);
+        }
+
+        return mDataList;
+
+    }
     /**
      * 专门为添加提交时撰写的最后阶段拼接方法
      * 第一个参数为activity
