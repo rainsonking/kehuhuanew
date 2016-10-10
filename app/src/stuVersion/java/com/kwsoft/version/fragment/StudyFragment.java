@@ -84,7 +84,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     public void initView(View view) {
         stuName = (TextView) view.findViewById(R.id.stu_name);
 
-        Log.e("TAG", "测试打印");
         try {
             String username = Constant.loginName;
             stuName.setText(username);
@@ -218,7 +217,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     });
             String cnName;
             for (int i = 0; i < listMap.size(); i++) {
-                Log.e("TAG", "事务看板数量：" + listMap.size() + "");
                 Map<String, Object> map = new HashMap<>();
                 cnName = String.valueOf(listMap.get(i).get("cnName"));
                 map.put("ctType", "3");
