@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -74,7 +75,9 @@
                     android:singleLine="true"
                     android:textColor="#333333"
                     android:textColorHint="#b2b2b2"
-                    android:textSize="18sp"></EditText>
+                    android:textSize="18sp">
+
+                </EditText>
 
                 <ImageView
                     android:id="@+id/iv_phone_clear"
@@ -203,5 +206,22 @@
 
 
     </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/avloadingIndicatorViewLayout"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:background="#b0FF4040"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        >
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            app:indicator="BallClipRotatePulse"
+            app:indicator_color="@color/white"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
 </RelativeLayout>

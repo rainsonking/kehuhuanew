@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -49,10 +50,9 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     private SharedPreferences sPreferences;
     private LinearLayout layout_enabled;
     private Button login;
-    ImageView iv_phone_clear;
-    ImageView iv_password_clear;
-    CheckBox cb_rmb_pwd;
-
+    private ImageView iv_phone_clear;
+    private ImageView iv_password_clear;
+    private RelativeLayout avloadingIndicatorViewLayout;
     static {
         //学员端设置成顶栏红色
         Constant.topBarColor = R.color.stu_topBarColor;
@@ -88,13 +88,15 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
 
     @SuppressWarnings("unchecked")
     public void initView() {
+        avloadingIndicatorViewLayout= (RelativeLayout) findViewById(R.id.avloadingIndicatorViewLayout);
+        avloadingIndicatorViewLayout.setOnClickListener(null);
         mUserName = (EditText) findViewById(R.id.ed_userName);
         mPassword = (EditText) findViewById(R.id.ed_passWord);
         layout_enabled = (LinearLayout) findViewById(R.id.layout_enabled);
         login = (Button) findViewById(R.id.btn_login);
         iv_phone_clear = (ImageView) findViewById(R.id.iv_phone_clear);
         iv_password_clear = (ImageView) findViewById(R.id.iv_password_clear);
-        cb_rmb_pwd = (CheckBox) findViewById(R.id.check_box);
+        CheckBox cb_rmb_pwd = (CheckBox) findViewById(R.id.check_box);
 
         login.setOnClickListener(this);
         iv_phone_clear.setOnClickListener(new View.OnClickListener() {
@@ -202,8 +204,9 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
         } else {
             final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
-            proDia.setTitle("正在登陆...");
-            proDia.show();
+//            proDia.setTitle("正在登陆。。。");
+//            proDia.show();
+            startAnim();
             nameValue = mUserName.getText().toString();//trim去掉首尾空格
             pwdValue = mPassword.getText().toString();
             if (!nameValue.equals("") && !pwdValue.equals("")) {//判断用户名密码非空
@@ -255,7 +258,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                 };
                 VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
             } else {
-                proDia.dismiss();
+                stopAnim();
                 Toast.makeText(StuLoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             }
         }
@@ -272,7 +275,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             LoginError loginError = JSON.parseObject(menuData, LoginError.class);
             if (loginError.getError() != 0) {
                 Toast.makeText(this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
-                proDia.dismiss();
+                stopAnim();
             } else {
                 //当成功登陆后存储正确的用户名和密码,
                 Constant.USERNAME_ALL = nameValue;
@@ -290,7 +293,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                 mainPage(menuData, proDia);//保存完用户名和密码，跳转到主页面
             }
         } else {
-            proDia.dismiss();
+            stopAnim();
             Toast.makeText(StuLoginActivity.this, "服务器超时", Toast.LENGTH_SHORT).show();
         }
     }
@@ -322,14 +325,15 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-//    void startAnim() {
-//        findViewById(R.id.avloadingIndicatorViewLayout).setVisibility(View.VISIBLE);
-//    }
-//
-//    void stopAnim() {
-//        findViewById(R.id.avloadingIndicatorViewLayout).setVisibility(View.GONE);
-//    }
+    void startAnim() {
 
+        avloadingIndicatorViewLayout.setVisibility(View.VISIBLE);
+
+    }
+
+    void stopAnim() {
+        avloadingIndicatorViewLayout.setVisibility(View.GONE);
+    }
 
     //获得用户名方法
     @SuppressWarnings("unchecked")

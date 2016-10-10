@@ -1,5 +1,7 @@
 package com.kwsoft.kehuhua.adcustom;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -200,17 +202,40 @@ public class RowsEditActivity extends AppCompatActivity {
                 this.finish();
                 break;
             case R.id.tv_commit_edit:
-                requestEditCommit();
+                toCommit();
                 break;
         }
     }
+    private void toCommit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(buttonName.getText()+"？");
+//        builder.setTitle("删除");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                requestEditCommit();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+
+
+
+    }
     private void requestEditCommit() {
         String value = DataProcess.commit(RowsEditActivity.this, fieldSet);
         if (!value.equals("no")) {
-            String volleyUrl = Constant.sysUrl + Constant.commitEdit + "?" +
+            String volleyUrl1 = Constant.sysUrl + Constant.commitEdit + "?" +
                     Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
                     value + "&" + hideFieldParagram + "&t0_au_" + tableId + "_" + pageId + "=" + dataId;
+            String volleyUrl=volleyUrl1.replaceAll(" ","%20");
             Log.e("TAG", "修改页面提交地址：" + volleyUrl);
             StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
                     new Response.Listener<String>() {
