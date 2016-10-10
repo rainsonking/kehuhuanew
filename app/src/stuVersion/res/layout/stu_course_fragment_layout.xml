@@ -21,7 +21,7 @@
             android:id="@+id/layout_date"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="5dp">
+            >
 
             <TextView
                 android:id="@+id/tv_date"
@@ -29,14 +29,20 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:gravity="center"
+                android:paddingLeft="5dp"
                 android:text="10月"
+                android:textSize="12sp"
                 android:textColor="#5ca7ff" />
 
             <TextView
                 android:id="@+id/tv_model"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                android:paddingTop="@dimen/fragment_left_pad_top_text_size"
                 android:text="00:00"
+                android:textSize="@dimen/fragment_left_text_size"
                 android:visibility="invisible" />
         </RelativeLayout>
 
@@ -86,8 +92,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="08:00"
                     android:textColor="@color/couse_time" />
 
@@ -100,8 +108,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="08:30"
                     android:textColor="@color/couse_time" />
 
@@ -114,8 +124,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="09:00"
                     android:textColor="@color/couse_time" />
 
@@ -128,8 +140,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="09:30"
                     android:textColor="@color/couse_time" />
 
@@ -142,8 +156,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="10:00"
                     android:textColor="@color/couse_time" />
 
@@ -156,8 +172,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="10:30"
                     android:textColor="@color/couse_time" />
 
@@ -170,8 +188,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="11:00"
                     android:textColor="@color/couse_time" />
 
@@ -184,8 +204,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="11:30"
                     android:textColor="@color/couse_time" />
 
@@ -198,8 +220,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="12:00"
                     android:textColor="@color/couse_time" />
 
@@ -212,8 +236,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="12:30"
                     android:textColor="@color/couse_time" />
 
@@ -226,8 +252,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="13:00"
                     android:textColor="@color/couse_time" />
 
@@ -240,8 +268,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="13:30"
                     android:textColor="@color/couse_time" />
 
@@ -254,8 +284,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="14:00"
                     android:textColor="@color/couse_time" />
 
@@ -268,8 +300,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="14:30"
                     android:textColor="@color/couse_time" />
 
@@ -282,8 +316,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="15:00"
                     android:textColor="@color/couse_time" />
 
@@ -296,8 +332,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="15:30"
                     android:textColor="@color/couse_time" />
 
@@ -310,8 +348,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="16:00"
                     android:textColor="@color/couse_time" />
 
@@ -324,8 +364,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="16:30"
                     android:textColor="@color/couse_time" />
 
@@ -338,8 +380,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="17:00"
                     android:textColor="@color/couse_time" />
 
@@ -352,8 +396,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="17:30"
                     android:textColor="@color/couse_time" />
 
@@ -366,8 +412,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="18:00"
                     android:textColor="@color/couse_time" />
 
@@ -380,8 +428,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="18:30"
                     android:textColor="@color/couse_time" />
 
@@ -394,8 +444,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="19:00"
                     android:textColor="@color/couse_time" />
 
@@ -408,8 +460,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="19:30"
                     android:textColor="@color/couse_time" />
 
@@ -422,8 +476,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="20:00"
                     android:textColor="@color/couse_time" />
 
@@ -436,8 +492,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="20:30"
                     android:textColor="@color/couse_time" />
 
@@ -450,8 +508,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="2dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="21:00"
                     android:textColor="@color/couse_time" />
 
@@ -464,8 +524,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="21:30"
                     android:textColor="@color/couse_time" />
 
@@ -478,8 +540,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="33dp"
                     android:background="#f5f5f5"
-                    android:paddingTop="2dp"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="22:00"
                     android:textColor="@color/couse_time" />
 
@@ -494,7 +558,10 @@
                     android:id="@+id/tv_model1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingRight="@dimen/fragment_left_pad_left_text_size"
+                    android:paddingTop="@dimen/fragment_left_pad_top_text_size"
+                    android:textSize="@dimen/fragment_left_text_size"
                     android:text="00:00"
                     android:visibility="invisible" />
 
