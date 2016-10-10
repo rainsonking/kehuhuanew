@@ -204,10 +204,11 @@ public class AddItemsActivity extends AppCompatActivity {
                 AddItemsActivity.this,
                 fieldSet);
         if (!value.equals("no")) {
-            String volleyUrl = Constant.sysUrl +Constant.commitAdd +"?" +
+            String volleyUrl1 = Constant.sysUrl +Constant.commitAdd +"?" +
                     Constant.tableId +"=" +tableId +"&" +Constant.pageId +"=" +pageId +"&" +
                     value + "&" + hideFieldParagram+"&"+
                     keyRelation;
+            String volleyUrl=volleyUrl1.replaceAll(" ","%20");
             Log.e("TAG", "添加提交地址：" + volleyUrl);
             StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
                     new Response.Listener<String>() {

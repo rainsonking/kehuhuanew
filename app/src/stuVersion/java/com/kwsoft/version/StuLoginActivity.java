@@ -202,8 +202,9 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
         } else {
             final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
-            proDia.setTitle("正在登陆。。。");
-            proDia.show();
+//            proDia.setTitle("正在登陆。。。");
+//            proDia.show();
+            startAnim();
             nameValue = mUserName.getText().toString();//trim去掉首尾空格
             pwdValue = mPassword.getText().toString();
             if (!nameValue.equals("") && !pwdValue.equals("")) {//判断用户名密码非空
@@ -255,7 +256,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                 };
                 VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
             } else {
-                proDia.dismiss();
+                stopAnim();
                 Toast.makeText(StuLoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             }
         }
@@ -272,7 +273,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             LoginError loginError = JSON.parseObject(menuData, LoginError.class);
             if (loginError.getError() != 0) {
                 Toast.makeText(this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
-                proDia.dismiss();
+                stopAnim();
             } else {
                 //当成功登陆后存储正确的用户名和密码,
                 Constant.USERNAME_ALL = nameValue;
@@ -290,7 +291,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                 mainPage(menuData, proDia);//保存完用户名和密码，跳转到主页面
             }
         } else {
-            proDia.dismiss();
+            stopAnim();
             Toast.makeText(StuLoginActivity.this, "服务器超时", Toast.LENGTH_SHORT).show();
         }
     }
@@ -322,13 +323,13 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-//    void startAnim() {
-//        findViewById(R.id.avloadingIndicatorViewLayout).setVisibility(View.VISIBLE);
-//    }
-//
-//    void stopAnim() {
-//        findViewById(R.id.avloadingIndicatorViewLayout).setVisibility(View.GONE);
-//    }
+    void startAnim() {
+        findViewById(R.id.avloadingIndicatorViewLayout).setVisibility(View.VISIBLE);
+    }
+
+    void stopAnim() {
+        findViewById(R.id.avloadingIndicatorViewLayout).setVisibility(View.GONE);
+    }
 
 
     //获得用户名方法
