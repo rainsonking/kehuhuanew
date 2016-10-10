@@ -205,14 +205,19 @@
 
     </LinearLayout>
 
+<RelativeLayout
+    android:id="@+id/avloadingIndicatorViewLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#40636363"
+    android:clickable="false"
+    android:visibility="gone">
 
     <RelativeLayout
-        android:id="@+id/avloadingIndicatorViewLayout"
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:background="#b0393f4d"
         android:layout_centerInParent="true"
-        android:visibility="gone"
         >
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avloadingIndicatorView"
@@ -223,4 +228,7 @@
             android:layout_centerInParent="true"
             />
     </RelativeLayout>
+
+</RelativeLayout>
+
 </RelativeLayout>

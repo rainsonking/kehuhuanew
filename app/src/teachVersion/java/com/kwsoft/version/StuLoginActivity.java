@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -49,10 +50,10 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     private SharedPreferences sPreferences;
     private LinearLayout layout_enabled;
     private Button login;
-    ImageView iv_phone_clear;
-    ImageView iv_password_clear;
-    CheckBox cb_rmb_pwd;
-
+    private ImageView iv_phone_clear;
+    private ImageView iv_password_clear;
+    private CheckBox cb_rmb_pwd;
+    private RelativeLayout avloadingIndicatorViewLayout;
     static {
         //学员端设置成顶栏红色
         Constant.topBarColor = R.color.prim_topBarColor;
@@ -88,6 +89,8 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
 
     @SuppressWarnings("unchecked")
     public void initView() {
+        avloadingIndicatorViewLayout= (RelativeLayout) findViewById(R.id.avloadingIndicatorViewLayout);
+        avloadingIndicatorViewLayout.setOnClickListener(null);
         mUserName = (EditText) findViewById(R.id.ed_userName);
         mPassword = (EditText) findViewById(R.id.ed_passWord);
         layout_enabled = (LinearLayout) findViewById(R.id.layout_enabled);
@@ -327,11 +330,13 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     }
 
     void startAnim() {
-        findViewById(R.id.avloadingIndicatorViewLayout).setVisibility(View.VISIBLE);
+
+        avloadingIndicatorViewLayout.setVisibility(View.VISIBLE);
+
     }
 
     void stopAnim() {
-        findViewById(R.id.avloadingIndicatorViewLayout).setVisibility(View.GONE);
+        avloadingIndicatorViewLayout.setVisibility(View.GONE);
     }
 
 
