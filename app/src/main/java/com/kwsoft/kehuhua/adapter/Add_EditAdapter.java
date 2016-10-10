@@ -556,6 +556,38 @@ public class Add_EditAdapter extends BaseAdapter {
                 }//onclick完毕
             });
 
+
+        } else if (fieldRole == 20 || fieldRole == 22) {
+
+/**
+ *
+ * 添加作业附件
+ *
+ *
+ */
+
+            if (isShow) {
+                addGeneral.setVisibility(View.VISIBLE);
+                addGeneral.setText("上传");
+            }
+
+            addGeneral.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //intent
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
 //5、内部对象单值
         } else if (fieldRole == 20 || fieldRole == 22) {
             if (isShow) {
