@@ -42,6 +42,7 @@ import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.StuMainActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
 import com.kwsoft.version.view.KanbanGridView;
+import com.kwsoft.version.view.StudyGridView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,12 +56,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
- *
  */
 public class StudyFragment extends Fragment implements View.OnClickListener {
 
+    private TextView stuName;
     //PullToRefreshGridView homeGridView;
-    private KanbanGridView homeGridView;
+    private StudyGridView homeGridView;
     private List<Map<String, Object>> parentList = new ArrayList<>();
 
     private int[] imgs2 = {R.drawable.stu_see_record_task, R.drawable.stu_see_record_curriculum,
@@ -81,7 +82,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     public void initView(View view) {
-        TextView stuName = (TextView) view.findViewById(R.id.stu_name);
+        stuName = (TextView) view.findViewById(R.id.stu_name);
 
         Log.e("TAG", "测试打印");
         try {
@@ -107,7 +108,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         mRollViewPager.setHintView(new ColorPointHintView(getActivity(), getResources().getColor(R.color.text6), getResources().getColor(R.color.text5)));
         mRollViewPager.setHintPadding(0, 0, 0, 40);
 
-        homeGridView = (KanbanGridView) view.findViewById(R.id.home_grid);
+        homeGridView = (StudyGridView) view.findViewById(R.id.home_grid);
         homeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -117,7 +118,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 itemData.put("menuName", String.valueOf(parentList.get(position).get("cnName")));
 
                 Constant.stu_index = String.valueOf(parentList.get(position).get("ctType"));
-                Log.e("TAG", "Constant.stu_index："+Constant.stu_index);
+
                 Constant.stu_homeSetId = String.valueOf(parentList.get(position).get("SourceDataId"));
                 try {
                     Intent intent = new Intent();
@@ -195,6 +196,13 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     public void setKanbanAdapter(List<Map<String, Object>> parentLists) {
+        if ((parentLists.size()) % 2 == 1) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("image",R.color.white);
+            map.put("cnName","");
+            map.put("name","");
+            parentLists.add(map);
+        }
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), parentLists,
                 R.layout.activity_stu_study_item, new String[]{"image", "cnName", "name"},
                 new int[]{R.id.iv_item, R.id.text1, R.id.text2});
@@ -228,7 +236,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                         name = String.valueOf(listMap1.get(0).get("name"));
                     }
                 }
-                map.put("name", name);
+                map.put("name", name+"个");
                 parentLists.add(map);
             }
         } catch (Exception e) {
