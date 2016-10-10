@@ -154,7 +154,11 @@ public class Add_EditAdapter extends BaseAdapter {
             list_item_cover.setVisibility(View.VISIBLE);
 
         }
+//初始化上传图片框
+        RelativeLayout image_upload_layout= (RelativeLayout) convertView.findViewById(R.id.image_upload_layout);
 
+       Button image_upload =(Button) convertView.findViewById(R.id.image_upload);
+        TextView image_upload_path = (TextView) convertView.findViewById(R.id.image_upload_path);
 
 //初始化编辑框
         EditText add_edit_text = (EditText) convertView.findViewById(R.id.add_edit_text);
@@ -557,7 +561,7 @@ public class Add_EditAdapter extends BaseAdapter {
             });
 
 
-        } else if (fieldRole == 20 || fieldRole == 22) {
+        } else if (fieldRole == 19) {
 
 /**
  *
@@ -567,18 +571,18 @@ public class Add_EditAdapter extends BaseAdapter {
  */
 
             if (isShow) {
-                addGeneral.setVisibility(View.VISIBLE);
-                addGeneral.setText("上传");
+                image_upload_layout.setVisibility(View.VISIBLE);
+
             }
 
-            addGeneral.setOnClickListener(new View.OnClickListener() {
+            image_upload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //intent
                 }
             });
 
-
+            image_upload_path.setText("文件已上传");
 
 
 

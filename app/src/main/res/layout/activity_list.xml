@@ -103,7 +103,7 @@
             />
 
         <com.handmark.pulltorefresh.library.PullToRefreshListView
-            android:id="@+id/lv"
+            android:id="@+id/android:list"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:dividerHeight="8dp"
@@ -114,7 +114,12 @@
             ptr:ptrMode="both"
 
             />
-
+        <TextView android:id="@id/android:empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="对不起，没有数据显示"
+            android:textSize="22sp"
+            android:textColor="@color/black"/>
 
 
 
