@@ -41,6 +41,7 @@ import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
 import com.kwsoft.version.view.KanbanGridView;
+import com.kwsoft.version.view.StudyGridView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +59,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class StudyFragment extends Fragment implements View.OnClickListener {
 
     private TextView stuName;
-    private KanbanGridView homeGridView;
+    // private KanbanGridView homeGridView;
+    private StudyGridView homeGridView;
     private List<Map<String, Object>> parentList = new ArrayList<>();
     private int[] image = {R.mipmap.edus_see_scan, R.mipmap.edus_see_form,
             R.mipmap.edus_see_news, R.mipmap.edus_see_set};
@@ -86,7 +88,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         tvMonth = (TextView) view.findViewById(R.id.tv_month);
         tvDay = (TextView) view.findViewById(R.id.tv_day);
 
-        Log.e("TAG", "测试打印");
         try {
             String username = Constant.loginName;
             stuName.setText(username);
@@ -94,7 +95,8 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             e.printStackTrace();
         }
 
-        homeGridView = (KanbanGridView) view.findViewById(R.id.home_grid);
+//        homeGridView = (KanbanGridView) view.findViewById(R.id.home_grid);
+        homeGridView = (StudyGridView) view.findViewById(R.id.home_grid);
         homeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -124,7 +126,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-               //执行刷新函数
+                //执行刷新函数
                 String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
                 getLoginData(volleyUrl);
             }
@@ -187,6 +189,13 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     public void setKanbanAdapter(List<Map<String, Object>> parentLists) {
+        if ((parentLists.size()) % 2 == 1) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("image",R.color.white);
+            map.put("cnName","");
+            map.put("name","");
+            parentLists.add(map);
+        }
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), parentLists,
                 R.layout.activity_stu_study_item, new String[]{"image", "cnName", "name"},
                 new int[]{R.id.iv_item, R.id.text1, R.id.text2});
@@ -202,7 +211,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     });
             String cnName;
             for (int i = 0; i < listMap.size(); i++) {
-                Log.e("TAG", "事务看板数量：" + listMap.size() + "");
                 Map<String, Object> map = new HashMap<>();
                 cnName = String.valueOf(listMap.get(i).get("cnName"));
                 map.put("ctType", "3");
@@ -217,7 +225,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 String name = "";
                 if (listMap1.size() > 0) {
                     if (listMap1.get(0) != null && listMap1.get(0).size() > 0) {
-                        name = String.valueOf(listMap1.get(0).get("name"));
+                        name = String.valueOf(listMap1.get(0).get("name"))+ "个";
                     }
                 }
                 map.put("name", name);
@@ -424,7 +432,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             Constant.USERID = String.valueOf(loginfo.get("USERID"));
 
             List<Map<String, Object>> menuListMap1 = (List<Map<String, Object>>) menuMap.get("roleFollowList");
-           // List<Map<String, Object>> menuListMap2 = (List<Map<String, Object>>) menuMap.get("menuList");
+            // List<Map<String, Object>> menuListMap2 = (List<Map<String, Object>>) menuMap.get("menuList");
 //看板模块数据
             String arrStr = JSON.toJSONString(menuListMap1);
             parentList.clear();
@@ -432,7 +440,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             setKanbanAdapter(parentList);
 
             //在更新UI后，无需其它Refresh操作，系统会自己加载新的listView
-               pull_refresh_scrollview.onRefreshComplete();
+            pull_refresh_scrollview.onRefreshComplete();
         } catch (Exception e) {
             e.printStackTrace();
         }
