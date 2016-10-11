@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,13 +36,25 @@ import com.kwsoft.kehuhua.adcustom.TreeViewActivity;
 import com.kwsoft.kehuhua.adcustom.UnlimitedAddActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
 import com.zfdang.multiple_images_selector.SelectorSettings;
 
-import org.angmarch.views.NiceSpinner;
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
 
+import org.angmarch.views.NiceSpinner;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +64,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static com.kwsoft.kehuhua.config.Constant.listPath;
+import static com.kwsoft.kehuhua.config.Constant.pictureUrl;
+import static com.kwsoft.kehuhua.config.Constant.sysUrl;
 
 /**
  * Created by Administrator on 2016/6/7 0007.
@@ -161,6 +178,7 @@ public class Add_EditAdapter extends BaseAdapter {
         RelativeLayout image_upload_layout = (RelativeLayout) convertView.findViewById(R.id.image_upload_layout);
 
         Button image_upload = (Button) convertView.findViewById(R.id.image_upload);
+        Button image_upload_commit = (Button) convertView.findViewById(R.id.image_upload_commit);
         TextView image_upload_path = (TextView) convertView.findViewById(R.id.image_upload_path);
 
 //初始化编辑框
@@ -558,7 +576,14 @@ public class Add_EditAdapter extends BaseAdapter {
                     mActivity.startActivityForResult(intent, REQUEST_CODE);
                 }
             });
+            image_upload_commit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //上传提交代码
+                    upload();
 
+                }
+            });
             image_upload_path.setText(Constant.pictureStr);
 
             Log.e("TAG", "跳转到下拉树");
@@ -899,8 +924,63 @@ public class Add_EditAdapter extends BaseAdapter {
     }
 
 
-}
+    //上传文件
+    public void upload() {
+        HttpUtils http = new HttpUtils();
+        RequestParams params = new RequestParams();
+        String uploadHost = sysUrl + pictureUrl;
 
+
+            //待上传的两个文件
+            if (listPath.size() > 0) {
+                for (int i = 0; i < listPath.size(); i++) {
+
+                    params.addBodyParameter("msg", "上传图片");
+                    params.addBodyParameter("file"+i, new File(listPath.get(i)));
+
+                }
+//                uploadMethod(params, uploadHost);
+            }
+            //请求的URL
+
+            //post请求，三个参数分别是请求地址、请求参数、请求的回调接口
+
+            Log.e("TAG", listPath.toString());
+        http.send(HttpRequest.HttpMethod.POST, uploadHost, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+//                        msgTextview.setText("conn...");
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isUploading) {
+                if (isUploading) {
+//                            msgTextview.setText("upload: " + current + "/"+ total);
+                    Toast.makeText(mActivity, "正在上传", Toast.LENGTH_SHORT).show();
+                } else {
+//                            msgTextview.setText("reply: " + current + "/"+ total);
+                    Toast.makeText(mActivity, "再次上传", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+//                        msgTextview.setText("reply: " + responseInfo.result);
+                Toast.makeText(mActivity, "上传成功", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(HttpException error, String msg) {
+//                        msgTextview.setText(error.getExceptionCode() + ":" + msg);
+                Toast.makeText(mActivity, "上传失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void uploadMethod ( final RequestParams params, final String uploadHost){
+
+    }
+}
 //            else {
 //                fieldSet.get(position).put("tempValue", defaultName);
 //                addGeneral.setHint(defaultName);

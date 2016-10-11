@@ -138,6 +138,8 @@ public class Constant {
     public final static String commitValue = "commitValue";// commitValue
 
     public static String pictureStr = "";//上传图片路径
+    public static List<String> listPath=new ArrayList<>();//上传图片路径
+    public final static String pictureUrl = "servlet/OmFileUploadServlet";
 
     public static int topBarColor;
 

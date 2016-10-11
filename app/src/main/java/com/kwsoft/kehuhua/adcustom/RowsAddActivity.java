@@ -36,6 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.kwsoft.kehuhua.config.Constant.listPath;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class RowsAddActivity extends AppCompatActivity {
@@ -355,9 +356,11 @@ public class RowsAddActivity extends AppCompatActivity {
 
                 // show results in textview
                 StringBuilder sb = new StringBuilder();
-                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
+                listPath.clear();
+//                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
                 for (String result : mResults) {
                     sb.append(result).append("\n");
+                    listPath.add(result);
                 }
                 Constant.pictureStr = sb.toString();
                 Log.e("picture", Constant.pictureStr);
