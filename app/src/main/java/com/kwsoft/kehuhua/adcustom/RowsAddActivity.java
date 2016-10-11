@@ -225,9 +225,9 @@ public class RowsAddActivity extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     private void setStore(String jsonData) {
         Log.e("TAG", "解析添加数据1");
-        Map<String, Object> buttonSet = JSON.parseObject(jsonData);
-        try {
 
+        try {
+            Map<String, Object> buttonSet = JSON.parseObject(jsonData);
 //获取fieldSet
             Map<String, Object> pageSet = (Map<String, Object>) buttonSet.get("pageSet");
             fieldSet = (List<Map<String, Object>>) pageSet.get("fieldSet");

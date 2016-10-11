@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +24,9 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.kwsoft.kehuhua.adcustom.AddItemsActivity;
 import com.kwsoft.kehuhua.adcustom.AddTemplateDataActivity;
@@ -35,24 +37,15 @@ import com.kwsoft.kehuhua.adcustom.RowsEditActivity;
 import com.kwsoft.kehuhua.adcustom.TreeViewActivity;
 import com.kwsoft.kehuhua.adcustom.UnlimitedAddActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.utils.MultipartRequest;
 import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
+import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
 import com.zfdang.multiple_images_selector.SelectorSettings;
 
-import net.tsz.afinal.FinalHttp;
-import net.tsz.afinal.http.AjaxCallBack;
-import net.tsz.afinal.http.AjaxParams;
-
 import org.angmarch.views.NiceSpinner;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.text.ParseException;
@@ -904,7 +897,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
     }
 
-    public void toMultiValueActivity(String viewName, String isMulti, String idArrs, Map<String, Object> childPra, List<Map<String, String>> needFilterList, int position) {
+    private void toMultiValueActivity(String viewName, String isMulti, String idArrs, Map<String, Object> childPra, List<Map<String, String>> needFilterList, int position) {
         try {
 
             Intent intent = new Intent();
@@ -926,411 +919,66 @@ public class Add_EditAdapter extends BaseAdapter {
 
     //上传文件
     public void upload() {
-        HttpUtils http = new HttpUtils();
-        RequestParams params = new RequestParams();
-        String uploadHost = sysUrl + pictureUrl;
 
-
+        String url = sysUrl + pictureUrl;
             //待上传的两个文件
+        List<File> files=new ArrayList<>();
             if (listPath.size() > 0) {
                 for (int i = 0; i < listPath.size(); i++) {
 
-                    params.addBodyParameter("msg", "上传图片");
-                    params.addBodyParameter("file"+i, new File(listPath.get(i)));
-
+                    files.add(new File(listPath.get(i)));
                 }
 //                uploadMethod(params, uploadHost);
-            }
             //请求的URL
-
             //post请求，三个参数分别是请求地址、请求参数、请求的回调接口
+            Log.e("TAG","listPath.toString()"+ listPath.toString());
 
-            Log.e("TAG", listPath.toString());
-        http.send(HttpRequest.HttpMethod.POST, uploadHost, params, new RequestCallBack<String>() {
-            @Override
-            public void onStart() {
-//                        msgTextview.setText("conn...");
+                if (files.size()>0) {
+                    Log.e("TAG","files.toString()"+ files.toString());
+                    uploadMethod (url,files);
+                }
+            }else{
+                Toast.makeText(mActivity, "尚未选择图片", Toast.LENGTH_SHORT).show();
             }
+    }
+
+    public void uploadMethod (String url,List<File> files){
+        Log.e("TAG","uploadMethod1");
+        MultipartRequest request = new MultipartRequest(url,   new Response.Listener<String>() {
 
             @Override
-            public void onLoading(long total, long current, boolean isUploading) {
-                if (isUploading) {
-//                            msgTextview.setText("upload: " + current + "/"+ total);
-                    Toast.makeText(mActivity, "正在上传", Toast.LENGTH_SHORT).show();
+            public void onResponse(String response) {
+                Log.e("TAG","uploadMethod2");
+                Toast.makeText(mActivity, "上传成功"+response, Toast.LENGTH_SHORT).show();
+//                TrendCreateHttpManager.toTrendCreateHttpActionSuccess();
+            }
+        },new  Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(mActivity, "上传失败", Toast.LENGTH_SHORT).show();
+//                TrendCreateHttpManager.toTrendCreateHttpActionError();
+            }
+        } , "myFiles", files, null){
+
+
+            //重写getHeaders 默认的key为cookie，value则为localCookie
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("cookie", Constant.localCookie);
+                    //Log.d("调试", "headers----------------" + headers);
+                    return headers;
                 } else {
-//                            msgTextview.setText("reply: " + current + "/"+ total);
-                    Toast.makeText(mActivity, "再次上传", Toast.LENGTH_SHORT).show();
+                    return super.getHeaders();
                 }
             }
-
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-//                        msgTextview.setText("reply: " + responseInfo.result);
-                Toast.makeText(mActivity, "上传成功", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-//                        msgTextview.setText(error.getExceptionCode() + ":" + msg);
-                Toast.makeText(mActivity, "上传失败", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void uploadMethod ( final RequestParams params, final String uploadHost){
-
+        };
+        VolleySingleton.getVolleySingleton(mActivity).addToRequestQueue(
+                request);
     }
 }
-//            else {
-//                fieldSet.get(position).put("tempValue", defaultName);
-//                addGeneral.setHint(defaultName);
-//            }
-
-//            if (fieldRole == 2) {
-//                fieldSet.get(position).put("tempKey", isT+"_au_" + tableId + "_" + pageId + "_" + fieldSet.get(position).get("fieldId") + "_" + "editor");
-//            } else {
-//                fieldSet.get(position).put("tempKey", isT+"_au_" + tableId + "_" + pageId + "_" + fieldSet.get(position).get("fieldId"));
-//            }
-//            else {
-//                fieldSet.get(position).put("tempValue", defaultName);
-//                add_edit_text.setText(defaultName);
-//            }
-
-
-//            //如果hashMap不为空，就设置的editText
-//            if (hashMap.get(position) != null) {
-//                add_edit_text.setText(hashMap.get(position));
-//            } else {
-//                add_edit_text.setText(defaultName);
-////                    fieldSet.get(position).put("tempValue", defaultName);
-//            }
-
-
-//            Log.e("TAG", "字典position：" +position);
-//            fieldSet.get(position).put("tempKey", isT+"_au_" + tableId + "_" + pageId + "_" + fieldSet.get(position).get("fieldId"));
-
-
-//                Log.e("TAG", "字典无默认值时自动填充的：" + String.valueOf(dicList.get(0).get("DIC_ID")) + "!");
-
-//            Log.e("TAG", "字典无默认值时自动填充的：" + String.valueOf(fieldSet.get(position).get("tempValue")));
-//将默认的值记录到数据源中
-
-
-//            if (fieldSet.get(position).get("dicDefaultSelect")!=null&&
-//                    !String.valueOf(fieldSet.get(position).get("dicDefaultSelect")).equals("")) {
-//
-//                dicDefaultSelect = String.valueOf(fieldSet.get(position).get("dicDefaultSelect"));
-//                //获得默认选中值
-//                dicDefaultSelectInt=Integer.valueOf(dicDefaultSelect);
-//                //如果有默认选中值，将byId确定
-//
-//
-//                byId = getById(dicList, byId, dicDefaultSelectInt);
-//
-//            }
-
-
-//            fieldSet.get(position).put("tempKey", isT+"_au_" + tableId + "_" + pageId + "_" + fieldSet.get(position).get("fieldId"));
-//            String defaultDate = null;
-//
-//                long defaultNameLong = Long.valueOf(defaultName);
-//                defaultDate = LongToDate.longToDate(defaultNameLong).substring(0, 10);
-
-
-//            String defaultDate = null;
-//            try {
-//                long defaultNameLong = Long.valueOf(defaultName);
-//                defaultDate = LongToDate.longToDate(defaultNameLong).substring(11, 16);
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//            }
-//            fieldSet.get(position).put("tempKey", isT+"_au_" + tableId + "_" + pageId + "_" + fieldSet.get(position).get("fieldId"));
-
-////            fieldSet.get(position).put("tempKey", isT+"_au_" + tableId
-////                    + "_" + pageId + "_" +
-////                    fieldSet.get(position).get("fieldId"));
-//            String defaultName2 = getString20(position, flag);
-//
-//
-//            //获取needFilterList
-
-
-//                fieldSet.get(position).put("tempKey", isT+"_au_" + fieldSet.get(position).get("relationTableId") + "_" +
-//                        fieldSet.get(position).get("showFieldArr") +
-//                        "_" + fieldSet.get(position).get("fieldId") + "_dz");
-//                String defaultName1 = getString21(position, flag);
-//                //选择类型，过滤chooseType
-//                addGeneral.setHint(defaultName1);
-
-//                Log.e("TAG", "fieldSet.get(position) " + fieldSet.get(position).toString());
-//                fieldSet.get(position).put("tempKey", isT+"_au_" + fieldSet.get(position).get("relationTableId") + "_" +
-//                        fieldSet.get(position).get("showFieldArr") +
-//                        "_" + fieldSet.get(position).get("fieldId") + "_dz");
-//                    Log.e("TAG", "unlimitedAddValue " + unlimitedAddValue);
-
-
-//    @NonNull
-//    public String getString21(int position, int flag0) {
-//        String defaultName1 = "";
-//        try {
-//            switch (flag0) {
-//                case 1://修改
-//                    String key = String.valueOf(fieldSet.get(position).get("relationTableId")) + "_" +
-//                            String.valueOf(fieldSet.get(position).get("showFieldArr")) + "_" + dataId;
-//                    Log.e("TAG", "defaultValArr：" + defaultValArr.toString());
-//
-//                    if (defaultValArr.get(key) != null) {
-//                        String defaultName2 = "";
-//                        String idsPre2 = "";
-//                        List<Map<String, String>> defaultValArr2 = (List<Map<String, String>>) defaultValArr.get(key);
-//                        if (defaultValArr2.size() > 0 && fieldSet.get(position).get("tempValue") == null) {
-//                            for (int i = 0; i < defaultValArr2.size(); i++) {
-//                                String keyName = "F_" + fieldSet.get(position).get("tableId") + "_AFM_1";
-//                                String keyId = "T_" + fieldSet.get(position).get("tableId") + "_0";
-//                                try {
-//                                    defaultName2 += defaultValArr2.get(i).get(keyName) + ",";
-//                                    idsPre2 += String.valueOf(defaultValArr2.get(i).get(keyId)) + ",";
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                            defaultName1 = defaultName2.substring(0, defaultName2.length() - 1);
-//                            fieldSet.get(position).put("tempValue", defaultValArr2.size());
-//                            fieldSet.get(position).put("idArr", idsPre2.substring(0, idsPre2.length() - 1));
-//                            fieldSet.get(position).put("tempValueName", defaultName1);
-//                        }
-//                    }
-//                    break;
-//                case 0:
-//
-//
-//                    break;
-//
-//
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        return defaultName1;
-//    }
-//
-//    public String getString20(int position, int flag0) {
-//        String defaultName2 = "";
-//        String fieldAliasList;
-//        try {
-//            switch (flag0) {
-//                case 1://修改
-//                    fieldAliasList = tableId + "_" + pageId + "_0_toUpdateSql_" + dataId;
-//                    List<Map<String, Object>> defaultValArrList;
-//                    Map<String, Object> defaultValArrMap = new HashMap<>();
-//                    if (defaultValArr.get(fieldAliasList) != null) {
-//                        defaultValArrList = (List<Map<String, Object>>) defaultValArr.get(fieldAliasList);
-//                        if (defaultValArrList.size() > 0) {
-//                            defaultValArrMap = defaultValArrList.get(0);
-//                        }
-//                    }
-//                    if (fieldSet.get(position).get("aliasIdName") != null) {
-//                        String key = String.valueOf(fieldSet.get(position).get("aliasIdName"));
-//
-//                        if (defaultValArrMap.get(key) != null && fieldSet.get(position).get("tempValue") == null) {
-//                            String idsPre2 = String.valueOf(defaultValArrMap.get(key));
-//                            fieldSet.get(position).put("tempValue", idsPre2);
-//
-//                        }
-//
-//                        String keyAfm = "";
-//                        try {
-//                            String[] valueAfm = key.split("_");
-//                            String keyAfm1 = valueAfm[2] + "_" + valueAfm[3];
-//                            keyAfm = keyAfm1.replace("T", "F");
-//                            Log.e("TAG", "联合适配器获取AFM" + keyAfm);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                        if (defaultValArrMap.get(keyAfm) != null) {
-//                            defaultName2 = String.valueOf(defaultValArrMap.get(keyAfm));
-//                            Log.e("TAG", "联合适配器获取AFM" + defaultName2);
-//                        }
-//                    }
-//                    break;
-//                case 0://添加
-//                    //待填充
-//                    break;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return defaultName2;
-//    }
-
-//    public String getDefaultString(int position, int flag0) {
-//        String defaultName = "";
-//        String fieldAliasList;
-//        try {
-//            switch (flag0) {
-//
-//                case 0:
-//                    fieldAliasList = "au_" + tableId + "_" + pageId + "_" + dataId;
-//                    if (defaultValArr != null && defaultValArr.get(fieldAliasList) != null) {
-//                        defaultName = String.valueOf(defaultValArr.get(fieldAliasList));
-//                    }
-//                    break;
-//                case 1:
-//                    fieldAliasList = tableId + "_" + pageId + "_0_toUpdateSql_" + dataId;
-//                    Log.e("TAG", "row添加：" + fieldAliasList);
-//                    List<Map<String, Object>> defaultValArrList;
-//                    Map<String, Object> defaultValArrMap = new HashMap<>();
-//                    if (defaultValArr.get(fieldAliasList) != null) {
-//                        defaultValArrList = (List<Map<String, Object>>) defaultValArr.get(fieldAliasList);
-//                        if (defaultValArrList.size() > 0) {
-//                            defaultValArrMap = defaultValArrList.get(0);
-//
-//                        }
-//                    }
-//                    if (fieldSet.get(position).get("fieldAliasName") != null) {
-//                        String fieldAliasName1 = String.valueOf(fieldSet.get(position).get("fieldAliasName"));
-//                        if (defaultValArrMap.get(fieldAliasName1) != null) {
-//                            defaultName = String.valueOf(defaultValArrMap.get(fieldAliasName1));
-//                        }
-//                    }
-//                    break;
-//                case 2:
-//                    fieldAliasList = paramsMap.get("mainTableId") + "_" + pageId + "_glAddSql_" + dataId;
-//                    List<Map<String, Object>> defaultValArrList2;
-//                    Map<String, Object> defaultValArrMap2 = new HashMap<>();
-//                    if (defaultValArr.get(fieldAliasList) != null) {
-//                        defaultValArrList2 = (List<Map<String, Object>>) defaultValArr.get(fieldAliasList);
-//                        if (defaultValArrList2.size() > 0) {
-//                            defaultValArrMap2 = defaultValArrList2.get(0);
-//                        }
-//                    }
-//                    if (fieldSet.get(position).get("fieldAliasName") != null) {
-//                        String fieldAliasName1 = String.valueOf(fieldSet.get(position).get("fieldAliasName"));
-//                        if (defaultValArrMap2.get(fieldAliasName1) != null) {
-//                            defaultName = String.valueOf(defaultValArrMap2.get(fieldAliasName1));
-//                        }
-//                    }
-//                    break;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return defaultName;
-//    }
-
-
-//String defaultName = getDefaultString(position, flag);
-
-
-// Map<String, Object> defaultValArr1 = defaultValArr;
-//        if (Constant.jumpNum1 == 4) {
-//            isT="t1";
-//        }
-
-
-//        Log.e("TAG", "适配器初始化开始Constant.jumpNum "+Constant.jumpNum);
-//        Log.e("TAG", "适配器初始化开始Constant.jumpNum1 "+Constant.jumpNum1);
-//private int flag = -1;
-//private String isT="t0";
-
-
-//
-//            add_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int positionDic, long id) {
-//                    String DIC_ID = String.valueOf(finalDicList.get(positionDic).get("DIC_ID"));
-//                    Log.e("TAG", "DIC_ID " + DIC_ID);
-//                    fieldSet.get(position).put("true_defaultShowVal", DIC_ID);
-//                    if (!oldDicId.equals(DIC_ID)) {
-//                        notifyDataSetChanged();
-//                    }
-//                }
-//
-//                @Override
-//                public void onNothingSelected(AdapterView<?> parent) {
-//
-//                }
-//            });
-
-
-//将新的字典值列表挂载到适配器中
-
-//            SimpleAdapter simpleAdapter = new SimpleAdapter(context,
-//                    dicList, R.layout.spinner_item,
-//                    new String[]{"DIC_NAME"}, new int[]{R.id.spinner_item_name});
-//            add_spinner.setAdapter(simpleAdapter);
-
-//设置默认选中项
-
-//                    setSelection(byId, true);
-//根据默认选中项提交值
-
-//        Spinner add_spinner = (Spinner) convertView.findViewById(R.id.add_spinner);
-
-//            fieldSet.get(position).put("tempKey", isT+"_au_" + tableId + "_" + pageId + "_" + fieldSet.get(position).get("fieldId"));
-
-
-//                                    String monthNew = String.valueOf(month + 1);
-//                                    String dayNew = String.valueOf(day);
-//                                    if (month + 1 < 10) {
-//                                        monthNew = "0" + String.valueOf(month + 1);
-//                                    }
-//                                    if (day < 10) {
-//                                        dayNew = "0" + String.valueOf(day);
-//                                    }
-
-//                                  String sDt = "08/31/2006 21:08:00";
-
-//                                   addGeneral.setText(year + "-" + monthNew + "-" + dayNew);
-//                                    fieldSet.get(position).put(Constant.itemValue, year + "-" + monthNew + "-" + dayNew);
-//                                    fieldSet.get(position).put(Constant.itemName, year + "-" + monthNew + "-" + dayNew);
-
-//                    .setOnClickListener(new NoDoubleClickListener() {
-//                @Override
-//                public void onNoDoubleClick(View v) {
-//                    final Calendar c = Calendar.getInstance();
-//                    c.setTimeInMillis(System.currentTimeMillis());
-//
-//                    TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-//                            (new TimePickerDialog.OnTimeSetListener() {
-//                                @Override
-//                                public void onTimeSet(RadialPickerLayout view, int hour, int minute) {
-//                                    String hourNew = String.valueOf(hour);
-//                                    String minuteNew = String.valueOf(minute);
-//                                    if (hour < 10) {
-//                                        hourNew = "0" + String.valueOf(hour);
-//                                    }
-//                                    if (minute < 10) {
-//                                        minuteNew = "0" + String.valueOf(minute);
-//                                    }
-//                                    String dateData = hourNew + ":" + minuteNew;
-//                                    addGeneral.setText(dateData);
-//                                    fieldSet.get(position).put(Constant.itemValue, dateData);
-//                                    fieldSet.get(position).put(Constant.itemName, dateData);
-//                                }
-//                            }), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
-//                            false, false);
-//                    timePickerDialog.setVibrate(true);
-//                    timePickerDialog.setCloseOnSingleTapMinute(false);
-//                    timePickerDialog.show(fm, TIMEPICKER_TAG);
-//
-//                }
-//            });
-
-//            String hourNew=String.valueOf(hour);
-//            String minuteNew=String.valueOf(minute);
-//            if (hour<10) {
-//                hourNew="0"+String.valueOf(hour);
-//            }
-//            if (minute<10) {
-//                minuteNew="0"+String.valueOf(minute);
-//            }
-//            String dateData2 = dateTime2 + " " + hourNew + ":" + minuteNew;
-//            date2.setText(dateData2);
-//            Constant.commitPra.put(fieldAliasName + "_endDates_pld", dateData2);
-
 
 
 
