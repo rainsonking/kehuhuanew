@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp">
     <!--公共控件，左侧显示名-->
@@ -42,12 +41,12 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginStart="25dp"
+            android:inputType="textAutoCorrect"
             android:maxLength="11"
             android:textColor="@color/list_item_right"
             android:textColorHint="@color/gray"
             android:textSize="14sp"
-            android:visibility="gone"
-            android:inputType="textAutoCorrect" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/add_general"
@@ -55,8 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/list_item_right"
-            android:textSize="18sp"
-             />
+            android:textSize="18sp" />
 
 
         <org.angmarch.views.NiceSpinner
@@ -74,32 +72,32 @@
             android:layout_height="wrap_content"
             android:text="进行操作"
             android:visibility="gone" />
-<RelativeLayout
-    android:id="@+id/image_upload_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone">
 
-    <Button
-        android:id="@+id/image_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="选择图片"
-        android:textSize="20sp"
-        android:textColor="@color/black"/>
-<TextView
-    android:id="@+id/image_upload_path"
-    android:layout_marginTop="5dp"
-    android:layout_below="@+id/image_upload"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="图片路径"
-    android:textColor="@color/black"/>
+        <RelativeLayout
+            android:id="@+id/image_upload_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/image_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择图片"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/image_upload_path"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_upload"
+                android:layout_marginTop="5dp"
+                android:text="图片路径"
+                android:textColor="@color/black" />
 
 
-
-
-</RelativeLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -115,8 +113,7 @@
         <TextView
             android:id="@+id/edit_cover_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
 </RelativeLayout>

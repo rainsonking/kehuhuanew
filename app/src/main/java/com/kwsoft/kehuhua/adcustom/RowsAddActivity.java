@@ -25,6 +25,7 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,7 +130,7 @@ public class RowsAddActivity extends AppCompatActivity {
                     value + "&" + hideFieldParagram + "&" + keyRelation;
 
 
-            String volleyUrl=volleyUrl1.replaceAll(" ","%20");
+            String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
             Log.e("TAG", "关联添加提交地址：" + volleyUrl);
             StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
                     new Response.Listener<String>() {
@@ -255,8 +256,12 @@ public class RowsAddActivity extends AppCompatActivity {
 
     }
 
+    private static final int REQUEST_CODE = 732;
+    private ArrayList<String> mResults = new ArrayList<>();
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (2 == requestCode) {
             if (2 == resultCode) {
                 //返回添加页面后复位jump值
@@ -337,13 +342,25 @@ public class RowsAddActivity extends AppCompatActivity {
                                     RowsAddActivity.this,
                                     myValueList.get(i));
                         }
-
                     }
                 }
                 Log.e("TAG", "secondValue " + secondValue);
                 fieldSet.get(positionLast).put(Constant.itemValue, myValueList.size() + "&" + secondValue);
+                adapter.notifyDataSetChanged();
+            }
+        } else if (REQUEST_CODE == requestCode) {
+            if (resultCode == RESULT_OK) {
+                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+                assert mResults != null;
 
-
+                // show results in textview
+                StringBuilder sb = new StringBuilder();
+                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
+                for (String result : mResults) {
+                    sb.append(result).append("\n");
+                }
+                Constant.pictureStr = sb.toString();
+                Log.e("picture", Constant.pictureStr);
                 adapter.notifyDataSetChanged();
             }
         }

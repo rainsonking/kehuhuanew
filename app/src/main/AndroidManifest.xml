@@ -53,6 +53,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity
             android:name="com.kwsoft.kehuhua.adcustom.IsLoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

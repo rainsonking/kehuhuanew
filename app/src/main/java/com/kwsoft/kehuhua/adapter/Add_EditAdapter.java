@@ -559,7 +559,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 }
             });
 
-            image_upload_path.setText("文件已上传");
+            image_upload_path.setText(Constant.pictureStr);
 
             Log.e("TAG", "跳转到下拉树");
 
