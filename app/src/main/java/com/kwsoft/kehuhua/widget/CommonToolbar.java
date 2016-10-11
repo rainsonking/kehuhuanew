@@ -76,7 +76,7 @@ public class CommonToolbar extends Toolbar {
 
     }
 
-    private void hideLeftImageButton() {
+    public void hideLeftImageButton() {
 
         if(mLeftImageButton !=null)
             mLeftImageButton.setVisibility(GONE);
