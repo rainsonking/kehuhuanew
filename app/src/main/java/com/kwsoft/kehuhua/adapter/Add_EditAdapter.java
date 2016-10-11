@@ -921,45 +921,47 @@ public class Add_EditAdapter extends BaseAdapter {
     public void upload() {
 
         String url = sysUrl + pictureUrl;
-            //待上传的两个文件
-        List<File> files=new ArrayList<>();
-            if (listPath.size() > 0) {
-                for (int i = 0; i < listPath.size(); i++) {
+        //待上传的两个文件
+        List<File> files = new ArrayList<>();
+        if (listPath.size() > 0) {
+            for (int i = 0; i < listPath.size(); i++) {
 
-                    files.add(new File(listPath.get(i)));
-                }
+                files.add(new File(listPath.get(i)));
+            }
 //                uploadMethod(params, uploadHost);
             //请求的URL
             //post请求，三个参数分别是请求地址、请求参数、请求的回调接口
-            Log.e("TAG","listPath.toString()"+ listPath.toString());
+            Log.e("TAG", "listPath.toString()" + listPath.toString());
 
-                if (files.size()>0) {
-                    Log.e("TAG","files.toString()"+ files.toString());
-                    uploadMethod (url,files);
-                }
-            }else{
-                Toast.makeText(mActivity, "尚未选择图片", Toast.LENGTH_SHORT).show();
+            if (files.size() > 0) {
+                Log.e("TAG", "files.toString()" + files.toString());
+                uploadMethod(url, files);
             }
+        } else {
+            Toast.makeText(mActivity, "尚未选择图片", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void uploadMethod (String url,List<File> files){
-        Log.e("TAG","uploadMethod1");
-        MultipartRequest request = new MultipartRequest(url,   new Response.Listener<String>() {
+    public void uploadMethod(String url, List<File> files) {
+        Log.e("TAG", "uploadMethod1");
+        MultipartRequest request = new MultipartRequest(url, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                Log.e("TAG","uploadMethod2");
-                Toast.makeText(mActivity, "上传成功"+response, Toast.LENGTH_SHORT).show();
+
+                getFileCode(response);
+
+
 //                TrendCreateHttpManager.toTrendCreateHttpActionSuccess();
             }
-        },new  Response.ErrorListener() {
+        }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(mActivity, "上传失败", Toast.LENGTH_SHORT).show();
 //                TrendCreateHttpManager.toTrendCreateHttpActionError();
             }
-        } , "myFiles", files, null){
+        }, "myFiles", files, null) {
 
 
             //重写getHeaders 默认的key为cookie，value则为localCookie
@@ -977,6 +979,33 @@ public class Add_EditAdapter extends BaseAdapter {
         };
         VolleySingleton.getVolleySingleton(mActivity).addToRequestQueue(
                 request);
+    }
+
+//解析文件上传成功的code值
+    private void getFileCode(String response) {
+
+        Log.e("TAG", "uploadMethod2:" + response);
+        Toast.makeText(mActivity, "上传成功", Toast.LENGTH_SHORT).show();
+        List<Integer> codeList = new ArrayList<>();
+        if (response.contains(":")) {
+            String[] value = response.split(",");
+            for (String valueTemp : value) {
+                String[] valueTemp1 = valueTemp.split(":");
+                int valueCode = Integer.valueOf(valueTemp1[1]);
+                codeList.add(valueCode);
+            }
+            Log.e("TAG", "文件上传codeList:" + codeList.toString());
+
+
+
+
+
+
+        } else {
+            Toast.makeText(mActivity, "文件值解析出现问题", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }
 
