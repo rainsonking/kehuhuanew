@@ -37,6 +37,8 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
+import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
+import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import org.angmarch.views.NiceSpinner;
 
@@ -52,7 +54,6 @@ import java.util.Map;
 
 /**
  * Created by Administrator on 2016/6/7 0007.
- *
  */
 public class Add_EditAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;
@@ -65,6 +66,8 @@ public class Add_EditAdapter extends BaseAdapter {
     private Map<String, String> paramsMap = new HashMap<>();
     private String tableId, dataId, pageId;
     private android.support.v4.app.FragmentManager fm;
+    private static final int REQUEST_CODE = 732;
+    private ArrayList<String> mResults = new ArrayList<>();
 
 
     public Add_EditAdapter(Context context, List<Map<String, Object>> fieldSet,
@@ -137,9 +140,9 @@ public class Add_EditAdapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.activity_add_item, null);
 //初始化左侧名称
         TextView textView = (TextView) convertView.findViewById(R.id.add_item_name);
-        String fieldCnName=String.valueOf(fieldSet.get(position).get("fieldCnName"));
-        if (fieldCnName.equals("")||fieldCnName.equals("null")) {
-            fieldCnName="";
+        String fieldCnName = String.valueOf(fieldSet.get(position).get("fieldCnName"));
+        if (fieldCnName.equals("") || fieldCnName.equals("null")) {
+            fieldCnName = "";
         }
         textView.setText(fieldCnName);
 
@@ -155,9 +158,9 @@ public class Add_EditAdapter extends BaseAdapter {
 
         }
 //初始化上传图片框
-        RelativeLayout image_upload_layout= (RelativeLayout) convertView.findViewById(R.id.image_upload_layout);
+        RelativeLayout image_upload_layout = (RelativeLayout) convertView.findViewById(R.id.image_upload_layout);
 
-       Button image_upload =(Button) convertView.findViewById(R.id.image_upload);
+        Button image_upload = (Button) convertView.findViewById(R.id.image_upload);
         TextView image_upload_path = (TextView) convertView.findViewById(R.id.image_upload_path);
 
 //初始化编辑框
@@ -178,11 +181,11 @@ public class Add_EditAdapter extends BaseAdapter {
 
 //默认值选择,不包含20、21的情况，如果存在赋值，不存在为空串
         String defaultName;
-        Object itemObj=fieldSet.get(position).get(Constant.itemName);
-        if (itemObj!=null) {
-            defaultName=String.valueOf(itemObj);
-        }else{
-            defaultName="";
+        Object itemObj = fieldSet.get(position).get(Constant.itemName);
+        if (itemObj != null) {
+            defaultName = String.valueOf(itemObj);
+        } else {
+            defaultName = "";
         }
 
 
@@ -323,7 +326,7 @@ public class Add_EditAdapter extends BaseAdapter {
             //字典按钮点击选择Arrays.asList("One", "Two", "Three", "Four", "Five")
             List<String> dataset = new LinkedList<>();
 
-            for (int i=0;i<dicList.size();i++) {
+            for (int i = 0; i < dicList.size(); i++) {
                 dataset.add(String.valueOf(dicList.get(i).get("DIC_NAME")));
             }
             add_spinner.attachDataSource(dataset);
@@ -360,7 +363,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 addGeneral.setVisibility(View.VISIBLE);
             }
             //将long型时间改为约定的时间格式
-            String dateType="yyyy-MM-dd HH:mm:ss";
+            String dateType = "yyyy-MM-dd HH:mm:ss";
             //判断 如果defaultName是格林尼治时间字符串
 
             //转换long为日期
@@ -368,12 +371,12 @@ public class Add_EditAdapter extends BaseAdapter {
             if (defaultName.matches("[0-9]+")) {
                 long defaultNameLong = Long.valueOf(defaultName);
                 //转换long为日期
-                Log.e("TAG", "defaultNameLong "+defaultNameLong);
+                Log.e("TAG", "defaultNameLong " + defaultNameLong);
                 Date date = new Date(defaultNameLong);
-                defaultName= new SimpleDateFormat(dateType).format(date);
+                defaultName = new SimpleDateFormat(dateType).format(date);
             }
             addGeneral.setText(defaultName);
-            if (fieldSet.get(position).get(Constant.itemValue)==null) {
+            if (fieldSet.get(position).get(Constant.itemValue) == null) {
                 fieldSet.get(position).put(Constant.itemValue, defaultName);
                 fieldSet.get(position).put(Constant.itemName, defaultName);
             }
@@ -390,18 +393,18 @@ public class Add_EditAdapter extends BaseAdapter {
                                 @Override
                                 public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
                                     //获得年月日
-                                    final String dateTime2=year + "-" + month + "-" + day;
+                                    final String dateTime2 = year + "-" + month + "-" + day;
                                     TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
                                             (new TimePickerDialog.OnTimeSetListener() {
                                                 @Override
                                                 public void onTimeSet(RadialPickerLayout view, int hour, int minute) {
                                                     //获得时分并与日期加在一起，后缀加上秒数
-                                                    String sDt=dateTime2+" "+hour+":"+minute+":00";
-                                                    SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                    String sDt = dateTime2 + " " + hour + ":" + minute + ":00";
+                                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                                     try {
                                                         Date dt2 = sdf.parse(sDt);
-                                                        SimpleDateFormat sdf2=new SimpleDateFormat(finalDateType);
-                                                        String dateStr=sdf2.format(dt2);
+                                                        SimpleDateFormat sdf2 = new SimpleDateFormat(finalDateType);
+                                                        String dateStr = sdf2.format(dt2);
                                                         addGeneral.setText(dateStr);
                                                         fieldSet.get(position).put(Constant.itemValue, dateStr);
                                                         fieldSet.get(position).put(Constant.itemName, dateStr);
@@ -424,45 +427,6 @@ public class Add_EditAdapter extends BaseAdapter {
                     datePickerDialog.setYearRange(1983, 2030);
                     datePickerDialog.setCloseOnSingleTapDay(false);
                     datePickerDialog.show(fm, DATEPICKER_TAG);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //                    final Calendar c = Calendar.getInstance();
@@ -506,8 +470,8 @@ public class Add_EditAdapter extends BaseAdapter {
                 addGeneral.setVisibility(View.VISIBLE);
             }
 //将long型时间改为约定的时间格式
-            String dateType="HH:mm:ss";
-            Log.e("TAG", "defaultName "+defaultName);
+            String dateType = "HH:mm:ss";
+            Log.e("TAG", "defaultName " + defaultName);
 //判断是否为纯数字
 
             //存储defaultName
@@ -517,15 +481,15 @@ public class Add_EditAdapter extends BaseAdapter {
             if (defaultName.matches("[0-9]+")) {
                 long defaultNameLong = Long.valueOf(defaultName);
                 //转换long为日期
-                Log.e("TAG", "defaultNameLong "+defaultNameLong);
+                Log.e("TAG", "defaultNameLong " + defaultNameLong);
                 Date date = new Date(defaultNameLong);
-                defaultName= new SimpleDateFormat(dateType).format(date);
+                defaultName = new SimpleDateFormat(dateType).format(date);
             }
-                addGeneral.setText(defaultName);
-                if (fieldSet.get(position).get(Constant.itemValue)==null) {
-                    fieldSet.get(position).put(Constant.itemValue, defaultName);
-                    fieldSet.get(position).put(Constant.itemName, defaultName);
-                }
+            addGeneral.setText(defaultName);
+            if (fieldSet.get(position).get(Constant.itemValue) == null) {
+                fieldSet.get(position).put(Constant.itemValue, defaultName);
+                fieldSet.get(position).put(Constant.itemName, defaultName);
+            }
 
             final String finalDateType = dateType;
             addGeneral.setOnClickListener(new NoDoubleClickListener() {
@@ -538,12 +502,12 @@ public class Add_EditAdapter extends BaseAdapter {
                             (new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(RadialPickerLayout view, int hour, int minute) {
-                                    String sDt=hour+":"+minute+":00";
-                                    SimpleDateFormat sdf= new SimpleDateFormat(finalDateType);
+                                    String sDt = hour + ":" + minute + ":00";
+                                    SimpleDateFormat sdf = new SimpleDateFormat(finalDateType);
                                     try {
                                         Date dt2 = sdf.parse(sDt);
-                                        SimpleDateFormat sdf2=new SimpleDateFormat(finalDateType);
-                                        String dateStr=sdf2.format(dt2);
+                                        SimpleDateFormat sdf2 = new SimpleDateFormat(finalDateType);
+                                        String dateStr = sdf2.format(dt2);
                                         addGeneral.setText(dateStr);
                                         fieldSet.get(position).put(Constant.itemValue, dateStr);
                                         fieldSet.get(position).put(Constant.itemName, dateStr);
@@ -579,17 +543,25 @@ public class Add_EditAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     //intent
+                    // start multiple photos selector
+                    Intent intent = new Intent(mActivity, ImagesSelectorActivity.class);
+                    // max number of images to be selected
+                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
+                    // min size of image which will be shown; to filter tiny images (mainly icons)
+                    intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
+                    // show camera or not
+                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
+                    // pass current selected images as the initial value
+                    intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mResults);
+                    // start the selector
+
+                    mActivity.startActivityForResult(intent, REQUEST_CODE);
                 }
             });
 
             image_upload_path.setText("文件已上传");
 
             Log.e("TAG", "跳转到下拉树");
-
-
-
-
-
 
 
 //5、内部对象单值
@@ -602,10 +574,10 @@ public class Add_EditAdapter extends BaseAdapter {
             }
 
             String itemName;
-            if (fieldSet.get(position).get(Constant.itemName)!=null) {
-                itemName=String.valueOf(fieldSet.get(position).get(Constant.itemName));
-            }else{
-                itemName="";
+            if (fieldSet.get(position).get(Constant.itemName) != null) {
+                itemName = String.valueOf(fieldSet.get(position).get(Constant.itemName));
+            } else {
+                itemName = "";
             }
 
             if (!itemName.equals("")) {
@@ -624,12 +596,12 @@ public class Add_EditAdapter extends BaseAdapter {
                     }
 
                     if (finalChooseType != 1) {
-                        toMultiValueActivity(finalFieldCnName1,"false", idArrs, childPra, needFilterList, position);
+                        toMultiValueActivity(finalFieldCnName1, "false", idArrs, childPra, needFilterList, position);
 
 
                     } else {
                         Log.e("TAG", "跳转到下拉树");
-                        toTreeView(finalFieldCnName1,"false", idArrs, childPra, needFilterList, position);
+                        toTreeView(finalFieldCnName1, "false", idArrs, childPra, needFilterList, position);
                     }
 
                 }
@@ -646,10 +618,10 @@ public class Add_EditAdapter extends BaseAdapter {
                     addGeneral.setHint("请选择");
                 }
                 String itemName;
-                if (fieldSet.get(position).get(Constant.itemName)!=null) {
-                    itemName=String.valueOf(fieldSet.get(position).get(Constant.itemName));
-                }else{
-                    itemName="";
+                if (fieldSet.get(position).get(Constant.itemName) != null) {
+                    itemName = String.valueOf(fieldSet.get(position).get(Constant.itemName));
+                } else {
+                    itemName = "";
                 }
 
                 if (!itemName.equals("")) {
@@ -666,14 +638,13 @@ public class Add_EditAdapter extends BaseAdapter {
                             idArrs = String.valueOf(fieldSet.get(position).get(Constant.itemValue));
                         }
                         if (finalChooseType != 1) {
-                            toMultiValueActivity(finalFieldCnName,"true", idArrs, childPra, needFilterList, position);
+                            toMultiValueActivity(finalFieldCnName, "true", idArrs, childPra, needFilterList, position);
                         } else {//跳转到下拉树选择
-                            toTreeView(finalFieldCnName,"true", idArrs, childPra, needFilterList, position);
+                            toTreeView(finalFieldCnName, "true", idArrs, childPra, needFilterList, position);
                         }
                     }
                 });
-            }
-            else if (addStyle.equals("3")) {
+            } else if (addStyle.equals("3")) {
                 if (isShow) {
                     add_unlimited.setVisibility(View.VISIBLE);
                 }
@@ -764,28 +735,24 @@ public class Add_EditAdapter extends BaseAdapter {
     }
 
     /**
-     *
-     *
-     * @param dicList
-     * 字典列表最小为1
-     * @param byId
-     * 默认选择值
+     * @param dicList             字典列表最小为1
+     * @param byId                默认选择值
      * @param dicDefaultSelectInt
      * @return
      */
     public int getById(List<Map<String, Object>> dicList, int byId, int dicDefaultSelectInt) {
-           //纠正显示值错误
-        if (dicList.size()==1) {
-            byId=0;
+        //纠正显示值错误
+        if (dicList.size() == 1) {
+            byId = 0;
 
-        }else{
+        } else {
             //正常循环
-        for (int i = 0; i < dicList.size(); i++) {
-            if (Integer.parseInt(String.valueOf(dicList.get(i).get("DIC_ID"))) == dicDefaultSelectInt) {
-                byId = i;
-                break;
+            for (int i = 0; i < dicList.size(); i++) {
+                if (Integer.parseInt(String.valueOf(dicList.get(i).get("DIC_ID"))) == dicDefaultSelectInt) {
+                    byId = i;
+                    break;
+                }
             }
-        }
         }
         return byId;
     }
@@ -891,7 +858,7 @@ public class Add_EditAdapter extends BaseAdapter {
         return needFilterList;
     }
 
-    private void toTreeView(String viewName,String aTrue, String idArrs, Map<String, Object> childPra, List<Map<String, String>> needFilterList, int position) {
+    private void toTreeView(String viewName, String aTrue, String idArrs, Map<String, Object> childPra, List<Map<String, String>> needFilterList, int position) {
 
         try {
             Intent intent = new Intent();
@@ -912,7 +879,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
     }
 
-    public void toMultiValueActivity(String viewName,String isMulti, String idArrs, Map<String, Object> childPra, List<Map<String, String>> needFilterList, int position) {
+    public void toMultiValueActivity(String viewName, String isMulti, String idArrs, Map<String, Object> childPra, List<Map<String, String>> needFilterList, int position) {
         try {
 
             Intent intent = new Intent();
@@ -1187,13 +1154,6 @@ public class Add_EditAdapter extends BaseAdapter {
 //        Log.e("TAG", "适配器初始化开始Constant.jumpNum1 "+Constant.jumpNum1);
 //private int flag = -1;
 //private String isT="t0";
-
-
-
-
-
-
-
 
 
 //
