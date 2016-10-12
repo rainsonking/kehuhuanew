@@ -55,8 +55,13 @@ public class MenuFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 earaListViewAdapter.setSelectPos(position);
                 earaListViewAdapter.notifyDataSetChanged();
-                getChildMap(position);
-                nextAdapter.notifyDataSetChanged();
+               int childNum= getChildMap(position);
+                if (childNum==0) {
+                    toItem(parentList.get(position));
+                }else{
+                    nextAdapter.notifyDataSetChanged();
+                }
+
             }
         });
 
@@ -87,15 +92,6 @@ public class MenuFragment extends Fragment {
         }
     }
 
-    public void addParentImage(){
-        for (int i=0;i<parentList.size();i++) {
-            parentList.get(i).remove("image");
-//            parentList.get(i).put("normalImage", StuPra.imgs[2*i]);
-//            parentList.get(i).put("selectedImage", StuPra.imgs[2*i+1]);
-        }
-    }
-
-
 
     private void initView(View view) {
         //开始设置左侧内容，初始化控件
@@ -125,7 +121,7 @@ public class MenuFragment extends Fragment {
     }
 
 
-    public void getChildMap(int position) {
+    public int getChildMap(int position) {
         childList.clear();
         if (parentList.get(position).get("meunColl")!=null) {
             childList.addAll((List<Map<String, Object>>)parentList.get(position).get("meunColl"));
@@ -135,6 +131,7 @@ public class MenuFragment extends Fragment {
                 childList.get(i).put("images", StuPra.images[i]);
             }
         }
+        return childList.size();
     }
 
     public void toItem(Map<String, Object> itemData) {

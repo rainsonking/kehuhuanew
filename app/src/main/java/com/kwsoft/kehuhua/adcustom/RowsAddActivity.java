@@ -1,13 +1,14 @@
 package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,10 +42,6 @@ import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class RowsAddActivity extends AppCompatActivity {
 
-    @Bind(R.id.rows_IV_back_list_item_tadd)
-    ImageView rowsIVBackListItemTadd;
-    @Bind(R.id.rows_tv_commit_item_tadd)
-    ImageView rowsTvCommitItemTadd;
     @Bind(R.id.rows_tv_add_item_title)
     TextView rowsTvAddItemTitle;
     @Bind(R.id.rows_lv_add_item)
@@ -65,6 +62,7 @@ public class RowsAddActivity extends AppCompatActivity {
     private String hideFieldParagram = "";
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
