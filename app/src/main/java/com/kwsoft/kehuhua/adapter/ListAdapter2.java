@@ -19,110 +19,37 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> {
+public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> implements View.OnClickListener{
 
     private List<List<Map<String, String>>> mDatas;
     private List<Map<String, Object>> childTab;
     private Context mContext;
+    private OnRecyclerViewItemClickListener mOnItemClickListener = null;
 
+
+    public static interface OnRecyclerViewItemClickListener {
+        void onItemClick(View view , String data);
+    }
+    public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
     public ListAdapter2(List<List<Map<String, String>>> mDatas,List<Map<String, Object>> childTab){
         this.mDatas = mDatas;
         this.childTab = childTab;
     }
-
-
-
-
-
-//    @Override
-//    public void onBindViewHolder(ViewHolder holder, final int position) {
-//
-//        final ViewHolder mHolder =holder;
-//        mHolder.mItem = mValues.get(position);
-//        if(flag){
-//            mHolder.checkboxOperateData.setVisibility(View.VISIBLE);
-//            mHolder.checkboxOperateData.setOnClickListener(new View.OnClickListener() {
-//
-//                public void onClick(View v) {
-//                    if (isSelected.get(position)) {
-//                        isSelected.put(position, false);
-//                        setIsSelected(isSelected);
-//                        mValues.get(position).get(0).put("isCheck", String.valueOf(isSelected.get(position)));
-//                    } else {
-//                        isSelected.put(position, true);
-//                        setIsSelected(isSelected);
-//                        mValues.get(position).get(0).put("isCheck", String.valueOf(isSelected.get(position)));
-//                    }
-//                }
-//            });
-//            mHolder.checkboxOperateData.setChecked(isSelected.get(position));
-//        }
-//        final String title=mHolder.mItem.get(0).get("fieldCnName2");
-//        mHolder.studentName.setText(!title.equals("null")?title:"");
-//
-//        String left1Title=mHolder.mItem.get(1).get("fieldCnName");
-//        mHolder.left1.setText(!left1Title.equals("null")?left1Title:"");
-//
-//        String right1Title=mHolder.mItem.get(1).get("fieldCnName2");
-//        mHolder.right1.setText(!right1Title.equals("null")?right1Title:"");
-//
-//        String left2Title=mHolder.mItem.get(2).get("fieldCnName");
-//        mHolder.left2.setText(!left2Title.equals("null")?left2Title:"");
-//
-//        String right2Title=mHolder.mItem.get(2).get("fieldCnName2");
-//        mHolder.right2.setText(!right2Title.equals("null")?right2Title:"");
-//
-//        String left3Title=mHolder.mItem.get(3).get("fieldCnName");
-//        mHolder.left3.setText(!left3Title.equals("null")?left3Title:"");
-//
-//        String right3Title=mHolder.mItem.get(3).get("fieldCnName2");
-//        mHolder.right3.setText(!right3Title.equals("null")?right3Title:"");
-//
-//        String left4Title=mHolder.mItem.get(4).get("fieldCnName");
-//        mHolder.left4.setText(!left4Title.equals("null")?left4Title:"");
-//
-//        String right4Title=mHolder.mItem.get(4).get("fieldCnName2");
-//        mHolder.right4.setText(!right4Title.equals("null")?right4Title:"");
-//
-//        String right5Title=mHolder.mItem.get(5).get("fieldCnName2");
-//        mHolder.right5.setText(!right5Title.equals("null")?right5Title:"");
-//
-//        String right6Title=mHolder.mItem.get(6).get("fieldCnName2");
-//        mHolder.right6.setText(!right6Title.equals("null")?right6Title:"");
-//
-//
-//
-//
-//
-//        Log.e("TAG", "titleName  "+title);
-//        if (childTab.size()>0) {
-//
-//            mHolder.click_open.setVisibility(View.VISIBLE);
-//            mHolder.click_open_btn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent();
-//                    intent.setClass(context, TabActivity.class);
-//
-//                    intent.putExtra("childTab", JSON.toJSONString(childTab));
-//                    intent.putExtra("titleName",title);
-//                    context.startActivity(intent);
-//                }
-//            });
-//        }
-//        View view=mHolder.mView;
-//        view.setTag(position);
-//
-//    }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext=parent.getContext();
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
         View view = mInflater.inflate(R.layout.activity_list_item,null);
+        //将创建的View注册点击事件
+        view.setOnClickListener(this);
         return new ViewHolder(view);
     }
+
+
+
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -204,6 +131,8 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> 
                 }
             });
         }
+
+        holder.itemView.setTag(item);
     }
     /**
      * 获取单项数据
@@ -257,6 +186,14 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> 
         return 0;
     }
 
+    @Override
+    public void onClick(View view) {
+        if (mOnItemClickListener != null) {
+            //注意这里使用getTag方法获取数据
+            mOnItemClickListener.onItemClick(view,(String)view.getTag());
+        }
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
         final TextView studentName,
@@ -289,4 +226,5 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> 
         }
 
     }
+
 }

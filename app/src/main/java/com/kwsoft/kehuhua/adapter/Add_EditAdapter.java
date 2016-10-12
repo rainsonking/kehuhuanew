@@ -573,7 +573,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     //上传提交代码
-                    upload();
+                    upload(position);
 
                 }
             });
@@ -918,7 +918,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
 
     //上传文件
-    public void upload() {
+    public void upload(int position) {
 
         String url = sysUrl + pictureUrl;
         //待上传的两个文件
@@ -935,21 +935,21 @@ public class Add_EditAdapter extends BaseAdapter {
 
             if (files.size() > 0) {
                 Log.e("TAG", "files.toString()" + files.toString());
-                uploadMethod(url, files);
+                uploadMethod(url, files, position);
             }
         } else {
             Toast.makeText(mActivity, "尚未选择图片", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void uploadMethod(String url, List<File> files) {
+    public void uploadMethod(String url, List<File> files, final int position) {
         Log.e("TAG", "uploadMethod1");
         MultipartRequest request = new MultipartRequest(url, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
 
-                getFileCode(response);
+                getFileCode(response, position);
 
 
 //                TrendCreateHttpManager.toTrendCreateHttpActionSuccess();
@@ -981,11 +981,10 @@ public class Add_EditAdapter extends BaseAdapter {
                 request);
     }
 
-    String codeListStr = "";
 
     //解析文件上传成功的code值
-    private void getFileCode(String response) {
-
+    private void getFileCode(String response, int position) {
+        String codeListStr = "";
         Log.e("TAG", "uploadMethod2:" + response);
         Toast.makeText(mActivity, "上传成功", Toast.LENGTH_SHORT).show();
         List<Integer> codeList = new ArrayList<>();
@@ -1010,8 +1009,9 @@ public class Add_EditAdapter extends BaseAdapter {
         } else {
             Toast.makeText(mActivity, "文件值解析出现问题", Toast.LENGTH_SHORT).show();
         }
-
-
+        fieldSet.get(position).put(Constant.itemValue, codeListStr);
+        fieldSet.get(position).put(Constant.itemName, codeListStr);
+        notifyDataSetChanged();
     }
 }
 

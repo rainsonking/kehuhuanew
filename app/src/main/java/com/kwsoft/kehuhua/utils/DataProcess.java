@@ -314,168 +314,52 @@ public class DataProcess {
         }
         return commitUrl;
     }
+
+
+    /**
+     * 合并配置和数据，并添加参数
+     */
+    public static List<List<Map<String, String>>> combineSetData(String tableId,List<Map<String, Object>> set, List<Map<String, Object>> data) {
+        List<List<Map<String, String>>> newData = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            List<Map<String, String>> itemNum = new ArrayList<>();
+            for (int j = 0; j < set.size(); j++) {
+                Map<String, String> property = new HashMap<>();
+                if (j == 0) {
+                    property.put("isCheck", "false");
+                    String mainId = "T_" + tableId + "_0";
+                    if (data.get(i).get(mainId) != null) {
+                        property.put("mainId", String.valueOf(data.get(i).get(mainId)));
+                    } else {
+                        property.put("mainId", "");
+                    }
+                    property.put("tableId", tableId);
+                    property.put("allItemData", data.get(i).toString());
+                }
+                property.put("fieldCnName", String.valueOf(set.get(j).get("fieldCnName")));
+                String fieldAliasName = String.valueOf(set.get(j).get("fieldAliasName"));
+                String fieldCnName2 = "";
+                if (data.get(i).get(fieldAliasName) != null) {
+                    fieldCnName2 = String.valueOf(data.get(i).get(fieldAliasName));
+                }
+                property.put("fieldCnName2", fieldCnName2);
+                itemNum.add(property);
+            }
+            newData.add(itemNum);
+        }
+        return newData;
+    }
+
+
+
+
+
+
+
+
+
+
 }
 
-
-//    /**
-//     * 所属层数
-//     * @param floor
-//     *
-//     * tableId、pageId
-//     * @param tableId
-//     * @param pageId
-//     *
-//     * 数据源
-//     * @param dataListMap
-//     * @return
-//     */
-//
-//    public String formatData(int floor,String tableId,String pageId,List<Map<String, Object>> dataListMap){
-//
-//
-//
-//        for (int i=0;i<dataListMap.size();i++) {
-//
-//            Map<String, Object> itemMap=dataListMap.get(i);
-//
-////获取fieldRole
-//            int fieldRole = Integer.valueOf(String.valueOf(itemMap.get("fieldRole")));
-////是否显示
-////            boolean isShow=true;
-////            if (itemMap.get("jsWhereStr")!=null) {
-////                String jsWhereStr=String.valueOf(itemMap.get("jsWhereStr")).replace(" ", "").replace("==", "");
-////                //String jsWhereStrFieldId=
-////                String jsWhereStrFieldId = jsWhereStr.substring(jsWhereStr.indexOf(":")+1, jsWhereStr.indexOf("}"));
-////                String jsWhereStrValue=jsWhereStr.substring(jsWhereStr.indexOf("}")+1, jsWhereStr.length());
-////
-////                Log.e("TAG", "jsWhereStrFieldId：" +jsWhereStrFieldId);
-////                Log.e("TAG", "jsWhereStrValue：" +jsWhereStrValue);
-////
-////                int fieldIdNeed=Integer.valueOf(jsWhereStrFieldId);
-////                int dicNeed=Integer.valueOf(jsWhereStrValue);
-////                int countNum=0;
-////                for (int j=0;j<dataListMap.size();j++) {
-////                    countNum++;
-////                    int fieldIdTemp=Integer.valueOf(String.valueOf(dataListMap.get(j).get("fieldId")));
-////                    if (fieldIdNeed==fieldIdTemp) {
-////                        //获得字典值
-////                        if (dataListMap.get(j).get("tempValue")!=null) {
-////                            int dicTemp= Integer.valueOf(String.valueOf(dataListMap.get(j).get("tempValue")));
-////                            if (dicNeed==dicTemp) {
-////                                break;
-////                            }
-////                        }
-////                    }
-////                }
-////                if (countNum==dataListMap.size()) {
-////                    isShow=false;
-////                }
-////            }
-////
-////            dataListMap.get(i).put("isShow",isShow);
-//
-//            if (fieldRole == 1 || fieldRole == 2 || fieldRole == 10 ||
-//                    fieldRole == 3 || fieldRole == 4 || fieldRole == 5 ||
-//                    fieldRole == 6 || fieldRole == 7 || fieldRole == 11 ||
-//                    fieldRole == 12 || fieldRole == 13 || fieldRole == 8 ||
-//                    fieldRole == 9 || fieldRole == 24 || fieldRole == 29) {
-//
-//                if (fieldRole == 2) {
-//                    itemMap.put("tempKey", "t"+floor + "_au_" + tableId + "_" + pageId + "_" + itemMap.get("fieldId") + "_" + "editor");
-//                } else {
-//                    itemMap.put("tempKey", "t"+floor + "_au_" + tableId + "_" + pageId + "_" + itemMap.get("fieldId"));
-//                }
-//            }else if (fieldRole == 16 || fieldRole == 23) {
-//                itemMap.put("tempKey", "t"+floor+"_au_" + tableId + "_" + pageId + "_" + itemMap.get("fieldId"));
-//            }else if (fieldRole == 14 || fieldRole == 26 || fieldRole == 28) {
-//
-//                itemMap.put("tempKey", "t"+floor+"_au_" + tableId + "_" + pageId + "_" + itemMap.get("fieldId"));
-//
-//            }else if (fieldRole == 15) {
-//
-//                itemMap.put("tempKey", "t"+floor+"_au_" + tableId + "_" + pageId + "_" + itemMap.get("fieldId"));
-//            }else if (fieldRole == 20 || fieldRole == 22) {
-//                itemMap.put("tempKey", "t"+floor+"_au_" + tableId + "_" + pageId + "_" + itemMap.get("fieldId"));
-//            }else if (fieldRole == 21) {
-//                String addStyle = String.valueOf(itemMap.get("addStyle"));
-//                if (addStyle.equals("1") || addStyle.equals("2")) {
-//
-//                    itemMap.put("tempKey", "t"+floor + "_au_" + itemMap.get("relationTableId") + "_" +
-//                            itemMap.get("showFieldArr") +
-//                            "_" + itemMap.get("fieldId") + "_dz");
-//                }else if (addStyle.equals("3")) {
-//                    itemMap.put("tempKey", "t"+floor + "_au_" + itemMap.get("relationTableId") + "_" +
-//                            itemMap.get("showFieldArr") +
-//                            "_" + itemMap.get("fieldId") + "_dz");
-//                }
-//            }else {
-//                itemMap.put("tempKey", "t"+floor+"_au_" + tableId + "_" + pageId + "_" + itemMap.get("fieldId"));
-//            }
-//        }
-//
-//return null;
-//    }
-
-
-//    public static String toCommit(Activity mActivity,
-//                                     List<Map<String, Object>> dataCommit) {
-//
-//        //必填项判断
-//        String commitUrl = "";
-//        int numNull = 0;//判断必填项是否填写
-//        for (int i = 0; i < dataCommit.size(); i++) {
-//            int ifMust = Integer.valueOf(String.valueOf(dataCommit.get(i).get("ifMust")));
-//            String tempValue = String.valueOf(dataCommit.get(i).get("true_defaultShowVal"));
-//            //如果存在1个必填项为空则提示
-//            if (ifMust == 1 && (tempValue.equals(""))) {
-//                numNull++;
-//                break;
-//            }
-//        }
-//
-//
-//        if (numNull == 0) {
-//        //如果必填的都填写了，则拼参数
-//            Map<String, Object> commitMap1 = new HashMap<>();
-//            //拼接网址
-//            for (int i = 0; i < dataCommit.size(); i++) {
-//                String key = String.valueOf(dataCommit.get(i).get("tempKey"));
-//                String value;
-//                if (dataCommit.get(i).get("tempValue") != null) {
-//                    value = String.valueOf(dataCommit.get(i).get("tempValue"));
-//                } else {
-//                    value = "";
-//                }
-//                commitMap1.put(key, value);
-//
-//            }
-//            String pinJie1 = "";
-//            for (Map.Entry entry : commitMap1.entrySet()) {
-//                pinJie1 += entry.getKey() + "=" + entry.getValue() + "&";
-//            }
-//            Log.e("TAG", "pinJie1" + pinJie1);
-//            for (int i = 0; i < dataCommit.size(); i++) {
-//                if (dataCommit.get(i).get("idArr") != null) {
-//                    String[] ids = String.valueOf(dataCommit.get(i).get("idArr")).split(",");
-//                    String pinJie2 = "";
-//                    if (dataCommit.get(i).get("tempKeyIdArr") != null) {
-//                        String keyChild = String.valueOf(dataCommit.get(i).get("tempKeyIdArr"));
-//                        for (String id : ids) {
-//                            pinJie2 += keyChild + "=" + id + "&";
-//                        }
-//                    }
-//                    pinJie1 += pinJie2;
-//                }
-//            }
-//            commitUrl = pinJie1.substring(0, pinJie1.length() - 1);
-//            //请求网络提交
-//            Log.e("TAG", "添加合成数据" + commitUrl);
-//        } else {
-//            commitUrl = "no";
-//            Toast.makeText(mActivity, "必填字段不能为空", Toast.LENGTH_SHORT).show();
-//        }
-//        return commitUrl;
-//
-//    }
 
 

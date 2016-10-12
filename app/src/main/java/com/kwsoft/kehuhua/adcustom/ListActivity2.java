@@ -23,6 +23,7 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 
@@ -309,7 +310,7 @@ public class ListActivity2 extends AppCompatActivity {
         }
 //将dataList与fieldSet合并准备适配数据
         if (dataList != null && dataList.size() > 0) {
-            datas = combineSetData(fieldSet, dataList);
+            datas = DataProcess.combineSetData(tableId,fieldSet, dataList);
         } else {
             Toast.makeText(ListActivity2.this, "列表无数据",
                     Toast.LENGTH_SHORT).show();
@@ -349,6 +350,15 @@ public class ListActivity2 extends AppCompatActivity {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity2.this));
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 //                mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+
+                mAdapter.setOnItemClickListener(new ListAdapter2.OnRecyclerViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, String data) {
+                        Log.e("TAG", "data " + data);
+//                        Toast.makeText(ListActivity2.this, data, Toast.LENGTH_SHORT).show();
+//                        toItem(data);
+                    }
+                });
                 break;
             case STATE_REFREH:
                 mAdapter.clearData();
@@ -364,40 +374,24 @@ public class ListActivity2 extends AppCompatActivity {
         }
     }
 
-    /**
-     * 合并配置和数据，并添加参数
-     */
-    public List<List<Map<String, String>>> combineSetData(List<Map<String, Object>> set, List<Map<String, Object>> data) {
-        List<List<Map<String, String>>> newData = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            List<Map<String, String>> itemNum = new ArrayList<>();
-            for (int j = 0; j < set.size(); j++) {
-                Map<String, String> property = new HashMap<>();
-                if (j == 0) {
-                    property.put("isCheck", "false");
-                    String mainId = "T_" + tableId + "_0";
-                    if (data.get(i).get(mainId) != null) {
-                        property.put("mainId", String.valueOf(data.get(i).get(mainId)));
-                    } else {
-                        property.put("mainId", "");
-                    }
-                    property.put("tableId", tableId);
-                    property.put("allItemData", data.get(i).toString());
-                }
-                property.put("fieldCnName", String.valueOf(set.get(j).get("fieldCnName")));
-                String fieldAliasName = String.valueOf(set.get(j).get("fieldAliasName"));
-                String fieldCnName2 = "";
-                if (data.get(i).get(fieldAliasName) != null) {
-                    fieldCnName2 = String.valueOf(data.get(i).get(fieldAliasName));
-                }
-                property.put("fieldCnName2", fieldCnName2);
-                itemNum.add(property);
-            }
-            newData.add(itemNum);
-        }
-        return newData;
-    }
     @OnClick(R.id.searchButton)
     public void onClick() {
+    }
+
+    /**
+     * 跳转至子菜单列表
+     */
+    public void toItem(String itemData) {
+        try {
+            Intent intent = new Intent();
+            intent.setClass(this, InfoActivity.class);
+            intent.putExtra("childData", itemData);
+            intent.putExtra("tableId", tableId);
+            intent.putExtra("operaButtonSet", operaButtonSet);
+
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
