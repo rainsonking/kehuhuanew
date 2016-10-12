@@ -25,7 +25,6 @@ import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
-import com.zfdang.multiple_images_selector.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +76,7 @@ public class ListActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_list_avtivity2);
         ButterKnife.bind(this);
         initRefreshLayout();//初始化空间
+        initView();
         getDataIntent();//获取初始化数据
         getData();
 
@@ -93,8 +93,11 @@ public class ListActivity2 extends AppCompatActivity {
             }
             @Override
             public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
-                if (mAdapter.getItemCount() <= totalNum)
+                if (mAdapter.getItemCount() < totalNum){
+
                     loadMoreData();
+                }
+
                 else {
                     Toast.makeText(ListActivity2.this, "没有更多了", Toast.LENGTH_SHORT).show();
                     mRefreshLayout.finishRefreshLoadMore();
@@ -141,8 +144,8 @@ public class ListActivity2 extends AppCompatActivity {
         }
         mToolbar.setTitle(titleName);
         paramsMap = new HashMap<>();
-        paramsMap.put(tableId, tableId);
-        paramsMap.put(pageId, pageId);
+        paramsMap.put(Constant.tableId, tableId);
+        paramsMap.put(Constant.pageId, pageId);
         paramsMap.put(Constant.timeName, dataTime + "");
         paramsStr = JSON.toJSONString(paramsMap);
         Constant.paramsMapSearch = paramsMap;
