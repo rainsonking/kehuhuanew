@@ -438,39 +438,6 @@ public class Add_EditAdapter extends BaseAdapter {
                     datePickerDialog.setYearRange(1983, 2030);
                     datePickerDialog.setCloseOnSingleTapDay(false);
                     datePickerDialog.show(fm, DATEPICKER_TAG);
-
-
-//                    final Calendar c = Calendar.getInstance();
-//                    c.setTimeInMillis(System.currentTimeMillis());
-//                    //默认选中当前时间
-//                    DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((new DatePickerDialog.OnDateSetListener() {
-//                                @Override
-//                                public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-//
-//                                    String sDt=year+"-"+(month+1) + "-" + day;
-//                                    SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
-//                                    try {
-//                                        Date dt2 = sdf.parse(sDt);
-//                                        SimpleDateFormat sdf2=new SimpleDateFormat(finalDateType);
-//                                        String dateStr=sdf2.format(dt2);
-//                                        addGeneral.setText(dateStr);
-//                                        fieldSet.get(position).put(Constant.itemValue, dateStr);
-//                                        Log.e("TAG", "日期选择 "+Constant.itemValue+"   "+dateStr);
-//                                        fieldSet.get(position).put(Constant.itemName, dateStr);
-//                                        Log.e("TAG", "日期选择 "+Constant.itemName+"   "+dateStr);
-//                                    } catch (ParseException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }),
-//                            c.get(Calendar.YEAR),
-//                            c.get(Calendar.MONTH),
-//                            c.get(Calendar.DAY_OF_MONTH),
-//                            true);
-//                    datePickerDialog.setVibrate(true);
-//                    datePickerDialog.setYearRange(1983, 2030);
-//                    datePickerDialog.setCloseOnSingleTapDay(false);
-//                    datePickerDialog.show(fm, DATEPICKER_TAG);
                 }
             });
 
