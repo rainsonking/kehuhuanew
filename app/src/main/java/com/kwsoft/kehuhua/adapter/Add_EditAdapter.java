@@ -981,7 +981,9 @@ public class Add_EditAdapter extends BaseAdapter {
                 request);
     }
 
-//解析文件上传成功的code值
+    String codeListStr = "";
+
+    //解析文件上传成功的code值
     private void getFileCode(String response) {
 
         Log.e("TAG", "uploadMethod2:" + response);
@@ -995,12 +997,16 @@ public class Add_EditAdapter extends BaseAdapter {
                 codeList.add(valueCode);
             }
             Log.e("TAG", "文件上传codeList:" + codeList.toString());
-
-
-
-
-
-
+            int leg = codeList.size();
+            if (leg > 0) {
+                for (int i = 0; i < leg; i++) {
+                    if (i == (leg - 1)) {
+                        codeListStr = codeListStr + codeList.get(i);
+                    } else {
+                        codeListStr = codeListStr + codeList.get(i) + ",";
+                    }
+                }
+            }
         } else {
             Toast.makeText(mActivity, "文件值解析出现问题", Toast.LENGTH_SHORT).show();
         }
