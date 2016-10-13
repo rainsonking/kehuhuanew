@@ -24,9 +24,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.kwsoft.kehuhua.adcustom.AddItemsActivity;
 import com.kwsoft.kehuhua.adcustom.AddTemplateDataActivity;
@@ -37,17 +34,13 @@ import com.kwsoft.kehuhua.adcustom.RowsEditActivity;
 import com.kwsoft.kehuhua.adcustom.TreeViewActivity;
 import com.kwsoft.kehuhua.adcustom.UnlimitedAddActivity;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.kehuhua.utils.MultipartRequest;
 import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
-import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
-import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import org.angmarch.views.NiceSpinner;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,12 +51,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.kwsoft.kehuhua.config.Constant.listPath;
-import static com.kwsoft.kehuhua.config.Constant.pictureUrl;
-import static com.kwsoft.kehuhua.config.Constant.sysUrl;
-
 /**
  * Created by Administrator on 2016/6/7 0007.
+ *
  */
 public class Add_EditAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;
@@ -171,8 +161,6 @@ public class Add_EditAdapter extends BaseAdapter {
         RelativeLayout image_upload_layout = (RelativeLayout) convertView.findViewById(R.id.image_upload_layout);
 
         Button image_upload = (Button) convertView.findViewById(R.id.image_upload);
-        Button image_upload_commit = (Button) convertView.findViewById(R.id.image_upload_commit);
-        TextView image_upload_path = (TextView) convertView.findViewById(R.id.image_upload_path);
 
 //初始化编辑框
         EditText add_edit_text = (EditText) convertView.findViewById(R.id.add_edit_text);
@@ -211,7 +199,7 @@ public class Add_EditAdapter extends BaseAdapter {
         boolean isShow = isShow(position, textView, textViewIfMust);
 //1、普通编辑框
 
-        if (fieldRole == 1 || fieldRole == 2 || fieldRole == 10 ||
+        if (fieldRole == -1 ||fieldRole == 1 || fieldRole == 2 || fieldRole == 10 ||
                 fieldRole == 3 || fieldRole == 4 || fieldRole == 5 ||
                 fieldRole == 6 || fieldRole == 7 || fieldRole == 11 ||
                 fieldRole == 12 || fieldRole == 13 || fieldRole == 8 ||
@@ -438,39 +426,6 @@ public class Add_EditAdapter extends BaseAdapter {
                     datePickerDialog.setYearRange(1983, 2030);
                     datePickerDialog.setCloseOnSingleTapDay(false);
                     datePickerDialog.show(fm, DATEPICKER_TAG);
-
-
-//                    final Calendar c = Calendar.getInstance();
-//                    c.setTimeInMillis(System.currentTimeMillis());
-//                    //默认选中当前时间
-//                    DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((new DatePickerDialog.OnDateSetListener() {
-//                                @Override
-//                                public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-//
-//                                    String sDt=year+"-"+(month+1) + "-" + day;
-//                                    SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
-//                                    try {
-//                                        Date dt2 = sdf.parse(sDt);
-//                                        SimpleDateFormat sdf2=new SimpleDateFormat(finalDateType);
-//                                        String dateStr=sdf2.format(dt2);
-//                                        addGeneral.setText(dateStr);
-//                                        fieldSet.get(position).put(Constant.itemValue, dateStr);
-//                                        Log.e("TAG", "日期选择 "+Constant.itemValue+"   "+dateStr);
-//                                        fieldSet.get(position).put(Constant.itemName, dateStr);
-//                                        Log.e("TAG", "日期选择 "+Constant.itemName+"   "+dateStr);
-//                                    } catch (ParseException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }),
-//                            c.get(Calendar.YEAR),
-//                            c.get(Calendar.MONTH),
-//                            c.get(Calendar.DAY_OF_MONTH),
-//                            true);
-//                    datePickerDialog.setVibrate(true);
-//                    datePickerDialog.setYearRange(1983, 2030);
-//                    datePickerDialog.setCloseOnSingleTapDay(false);
-//                    datePickerDialog.show(fm, DATEPICKER_TAG);
                 }
             });
 
@@ -479,6 +434,7 @@ public class Add_EditAdapter extends BaseAdapter {
         } else if (fieldRole == 15) {
             if (isShow) {
                 addGeneral.setVisibility(View.VISIBLE);
+
             }
 //将long型时间改为约定的时间格式
             String dateType = "HH:mm:ss";
@@ -534,54 +490,39 @@ public class Add_EditAdapter extends BaseAdapter {
 
                 }//onclick完毕
             });
-
-
         } else if (fieldRole == 19) {
-
 /**
  *
  * 添加作业附件
  *
  *
  */
-
-            if (isShow) {
+            if (isShow&&ifUpdate==1) {
                 image_upload_layout.setVisibility(View.VISIBLE);
+                image_upload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(mActivity, SelectPictureActivity.class);
+                        intent.putExtra("position", position + "");
+                        mActivity.startActivityForResult(intent, 2);
+                    }
+                });
+//                image_upload_commit.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        fieldSet.get(position).put(Constant.itemValue, codeListStr);
+//                        fieldSet.get(position).put(Constant.itemName, codeListStr);
+//                        notifyDataSetChanged();
+//
+//                    }
+//                });
 
+
+//                image_upload_path.setText(Constant.pictureStr);
+            }else{
+                addGeneral.setVisibility(View.VISIBLE);
+                addGeneral.setText(defaultName);
             }
-
-            image_upload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //intent
-                    // start multiple photos selector
-                    Intent intent = new Intent(mActivity, ImagesSelectorActivity.class);
-                    // max number of images to be selected
-                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
-                    // min size of image which will be shown; to filter tiny images (mainly icons)
-                    intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
-                    // show camera or not
-                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
-                    // pass current selected images as the initial value
-                    intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mResults);
-                    // start the selector
-
-                    mActivity.startActivityForResult(intent, REQUEST_CODE);
-                }
-            });
-            image_upload_commit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //上传提交代码
-                    upload();
-
-                }
-            });
-            image_upload_path.setText(Constant.pictureStr);
-
-            Log.e("TAG", "跳转到下拉树");
-
-
 //5、内部对象单值
         } else if (fieldRole == 20 || fieldRole == 22) {
             if (isShow) {
@@ -917,96 +858,104 @@ public class Add_EditAdapter extends BaseAdapter {
     }
 
 
-    //上传文件
-    public void upload() {
+//    //上传文件
+//    public void upload(int position) {
+//
+//        String url = sysUrl + pictureUrl;
+//        //待上传的两个文件
+//        List<File> files = new ArrayList<>();
+//        if (img_Paths.size() > 0) {
+//            for (int i = 0; i < img_Paths.size(); i++) {
+//
+//                files.add(new File(img_Paths.get(i)));
+//            }
+////                uploadMethod(params, uploadHost);
+//            //请求的URL
+//            //post请求，三个参数分别是请求地址、请求参数、请求的回调接口
+//            Log.e("TAG", "listPath.toString()" + img_Paths.toString());
+//
+//            if (files.size() > 0) {
+//                Log.e("TAG", "files.toString()" + files.toString());
+//                uploadMethod(url, files, position);
+//            }
+//        } else {
+//            Toast.makeText(mActivity, "尚未选择图片", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
-        String url = sysUrl + pictureUrl;
-        //待上传的两个文件
-        List<File> files = new ArrayList<>();
-        if (listPath.size() > 0) {
-            for (int i = 0; i < listPath.size(); i++) {
-
-                files.add(new File(listPath.get(i)));
-            }
-//                uploadMethod(params, uploadHost);
-            //请求的URL
-            //post请求，三个参数分别是请求地址、请求参数、请求的回调接口
-            Log.e("TAG", "listPath.toString()" + listPath.toString());
-
-            if (files.size() > 0) {
-                Log.e("TAG", "files.toString()" + files.toString());
-                uploadMethod(url, files);
-            }
-        } else {
-            Toast.makeText(mActivity, "尚未选择图片", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void uploadMethod(String url, List<File> files) {
-        Log.e("TAG", "uploadMethod1");
-        MultipartRequest request = new MultipartRequest(url, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-
-                getFileCode(response);
-
-
-//                TrendCreateHttpManager.toTrendCreateHttpActionSuccess();
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(mActivity, "上传失败", Toast.LENGTH_SHORT).show();
-//                TrendCreateHttpManager.toTrendCreateHttpActionError();
-            }
-        }, "myFiles", files, null) {
-
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(mActivity).addToRequestQueue(
-                request);
-    }
-
-//解析文件上传成功的code值
-    private void getFileCode(String response) {
-
-        Log.e("TAG", "uploadMethod2:" + response);
-        Toast.makeText(mActivity, "上传成功", Toast.LENGTH_SHORT).show();
-        List<Integer> codeList = new ArrayList<>();
-        if (response.contains(":")) {
-            String[] value = response.split(",");
-            for (String valueTemp : value) {
-                String[] valueTemp1 = valueTemp.split(":");
-                int valueCode = Integer.valueOf(valueTemp1[1]);
-                codeList.add(valueCode);
-            }
-            Log.e("TAG", "文件上传codeList:" + codeList.toString());
+//    public void uploadMethod(String url, List<File> files, final int position) {
+//        Log.e("TAG", "uploadMethod1");
+//        MultipartRequest request = new MultipartRequest(url, new Response.Listener<String>() {
+//
+//            @Override
+//            public void onResponse(String response) {
+//
+//                getFileCode(response, position);
+//
+//
+////                TrendCreateHttpManager.toTrendCreateHttpActionSuccess();
+//            }
+//        }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Toast.makeText(mActivity, "上传失败", Toast.LENGTH_SHORT).show();
+////                TrendCreateHttpManager.toTrendCreateHttpActionError();
+//            }
+//        }, "myFiles", files, null) {
+//
+//
+//            //重写getHeaders 默认的key为cookie，value则为localCookie
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+//                    HashMap<String, String> headers = new HashMap<>();
+//                    headers.put("cookie", Constant.localCookie);
+//                    //Log.d("调试", "headers----------------" + headers);
+//                    return headers;
+//                } else {
+//                    return super.getHeaders();
+//                }
+//            }
+//        };
+//        VolleySingleton.getVolleySingleton(mActivity).addToRequestQueue(
+//                request);
+//    }
 
 
-
-
-
-
-        } else {
-            Toast.makeText(mActivity, "文件值解析出现问题", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
+//    //解析文件上传成功的code值
+//    private void getFileCode(String response, int position) {
+//        String codeListStr = "";
+//        Log.e("TAG", "uploadMethod2:" + response);
+//        Toast.makeText(mActivity, "上传成功", Toast.LENGTH_SHORT).show();
+//        List<Integer> codeList = new ArrayList<>();
+//        if (response.contains(":")) {
+//            String[] value = response.split(",");
+//            for (String valueTemp : value) {
+//                String[] valueTemp1 = valueTemp.split(":");
+//                int valueCode = Integer.valueOf(valueTemp1[1]);
+//                codeList.add(valueCode);
+//            }
+//            Log.e("TAG", "文件上传codeList:" + codeList.toString());
+//            int leg = codeList.size();
+//            if (leg > 0) {
+//                for (int i = 0; i < leg; i++) {
+//                    if (i == (leg - 1)) {
+//                        codeListStr = codeListStr + codeList.get(i);
+//                    } else {
+//                        codeListStr = codeListStr + codeList.get(i) + ",";
+//                    }
+//                }
+//            }
+//        } else {
+//            Toast.makeText(mActivity, "文件值解析出现问题", Toast.LENGTH_SHORT).show();
+//        }
+//        Log.e("TAG", "文件上传码codeListStr:" + codeListStr);
+//
+//        fieldSet.get(position).put(Constant.itemValue, codeListStr);
+//        fieldSet.get(position).put(Constant.itemName, codeListStr);
+//        notifyDataSetChanged();
+//    }
 }
 
 

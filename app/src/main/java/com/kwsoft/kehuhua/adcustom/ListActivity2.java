@@ -1,14 +1,24 @@
 package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -23,9 +33,9 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
-import com.zfdang.multiple_images_selector.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,12 +81,16 @@ public class ListActivity2 extends AppCompatActivity {
     private static final int STATE_MORE = 2;
     private int state = STATE_NORMAL;
 
+
+
+    private PopupWindow toolListPop, childListPop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_avtivity2);
         ButterKnife.bind(this);
         initRefreshLayout();//初始化空间
+        initView();
         getDataIntent();//获取初始化数据
         getData();
 
@@ -93,10 +107,13 @@ public class ListActivity2 extends AppCompatActivity {
             }
             @Override
             public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
-                if (mAdapter.getItemCount() <= totalNum)
+                if (mAdapter.getItemCount() < totalNum){
+
                     loadMoreData();
+                }
+
                 else {
-                    Toast.makeText(ListActivity2.this, "没有更多了", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ListActivity2.this, "没有更多了", Toast.LENGTH_SHORT).show();
                     mRefreshLayout.finishRefreshLoadMore();
                 }
             }
@@ -141,8 +158,8 @@ public class ListActivity2 extends AppCompatActivity {
         }
         mToolbar.setTitle(titleName);
         paramsMap = new HashMap<>();
-        paramsMap.put(tableId, tableId);
-        paramsMap.put(pageId, pageId);
+        paramsMap.put(Constant.tableId, tableId);
+        paramsMap.put(Constant.pageId, pageId);
         paramsMap.put(Constant.timeName, dataTime + "");
         paramsStr = JSON.toJSONString(paramsMap);
         Constant.paramsMapSearch = paramsMap;
@@ -261,17 +278,7 @@ public class ListActivity2 extends AppCompatActivity {
 
                     //        //判断条件显示右侧按钮
                     Log.e("TAG", "详情页operaButtonSet " + operaButtonSet);
-                    if (operaButtonSetList.size() > 0) {
-                        mToolbar.showRightImageButton();
-                        //右侧下拉按钮
-                        mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-//                                popButton();
-                            }
-                        });
 
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -294,7 +301,15 @@ public class ListActivity2 extends AppCompatActivity {
                 Log.e("TAG", "获取buttonSet" + buttonSet);
                 //判断右上角按钮是否可见
                 if (buttonSet.size() > 0) {
-                    mToolbar.hideLeftImageButton();
+                    mToolbar.showRightImageButton();
+                    //右侧下拉按钮
+                    mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showButtonSet();
+                        }
+                    });
+
                 }
             }
 //获取dataList
@@ -305,12 +320,12 @@ public class ListActivity2 extends AppCompatActivity {
             e.printStackTrace();
         }
 //将dataList与fieldSet合并准备适配数据
-        if (dataList != null && dataList.size() > 0) {
-            datas = combineSetData(fieldSet, dataList);
-        } else {
-            Toast.makeText(ListActivity2.this, "列表无数据",
-                    Toast.LENGTH_SHORT).show();
-        }
+//        if (dataList != null && dataList.size() > 0) {
+            datas = DataProcess.combineSetData(tableId,fieldSet, dataList);
+//        } else {
+//            Toast.makeText(ListActivity2.this, "列表无数据",
+//                    Toast.LENGTH_SHORT).show();
+//        }
 //用适配器并判断展示数据
         showData();
     }
@@ -341,60 +356,172 @@ public class ListActivity2 extends AppCompatActivity {
     private void showData() {
         switch (state) {
             case STATE_NORMAL:
-                mAdapter = new ListAdapter2(datas, childTab);
-                mRecyclerView.setAdapter(mAdapter);
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity2.this));
-                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//                mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+                normalRequest();
                 break;
             case STATE_REFREH:
-                mAdapter.clearData();
-                mAdapter.addData(datas);
-                mRecyclerView.scrollToPosition(0);
-                mRefreshLayout.finishRefresh();
+                    mAdapter.clearData();
+                    mAdapter.addData(datas);
+                    mRecyclerView.scrollToPosition(0);
+                    mRefreshLayout.finishRefresh();
                 break;
             case STATE_MORE:
-                mAdapter.addData(mAdapter.getDatas().size(), datas);
-                mRecyclerView.scrollToPosition(mAdapter.getDatas().size());
-                mRefreshLayout.finishRefreshLoadMore();
+                if (mAdapter!=null) {
+                    mAdapter.addData(mAdapter.getDatas().size(), datas);
+                    mRecyclerView.scrollToPosition(mAdapter.getDatas().size());
+                    mRefreshLayout.finishRefreshLoadMore();
+                }
+
                 break;
         }
     }
 
-    /**
-     * 合并配置和数据，并添加参数
-     */
-    public List<List<Map<String, String>>> combineSetData(List<Map<String, Object>> set, List<Map<String, Object>> data) {
-        List<List<Map<String, String>>> newData = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            List<Map<String, String>> itemNum = new ArrayList<>();
-            for (int j = 0; j < set.size(); j++) {
-                Map<String, String> property = new HashMap<>();
-                if (j == 0) {
-                    property.put("isCheck", "false");
-                    String mainId = "T_" + tableId + "_0";
-                    if (data.get(i).get(mainId) != null) {
-                        property.put("mainId", String.valueOf(data.get(i).get(mainId)));
-                    } else {
-                        property.put("mainId", "");
-                    }
-                    property.put("tableId", tableId);
-                    property.put("allItemData", data.get(i).toString());
-                }
-                property.put("fieldCnName", String.valueOf(set.get(j).get("fieldCnName")));
-                String fieldAliasName = String.valueOf(set.get(j).get("fieldAliasName"));
-                String fieldCnName2 = "";
-                if (data.get(i).get(fieldAliasName) != null) {
-                    fieldCnName2 = String.valueOf(data.get(i).get(fieldAliasName));
-                }
-                property.put("fieldCnName2", fieldCnName2);
-                itemNum.add(property);
+    public void normalRequest(){
+        mAdapter = new ListAdapter2(datas, childTab);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity2.this));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//                mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+
+        mAdapter.setOnItemClickListener(new ListAdapter2.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, String data) {
+                Log.e("TAG", "data " + data);
+                        toItem(data);
             }
-            newData.add(itemNum);
-        }
-        return newData;
+        });
+
+
     }
+
     @OnClick(R.id.searchButton)
     public void onClick() {
+    }
+
+    /**
+     * 跳转至子菜单列表
+     */
+    public void toItem(String itemData) {
+        try {
+            Intent intent = new Intent();
+            intent.setClass(this, InfoActivity.class);
+            intent.putExtra("childData", itemData);
+            intent.putExtra("tableId", tableId);
+            intent.putExtra("operaButtonSet", operaButtonSet);
+
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    public void showButtonSet() {
+        try {
+                if (toolListPop != null && toolListPop.isShowing()) {
+                    toolListPop.dismiss();
+                } else {
+                    final View toolLayout = getLayoutInflater().inflate(
+                            R.layout.activity_list_buttonlist, null);
+                    ListView toolListPopView = (ListView) toolLayout
+                            .findViewById(R.id.buttonList);
+                    TextView tv_dismiss = (TextView) toolLayout.findViewById(R.id.tv_dismiss);
+                    tv_dismiss.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            toolListPop.dismiss();
+                        }
+                    });
+                    final SimpleAdapter adapter = new SimpleAdapter(
+                            this,
+                            buttonSet,
+                            R.layout.activity_list_buttonlist_item,
+                            new String[]{"buttonName"},
+                            new int[]{R.id.listItem});
+                    toolListPopView.setAdapter(adapter);
+                    // 点击listview中item的处理
+                    toolListPopView
+                            .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(AdapterView<?> arg0,
+                                                        View arg1, int arg2, long arg3) {
+                                    //分类型跳到不同的页面
+                                    int buttonType = (int) buttonSet.get(arg2).get("buttonType");
+                                    Map<String, Object> buttonSetItem = buttonSet.get(arg2);
+                                    String buttonSetItemStr = JSON.toJSONString(buttonSetItem);
+
+                                    switch (buttonType) {
+                                        case 0://添加页面
+                                            Intent intent = new Intent(ListActivity2.this, AddItemsActivity.class);
+                                            intent.putExtra("buttonSetItemStr", buttonSetItemStr);
+                                            startActivityForResult(intent, 5);
+                                            break;
+                                        case 3://批量删除操作
+//                                            listAdapter.flag = true;
+//                                            listAdapter.notifyDataSetChanged();
+//                                            setGone();
+                                            break;
+                                    }
+                                    // 隐藏弹出窗口
+                                    if (toolListPop != null && toolListPop.isShowing()) {
+                                        toolListPop.dismiss();
+                                    }
+                                }
+                            });
+                    // 创建弹出窗口
+                    // 窗口内容为layoutLeft，里面包含一个ListView
+                    // 窗口宽度跟tvLeft一样
+                    toolListPop = new PopupWindow(toolLayout, ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    ColorDrawable cd = new ColorDrawable(0b1);
+                    toolListPop.setBackgroundDrawable(cd);
+                    toolListPop.setAnimationStyle(R.style.PopupWindowAnimation);
+                    //设置半透明
+                    WindowManager.LayoutParams params = getWindow().getAttributes();
+                    params.alpha = 0.7f;
+                    getWindow().setAttributes(params);
+
+                    toolListPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            WindowManager.LayoutParams params = getWindow().getAttributes();
+                            params.alpha = 1f;
+                            getWindow().setAttributes(params);
+                        }
+                    });
+                    toolListPop.update();
+                    toolListPop.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                    toolListPop.setTouchable(true); // 设置popupwindow可点击
+                    toolListPop.setOutsideTouchable(true); // 设置popupwindow外部可点击
+                    toolListPop.setFocusable(true); // 获取焦点
+                    toolListPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                    toolListPop.showAtLocation(toolLayout, Gravity.BOTTOM, 0, 0);
+
+                    // 设置popupwindow的位置（相对tvLeft的位置）
+                    int topBarHeight = mToolbar.getBottom();
+                    toolListPop.showAsDropDown(toolListPopView, 0,
+                            (topBarHeight - toolListPopView.getHeight()) / 2);
+
+                    toolListPop.setTouchInterceptor(new View.OnTouchListener() {
+
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // 如果点击了popupwindow的外部，popupwindow也会消失
+                            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                                toolListPop.dismiss();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+
+                }
+
+        } catch (Exception e) {
+            Toast.makeText(ListActivity2.this, "无按钮数据", Toast.LENGTH_SHORT).show();
+        }
     }
 }

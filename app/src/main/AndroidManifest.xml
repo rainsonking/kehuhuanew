@@ -122,13 +122,25 @@
         <activity android:name="com.kwsoft.kehuhua.adcustom.TabActivity" />
         <activity
             android:name="com.kwsoft.kehuhua.adcustom.UnlimitedAddActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />ji
         <activity
             android:name="com.kwsoft.kehuhua.adcustom.AddTemplateDataActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.kwsoft.kehuhua.adcustom.MessagAlertActivity"
             android:label="消息" />
+        <activity android:name="com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity" />
+        <activity android:name="com.kwsoft.kehuhua.wechatPicture.SelectPicActivity" />
+        <activity android:name="com.kwsoft.kehuhua.wechatPicture.EnlargePicActivity">
+
+        </activity>
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
 
         <!-- For test only 测试状态通知栏，需要打开的Activity -->
         <activity

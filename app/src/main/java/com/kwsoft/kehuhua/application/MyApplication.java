@@ -5,8 +5,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +20,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Fresco.initialize(getApplicationContext());//拍照上传初始化
+//        Fresco.initialize(getApplicationContext());//拍照上传初始化
         JPushInterface.setDebugMode(false); 	// 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);     		// 初始化 JPush
     }

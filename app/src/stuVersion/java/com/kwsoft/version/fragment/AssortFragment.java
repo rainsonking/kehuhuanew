@@ -1,6 +1,5 @@
 package com.kwsoft.version.fragment;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +19,6 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -28,8 +26,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.kwsoft.kehuhua.adcustom.CourseActivity;
-import com.kwsoft.kehuhua.adcustom.ListActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
@@ -37,7 +33,6 @@ import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +79,8 @@ public class AssortFragment extends Fragment {
         homeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int menuId = (int) menuListMap.get(position).get("menuId");
-                toItem(menuId, menuListMap.get(position));
+                DataProcess.toList(getActivity(),menuListMap.get(position));
+
             }
         });
         ButterKnife.bind(this, view);
@@ -152,51 +147,6 @@ public class AssortFragment extends Fragment {
                         new int[]{R.id.iv_item, R.id.tv_item});
                 homeGridView.setAdapter(adapter);
                 homeGridView.setOnScrollListener(new SwipeListViewOnScrollListener(swipeRefreshLayout));
-    }
-
-    /**
-     * 跳转到list页面，分至此不分有无菜单情况
-     *
-     * @param menuId
-     * @param itemData
-     *
-     */
-    public void toItem(int menuId, Map<String, Object> itemData) {
-
-        //获取子列表
-        List<Map<String, Object>> childList = new ArrayList<>();
-//        for (int i = 0; i < menuListAll.size(); i++) {
-//            if (Integer.valueOf(String.valueOf(menuListAll.get(i).get("parent_menuId"))) == menuId) {
-//                childList.add(menuListAll.get(i));
-//            }
-//        }
-
-
-        if (itemData.get("meunColl")!=null) {
-            childList.addAll((List<Map<String, Object>>)itemData.get("meunColl"));
-            for (int i = 0; i < childList.size(); i++) {
-                String newMenuName = String.valueOf(childList.get(i).get("menuName"));
-                childList.get(i).put("menuName", newMenuName.replace("手机端", ""));
-            }
-        }
-
-//        if (childList.size() > 0) {
-//            childList = DataProcess.toImgList(childList);
-//        }
-        //转换整项为字符串准备发送
-        String itemDataString = JSONArray.toJSONString(itemData);
-
-        //转换子列表对象为字符串准备发送
-        String childString = JSONArray.toJSONString(childList);
-        Intent intent = new Intent();
-        if (itemData.get("menuPageUrl") == null) {
-            intent.setClass(getActivity(), ListActivity.class);
-        } else {
-            intent.setClass(getActivity(), CourseActivity.class);
-        }
-        intent.putExtra("itemData", itemDataString);
-        intent.putExtra("childData", childString);
-        startActivity(intent);
     }
 
     @Override
@@ -273,7 +223,6 @@ public class AssortFragment extends Fragment {
 
     /**
      * 解析菜单数据
-     * @param menuData
      */
 
     @SuppressWarnings("unchecked")

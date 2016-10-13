@@ -1,13 +1,14 @@
 package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,7 +26,6 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
-import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,15 +36,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.kwsoft.kehuhua.config.Constant.listPath;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class RowsAddActivity extends AppCompatActivity {
 
-    @Bind(R.id.rows_IV_back_list_item_tadd)
-    ImageView rowsIVBackListItemTadd;
-    @Bind(R.id.rows_tv_commit_item_tadd)
-    ImageView rowsTvCommitItemTadd;
     @Bind(R.id.rows_tv_add_item_title)
     TextView rowsTvAddItemTitle;
     @Bind(R.id.rows_lv_add_item)
@@ -65,6 +60,7 @@ public class RowsAddActivity extends AppCompatActivity {
     private String hideFieldParagram = "";
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +120,7 @@ public class RowsAddActivity extends AppCompatActivity {
 
 
     private void requestAddCommit() {
+        Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(6).toString());
         String value = DataProcess.commit(RowsAddActivity.this, fieldSet);
         if (!value.equals("no")) {
             String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
@@ -348,25 +345,21 @@ public class RowsAddActivity extends AppCompatActivity {
                 Log.e("TAG", "secondValue " + secondValue);
                 fieldSet.get(positionLast).put(Constant.itemValue, myValueList.size() + "&" + secondValue);
                 adapter.notifyDataSetChanged();
-            }
-        } else if (REQUEST_CODE == requestCode) {
-            if (resultCode == RESULT_OK) {
-                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
-                assert mResults != null;
-
-                // show results in textview
-                StringBuilder sb = new StringBuilder();
-                listPath.clear();
-//                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
-                for (String result : mResults) {
-                    sb.append(result).append("\n");
-                    listPath.add(result);
-                }
-                Constant.pictureStr = sb.toString();
-                Log.e("picture", Constant.pictureStr);
+            }else if (resultCode == 101) {
+                //返回添加页面后复位jump值
+                Constant.jumpNum = 0;
+                Log.e("TAG", "RESULT_OK " + 101);
+                Bundle bundle = data.getBundleExtra("bundle");
+                String positionStr = bundle.getString("position");
+                String codeListStr = bundle.getString("codeListStr");
+                int position=Integer.valueOf(positionStr);
+                fieldSet.get(position).put(Constant.itemValue, codeListStr);
+                fieldSet.get(position).put(Constant.itemName, codeListStr);
+                Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(position).toString());
                 adapter.notifyDataSetChanged();
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
