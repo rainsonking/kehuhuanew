@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import me.iwf.photopicker.PhotoPicker;
 
+import static com.kwsoft.kehuhua.config.Constant.img_Paths;
+
 public class SelectPicActivity extends ToolBarActivity {
 
     @Bind(R.id.gridView)
@@ -78,5 +80,8 @@ public class SelectPicActivity extends ToolBarActivity {
                 imgPaths.remove(requestCode);
                 adapter.notifyDataSetChanged();
         }
+        img_Paths.clear();
+        img_Paths.addAll(imgPaths);
+
     }
 }

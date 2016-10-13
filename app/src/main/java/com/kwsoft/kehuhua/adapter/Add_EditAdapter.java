@@ -57,7 +57,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.kwsoft.kehuhua.config.Constant.listPath;
+import static com.kwsoft.kehuhua.config.Constant.img_Paths;
 import static com.kwsoft.kehuhua.config.Constant.pictureUrl;
 import static com.kwsoft.kehuhua.config.Constant.sysUrl;
 
@@ -890,15 +890,15 @@ public class Add_EditAdapter extends BaseAdapter {
         String url = sysUrl + pictureUrl;
         //待上传的两个文件
         List<File> files = new ArrayList<>();
-        if (listPath.size() > 0) {
-            for (int i = 0; i < listPath.size(); i++) {
+        if (img_Paths.size() > 0) {
+            for (int i = 0; i < img_Paths.size(); i++) {
 
-                files.add(new File(listPath.get(i)));
+                files.add(new File(img_Paths.get(i)));
             }
 //                uploadMethod(params, uploadHost);
             //请求的URL
             //post请求，三个参数分别是请求地址、请求参数、请求的回调接口
-            Log.e("TAG", "listPath.toString()" + listPath.toString());
+            Log.e("TAG", "listPath.toString()" + img_Paths.toString());
 
             if (files.size() > 0) {
                 Log.e("TAG", "files.toString()" + files.toString());
@@ -976,6 +976,8 @@ public class Add_EditAdapter extends BaseAdapter {
         } else {
             Toast.makeText(mActivity, "文件值解析出现问题", Toast.LENGTH_SHORT).show();
         }
+        Log.e("TAG", "文件上传码codeListStr:" + codeListStr);
+
         fieldSet.get(position).put(Constant.itemValue, codeListStr);
         fieldSet.get(position).put(Constant.itemName, codeListStr);
         notifyDataSetChanged();
