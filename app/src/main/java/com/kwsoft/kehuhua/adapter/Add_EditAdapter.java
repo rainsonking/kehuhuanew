@@ -211,7 +211,7 @@ public class Add_EditAdapter extends BaseAdapter {
         boolean isShow = isShow(position, textView, textViewIfMust);
 //1、普通编辑框
 
-        if (fieldRole == 1 || fieldRole == 2 || fieldRole == 10 ||
+        if (fieldRole == -1 ||fieldRole == 1 || fieldRole == 2 || fieldRole == 10 ||
                 fieldRole == 3 || fieldRole == 4 || fieldRole == 5 ||
                 fieldRole == 6 || fieldRole == 7 || fieldRole == 11 ||
                 fieldRole == 12 || fieldRole == 13 || fieldRole == 8 ||
@@ -446,6 +446,7 @@ public class Add_EditAdapter extends BaseAdapter {
         } else if (fieldRole == 15) {
             if (isShow) {
                 addGeneral.setVisibility(View.VISIBLE);
+
             }
 //将long型时间改为约定的时间格式
             String dateType = "HH:mm:ss";
