@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kwsoft.kehuhua.adcustom.R;
@@ -26,6 +27,7 @@ public class CommonToolbar extends Toolbar {
     private View mView;
     private TextView mTextTitle;
     private ImageButton mRightImageButton,mLeftImageButton;
+    private ImageView isChildIv;
 
     public CommonToolbar(Context context) {
         this(context,null);
@@ -90,6 +92,7 @@ public class CommonToolbar extends Toolbar {
             LayoutInflater mInflater = LayoutInflater.from(getContext());
             mView = mInflater.inflate(R.layout.common_toolbar_child_page, null);
             mTextTitle = (TextView) mView.findViewById(R.id.child_toolbar_title);
+            isChildIv= (ImageView) mView.findViewById(R.id.is_child_iv);
             mRightImageButton = (ImageButton) mView.findViewById(R.id.child_toolbar_rightButton);
             mLeftImageButton = (ImageButton) mView.findViewById(R.id.child_toolbar_leftButton);
             LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
@@ -102,18 +105,28 @@ public class CommonToolbar extends Toolbar {
 
         mRightImageButton.setOnClickListener(li);
     }
+    public  void setTextTitleOnClickListener(OnClickListener li){
+
+        mTextTitle.setOnClickListener(li);
+    }
     public  void setLeftButtonOnClickListener(OnClickListener li){
 
         mLeftImageButton.setOnClickListener(li);
     }
+
     public void showRightImageButton(){
         if(mRightImageButton !=null)
             mRightImageButton.setVisibility(VISIBLE);
     }
 
-    private void showTitle() {
+    public void showTitle() {
         if(mTextTitle !=null)
             mTextTitle.setVisibility(VISIBLE);
+    }
+
+    public void showChildIv() {
+        if(isChildIv !=null)
+            isChildIv.setVisibility(VISIBLE);
     }
 
     @Override

@@ -26,6 +26,18 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         android:visibility="gone" />
+    <ImageView
+        android:id="@+id/is_child_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/often_drop"
+        android:scaleX="3"
+        android:scaleY="3"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/child_toolbar_title"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
 
 
     <ImageButton

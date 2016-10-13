@@ -1,5 +1,6 @@
 package com.kwsoft.kehuhua.adcustom;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -9,12 +10,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
@@ -33,6 +36,9 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.powerpopwindow.BaseRecyclerViewAdapter;
+import com.kwsoft.kehuhua.powerpopwindow.PowerPopMenu;
+import com.kwsoft.kehuhua.powerpopwindow.PowerPopMenuModel;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
@@ -150,6 +156,14 @@ public class ListActivity2 extends AppCompatActivity {
             pageId = childList.get(0).get("pageId") + "";
             titleName = childList.get(0).get("menuName") + "";
 //            list_more_menu.setVisibility(View.VISIBLE);
+            mToolbar.showChildIv();
+            initData();
+            mToolbar.setTextTitleOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popChildMenu(v);
+                }
+            });
         } else {
             tableId = itemMap.get("tableId") + "";
             Log.e("TAG", "List_tableId " + tableId);
@@ -169,6 +183,7 @@ public class ListActivity2 extends AppCompatActivity {
 
     //初始化顶栏
     public void initView() {
+        mContext = this;
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
         mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
         mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.often_more)); //右侧pop
@@ -178,6 +193,8 @@ public class ListActivity2 extends AppCompatActivity {
                 finish();
             }
         });
+
+        mEmptyView = (LinearLayout) View.inflate(mContext, R.layout.view_empty, null);
     }
 
     /**
@@ -303,6 +320,7 @@ public class ListActivity2 extends AppCompatActivity {
                 if (buttonSet.size() > 0) {
                     mToolbar.showRightImageButton();
                     //右侧下拉按钮
+                    initButtonsetData();
                     mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -329,6 +347,7 @@ public class ListActivity2 extends AppCompatActivity {
 //用适配器并判断展示数据
         showData();
     }
+
 
     /**
      * 下拉刷新方法
@@ -415,113 +434,100 @@ public class ListActivity2 extends AppCompatActivity {
     }
 
 
+    private Context mContext;
+    private List<PowerPopMenuModel> mChildMenuList,mRightButtonData;
+    private LinearLayout mEmptyView;
 
+    private void initData() {
 
-    public void showButtonSet() {
-        try {
-                if (toolListPop != null && toolListPop.isShowing()) {
-                    toolListPop.dismiss();
-                } else {
-                    final View toolLayout = getLayoutInflater().inflate(
-                            R.layout.activity_list_buttonlist, null);
-                    ListView toolListPopView = (ListView) toolLayout
-                            .findViewById(R.id.buttonList);
-                    TextView tv_dismiss = (TextView) toolLayout.findViewById(R.id.tv_dismiss);
-                    tv_dismiss.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            toolListPop.dismiss();
-                        }
-                    });
-                    final SimpleAdapter adapter = new SimpleAdapter(
-                            this,
-                            buttonSet,
-                            R.layout.activity_list_buttonlist_item,
-                            new String[]{"buttonName"},
-                            new int[]{R.id.listItem});
-                    toolListPopView.setAdapter(adapter);
-                    // 点击listview中item的处理
-                    toolListPopView
-                            .setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                                @Override
-                                public void onItemClick(AdapterView<?> arg0,
-                                                        View arg1, int arg2, long arg3) {
-                                    //分类型跳到不同的页面
-                                    int buttonType = (int) buttonSet.get(arg2).get("buttonType");
-                                    Map<String, Object> buttonSetItem = buttonSet.get(arg2);
-                                    String buttonSetItemStr = JSON.toJSONString(buttonSetItem);
-
-                                    switch (buttonType) {
-                                        case 0://添加页面
-                                            Intent intent = new Intent(ListActivity2.this, AddItemsActivity.class);
-                                            intent.putExtra("buttonSetItemStr", buttonSetItemStr);
-                                            startActivityForResult(intent, 5);
-                                            break;
-                                        case 3://批量删除操作
-//                                            listAdapter.flag = true;
-//                                            listAdapter.notifyDataSetChanged();
-//                                            setGone();
-                                            break;
-                                    }
-                                    // 隐藏弹出窗口
-                                    if (toolListPop != null && toolListPop.isShowing()) {
-                                        toolListPop.dismiss();
-                                    }
-                                }
-                            });
-                    // 创建弹出窗口
-                    // 窗口内容为layoutLeft，里面包含一个ListView
-                    // 窗口宽度跟tvLeft一样
-                    toolListPop = new PopupWindow(toolLayout, ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                    ColorDrawable cd = new ColorDrawable(0b1);
-                    toolListPop.setBackgroundDrawable(cd);
-                    toolListPop.setAnimationStyle(R.style.PopupWindowAnimation);
-                    //设置半透明
-                    WindowManager.LayoutParams params = getWindow().getAttributes();
-                    params.alpha = 0.7f;
-                    getWindow().setAttributes(params);
-
-                    toolListPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            WindowManager.LayoutParams params = getWindow().getAttributes();
-                            params.alpha = 1f;
-                            getWindow().setAttributes(params);
-                        }
-                    });
-                    toolListPop.update();
-                    toolListPop.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                    toolListPop.setTouchable(true); // 设置popupwindow可点击
-                    toolListPop.setOutsideTouchable(true); // 设置popupwindow外部可点击
-                    toolListPop.setFocusable(true); // 获取焦点
-                    toolListPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                    toolListPop.showAtLocation(toolLayout, Gravity.BOTTOM, 0, 0);
-
-                    // 设置popupwindow的位置（相对tvLeft的位置）
-                    int topBarHeight = mToolbar.getBottom();
-                    toolListPop.showAsDropDown(toolListPopView, 0,
-                            (topBarHeight - toolListPopView.getHeight()) / 2);
-
-                    toolListPop.setTouchInterceptor(new View.OnTouchListener() {
-
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            // 如果点击了popupwindow的外部，popupwindow也会消失
-                            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                                toolListPop.dismiss();
-                                return true;
-                            }
-                            return false;
-                        }
-                    });
-
-                }
-
-        } catch (Exception e) {
-            Toast.makeText(ListActivity2.this, "无按钮数据", Toast.LENGTH_SHORT).show();
+        mChildMenuList = new ArrayList<>();
+        for (int i=0;i<childList.size();i++) {
+            PowerPopMenuModel item = new PowerPopMenuModel();
+            item.text = String.valueOf(childList.get(i).get("menuName"));
+            item.resid = R.mipmap.ic_launcher;
+            mChildMenuList.add(item);
         }
+    }
+
+    private void popChildMenu(View v) {
+        PowerPopMenu mPowerPopMenu1 = new PowerPopMenu(mContext, LinearLayoutManager.VERTICAL, PowerPopMenu.POP_UP_TO_DOWN);
+        mPowerPopMenu1.setIsShowIcon(true);
+        mPowerPopMenu1.setListResource(mChildMenuList);
+        mPowerPopMenu1.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                refreshPage(position);
+            }
+        });
+        mPowerPopMenu1.show(v);
+    }
+
+
+    private void initButtonsetData() {
+
+        mRightButtonData= new ArrayList<>();
+        for (int i=0;i<buttonSet.size();i++) {
+            PowerPopMenuModel item = new PowerPopMenuModel();
+            item.text = String.valueOf(buttonSet.get(i).get("buttonName"));
+            mRightButtonData.add(item);
+        }
+
+    }
+//展示右上角按钮
+    public void showButtonSet() {
+        PowerPopMenu mPowerPopMenu2 = new PowerPopMenu(mContext, LinearLayoutManager.HORIZONTAL, PowerPopMenu
+                .POP_UP_TO_DOWN);
+        //必须放在setListResource之前
+        mPowerPopMenu2.setIsShowIcon(false);
+        mPowerPopMenu2.setListResource(mRightButtonData);
+        mPowerPopMenu2.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                toPage(position);
+            }
+        });
+        mPowerPopMenu2.addView(mEmptyView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams
+                .MATCH_PARENT, 50));
+        mPowerPopMenu2.show();
+
+    }
+
+    public void toPage(int position){
+        int buttonType = (int) buttonSet.get(position).get("buttonType");
+        Map<String, Object> buttonSetItem = buttonSet.get(position);
+        String buttonSetItemStr = JSON.toJSONString(buttonSetItem);
+
+        switch (buttonType) {
+            case 0://添加页面
+                Intent intent = new Intent(ListActivity2.this, AddItemsActivity.class);
+                intent.putExtra("buttonSetItemStr", buttonSetItemStr);
+                startActivityForResult(intent, 5);
+                break;
+            case 3://批量删除操作
+//              listAdapter.flag = true;
+//              listAdapter.notifyDataSetChanged();
+//              setGone();
+                break;
+        }
+    }
+
+
+    public void refreshPage(int position){
+
+        tableId = childList.get(position).get("tableId") + "";
+        pageId = childList.get(position).get("pageId") + "";
+        titleName = childList.get(position).get("menuName") + "";
+        //重新设置顶部名称
+        mToolbar.setTitle(titleName);
+        //重设参数值
+        paramsMap.put(Constant.tableId, tableId);
+        paramsMap.put(Constant.pageId, pageId);
+        paramsStr = JSON.toJSONString(paramsMap);
+        Constant.paramsMapSearch = paramsMap;
+        Constant.mainTableIdValue = tableId;
+        Constant.mainPageIdValue = pageId;
+        //重新请求数据
+        refreshData();
+
     }
 }
