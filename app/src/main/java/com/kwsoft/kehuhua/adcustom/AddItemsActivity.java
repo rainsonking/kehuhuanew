@@ -264,6 +264,18 @@ public class AddItemsActivity extends AppCompatActivity {
                 makeValue(data);
             } else if (5 == resultCode) {
                 unlimitedMakeValue(data);
+            }else if (resultCode == 101) {
+                //返回添加页面后复位jump值
+                Constant.jumpNum = 0;
+                Log.e("TAG", "RESULT_OK " + 101);
+                Bundle bundle = data.getBundleExtra("bundle");
+                String positionStr = bundle.getString("position");
+                String codeListStr = bundle.getString("codeListStr");
+                int position=Integer.valueOf(positionStr);
+                fieldSet.get(position).put(Constant.itemValue, codeListStr);
+                fieldSet.get(position).put(Constant.itemName, codeListStr);
+                Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(position).toString());
+                adapter.notifyDataSetChanged();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

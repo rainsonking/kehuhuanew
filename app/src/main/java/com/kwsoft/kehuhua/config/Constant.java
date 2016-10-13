@@ -146,7 +146,6 @@ public class Constant {
 
     public static int topBarColor;
 
-
 //学员端参数：
 
     public static String stu_index = "";// 副key

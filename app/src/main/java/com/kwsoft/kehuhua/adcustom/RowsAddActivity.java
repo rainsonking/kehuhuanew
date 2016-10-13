@@ -120,6 +120,7 @@ public class RowsAddActivity extends AppCompatActivity {
 
 
     private void requestAddCommit() {
+        Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(6).toString());
         String value = DataProcess.commit(RowsAddActivity.this, fieldSet);
         if (!value.equals("no")) {
             String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
@@ -344,27 +345,21 @@ public class RowsAddActivity extends AppCompatActivity {
                 Log.e("TAG", "secondValue " + secondValue);
                 fieldSet.get(positionLast).put(Constant.itemValue, myValueList.size() + "&" + secondValue);
                 adapter.notifyDataSetChanged();
+            }else if (resultCode == 101) {
+                //返回添加页面后复位jump值
+                Constant.jumpNum = 0;
+                Log.e("TAG", "RESULT_OK " + 101);
+                Bundle bundle = data.getBundleExtra("bundle");
+                String positionStr = bundle.getString("position");
+                String codeListStr = bundle.getString("codeListStr");
+                int position=Integer.valueOf(positionStr);
+                fieldSet.get(position).put(Constant.itemValue, codeListStr);
+                fieldSet.get(position).put(Constant.itemName, codeListStr);
+                Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(position).toString());
+                adapter.notifyDataSetChanged();
             }
         }
-//
-//        else if (REQUEST_CODE == requestCode) {
-//            if (resultCode == RESULT_OK) {
-//                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
-//                assert mResults != null;
-//
-//                // show results in textview
-//                StringBuilder sb = new StringBuilder();
-//                listPath.clear();
-////                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
-//                for (String result : mResults) {
-//                    sb.append(result).append("\n");
-//                    listPath.add(result);
-//                }
-//                Constant.pictureStr = sb.toString();
-//                Log.e("picture", Constant.pictureStr);
-//                adapter.notifyDataSetChanged();
-//            }
-//        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
