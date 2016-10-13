@@ -122,7 +122,7 @@
         <activity android:name="com.kwsoft.kehuhua.adcustom.TabActivity" />
         <activity
             android:name="com.kwsoft.kehuhua.adcustom.UnlimitedAddActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />ji
         <activity
             android:name="com.kwsoft.kehuhua.adcustom.AddTemplateDataActivity"
             android:theme="@style/AppTheme.NoActionBar" />
