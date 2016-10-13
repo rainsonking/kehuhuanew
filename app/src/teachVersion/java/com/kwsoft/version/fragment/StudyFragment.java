@@ -11,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -27,10 +25,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
-import com.jude.rollviewpager.adapter.StaticPagerAdapter;
 import com.kwsoft.kehuhua.adcustom.BlankActivity;
 import com.kwsoft.kehuhua.adcustom.CourseActivity;
-import com.kwsoft.kehuhua.adcustom.ListActivity;
+import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.SettingsActivity;
@@ -40,7 +37,6 @@ import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
-import com.kwsoft.version.view.KanbanGridView;
 import com.kwsoft.version.view.StudyGridView;
 
 import java.util.ArrayList;
@@ -108,7 +104,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 Constant.stu_homeSetId = String.valueOf(parentList.get(position).get("SourceDataId"));
                 try {
                     Intent intent = new Intent();
-                    intent.setClass(getActivity(), ListActivity.class);
+                    intent.setClass(getActivity(), ListActivity2.class);
                     intent.putExtra("itemData", JSON.toJSONString(itemData));
                     startActivity(intent);
                 } catch (Exception e) {
@@ -369,7 +365,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         String childString = JSONArray.toJSONString(childList);
         Intent intent = new Intent();
         if (itemData.get("menuPageUrl") == null) {
-            intent.setClass(getActivity(), ListActivity.class);
+            intent.setClass(getActivity(), ListActivity2.class);
         } else {
             intent.setClass(getActivity(), CourseActivity.class);
         }
