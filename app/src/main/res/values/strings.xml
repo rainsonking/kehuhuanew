@@ -104,4 +104,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+
+    <string name="action_delete">删除</string>
 </resources>

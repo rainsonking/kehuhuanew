@@ -40,10 +40,9 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.MultipartRequest;
 import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.wechatPicture.SelectPicActivity;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
-import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
-import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import org.angmarch.views.NiceSpinner;
 
@@ -521,19 +520,19 @@ public class Add_EditAdapter extends BaseAdapter {
             image_upload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //intent
-                    // start multiple photos selector
-                    Intent intent = new Intent(mActivity, ImagesSelectorActivity.class);
-                    // max number of images to be selected
-                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
-                    // min size of image which will be shown; to filter tiny images (mainly icons)
-                    intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
-                    // show camera or not
-                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
-                    // pass current selected images as the initial value
-                    intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mResults);
-                    // start the selector
-
+//                    //intent
+//                    // start multiple photos selector
+                    Intent intent = new Intent(mActivity, SelectPicActivity.class);
+//                    // max number of images to be selected
+//                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
+//                    // min size of image which will be shown; to filter tiny images (mainly icons)
+//                    intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
+//                    // show camera or not
+//                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
+//                    // pass current selected images as the initial value
+//                    intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mResults);
+//                    // start the selector
+//
                     mActivity.startActivityForResult(intent, REQUEST_CODE);
                 }
             });

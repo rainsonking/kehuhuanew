@@ -130,8 +130,8 @@
             android:name="com.kwsoft.kehuhua.adcustom.MessagAlertActivity"
             android:label="消息" />
 
-        <activity android:name="com.kwsoft.kehuhua.photo.activity.SelectPicActivity" />
-        <activity android:name="com.kwsoft.kehuhua.photo.activity.EnlargePicActivity">
+        <activity android:name="com.kwsoft.kehuhua.wechatPicture.SelectPicActivity" />
+        <activity android:name="com.kwsoft.kehuhua.wechatPicture.EnlargePicActivity">
 
         </activity>
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"

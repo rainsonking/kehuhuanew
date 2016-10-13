@@ -26,7 +26,6 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
-import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.kwsoft.kehuhua.config.Constant.listPath;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class RowsAddActivity extends AppCompatActivity {
@@ -347,24 +345,26 @@ public class RowsAddActivity extends AppCompatActivity {
                 fieldSet.get(positionLast).put(Constant.itemValue, myValueList.size() + "&" + secondValue);
                 adapter.notifyDataSetChanged();
             }
-        } else if (REQUEST_CODE == requestCode) {
-            if (resultCode == RESULT_OK) {
-                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
-                assert mResults != null;
-
-                // show results in textview
-                StringBuilder sb = new StringBuilder();
-                listPath.clear();
-//                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
-                for (String result : mResults) {
-                    sb.append(result).append("\n");
-                    listPath.add(result);
-                }
-                Constant.pictureStr = sb.toString();
-                Log.e("picture", Constant.pictureStr);
-                adapter.notifyDataSetChanged();
-            }
         }
+//
+//        else if (REQUEST_CODE == requestCode) {
+//            if (resultCode == RESULT_OK) {
+//                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+//                assert mResults != null;
+//
+//                // show results in textview
+//                StringBuilder sb = new StringBuilder();
+//                listPath.clear();
+////                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
+//                for (String result : mResults) {
+//                    sb.append(result).append("\n");
+//                    listPath.add(result);
+//                }
+//                Constant.pictureStr = sb.toString();
+//                Log.e("picture", Constant.pictureStr);
+//                adapter.notifyDataSetChanged();
+//            }
+//        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
