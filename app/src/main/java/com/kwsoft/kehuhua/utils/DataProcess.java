@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.kwsoft.kehuhua.adcustom.CourseActivity;
-import com.kwsoft.kehuhua.adcustom.ListActivity;
+import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
 
@@ -380,7 +380,7 @@ public class DataProcess {
         String childString = JSONArray.toJSONString(childList);
         Intent intent = new Intent();
         if (itemData.get("menuPageUrl") == null) {
-            intent.setClass(mActivity, ListActivity.class);
+            intent.setClass(mActivity, ListActivity2.class);
         } else {
             intent.setClass(mActivity, CourseActivity.class);
         }

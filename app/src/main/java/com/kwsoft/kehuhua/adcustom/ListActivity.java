@@ -49,7 +49,6 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.kwsoft.kehuhua.adcustom.R.id.topBar;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 
@@ -95,7 +94,7 @@ public class ListActivity extends BaseActivity implements View.OnClickListener {
     ImageView backList;
     @Bind(R.id.backMenu)
     ImageView backMenu;
-    @Bind(topBar)
+    @Bind(R.id.topBar)
     RelativeLayout rlTopBar;
 
     @Bind(R.id.list_more_menu)

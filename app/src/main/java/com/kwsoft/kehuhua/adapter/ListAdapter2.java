@@ -190,7 +190,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> 
     public void onClick(View view) {
         if (mOnItemClickListener != null) {
             //注意这里使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(view,(String)view.getTag());
+            mOnItemClickListener.onItemClick(view,JSON.toJSONString(view.getTag()));
         }
     }
 
@@ -219,7 +219,6 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> 
             right4 = (TextView) view.findViewById(R.id.right4);
             right5 = (TextView) view.findViewById(R.id.right5);
             right6 = (TextView) view.findViewById(R.id.right6);
-
 
             click_open= (RelativeLayout) view.findViewById(R.id.click_open);
             click_open_btn= (TextView) view.findViewById(R.id.click_open_btn);
