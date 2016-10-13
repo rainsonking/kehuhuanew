@@ -1,13 +1,14 @@
 package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,14 +37,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.kwsoft.kehuhua.config.Constant.listPath;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class RowsAddActivity extends AppCompatActivity {
 
-    @Bind(R.id.rows_IV_back_list_item_tadd)
-    ImageView rowsIVBackListItemTadd;
-    @Bind(R.id.rows_tv_commit_item_tadd)
-    ImageView rowsTvCommitItemTadd;
     @Bind(R.id.rows_tv_add_item_title)
     TextView rowsTvAddItemTitle;
     @Bind(R.id.rows_lv_add_item)
@@ -63,6 +62,7 @@ public class RowsAddActivity extends AppCompatActivity {
     private String hideFieldParagram = "";
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +124,12 @@ public class RowsAddActivity extends AppCompatActivity {
     private void requestAddCommit() {
         String value = DataProcess.commit(RowsAddActivity.this, fieldSet);
         if (!value.equals("no")) {
-            String volleyUrl = Constant.sysUrl + Constant.commitAdd + "?" +
+            String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
                     Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
                     value + "&" + hideFieldParagram + "&" + keyRelation;
+
+
+            String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
             Log.e("TAG", "关联添加提交地址：" + volleyUrl);
             StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
                     new Response.Listener<String>() {
@@ -220,9 +223,9 @@ public class RowsAddActivity extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     private void setStore(String jsonData) {
         Log.e("TAG", "解析添加数据1");
-        Map<String, Object> buttonSet = JSON.parseObject(jsonData);
-        try {
 
+        try {
+            Map<String, Object> buttonSet = JSON.parseObject(jsonData);
 //获取fieldSet
             Map<String, Object> pageSet = (Map<String, Object>) buttonSet.get("pageSet");
             fieldSet = (List<Map<String, Object>>) pageSet.get("fieldSet");
@@ -252,8 +255,12 @@ public class RowsAddActivity extends AppCompatActivity {
 
     }
 
+    private static final int REQUEST_CODE = 732;
+    private ArrayList<String> mResults = new ArrayList<>();
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (2 == requestCode) {
             if (2 == resultCode) {
                 //返回添加页面后复位jump值
@@ -334,13 +341,27 @@ public class RowsAddActivity extends AppCompatActivity {
                                     RowsAddActivity.this,
                                     myValueList.get(i));
                         }
-
                     }
                 }
                 Log.e("TAG", "secondValue " + secondValue);
                 fieldSet.get(positionLast).put(Constant.itemValue, myValueList.size() + "&" + secondValue);
+                adapter.notifyDataSetChanged();
+            }
+        } else if (REQUEST_CODE == requestCode) {
+            if (resultCode == RESULT_OK) {
+                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+                assert mResults != null;
 
-
+                // show results in textview
+                StringBuilder sb = new StringBuilder();
+                listPath.clear();
+//                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
+                for (String result : mResults) {
+                    sb.append(result).append("\n");
+                    listPath.add(result);
+                }
+                Constant.pictureStr = sb.toString();
+                Log.e("picture", Constant.pictureStr);
                 adapter.notifyDataSetChanged();
             }
         }

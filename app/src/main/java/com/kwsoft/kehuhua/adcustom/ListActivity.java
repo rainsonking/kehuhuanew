@@ -56,13 +56,15 @@ import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 /**
  * 展示列表页面对应类
  */
-public class ListActivity extends BaseActivity implements  View.OnClickListener {
+public class ListActivity extends BaseActivity implements View.OnClickListener {
 
+    @Bind(android.R.id.list)
+    PullToRefreshListView refreshListView;
     private String titleName;//请求时间
     //磁盘存储变量
     private DiskLruCacheHelper diskLruCache;
     //右上角下拉按钮
-    private PopupWindow toolListPop,childListPop;
+    private PopupWindow toolListPop, childListPop;
     //新接口梳理变量
     private Map<String, String> paramsMap;
     private String paramsStr;
@@ -76,7 +78,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
     //整个列表数据
     private List<Map<String, Object>> buttonSet;//按钮列表数据
 
-    private List<Map<String, Object>> childTabs=new ArrayList<>();
+    private List<Map<String, Object>> childTabs = new ArrayList<>();
     //上拉分页加载
     private int start = 0;
     private final int limit = 20;
@@ -95,8 +97,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
     ImageView backMenu;
     @Bind(topBar)
     RelativeLayout rlTopBar;
-    @Bind(R.id.lv)
-    PullToRefreshListView refreshListView;
+
     @Bind(R.id.list_more_menu)
     ImageView list_more_menu;
 
@@ -178,10 +179,10 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
         Intent intent = getIntent();
         String itemData = intent.getStringExtra("itemData");
 
-        if (intent.getStringExtra("childData")!=null) {
+        if (intent.getStringExtra("childData") != null) {
 
             String childData = intent.getStringExtra("childData");
-            childList=JSON.parseObject(childData,
+            childList = JSON.parseObject(childData,
                     new TypeReference<List<Map<String, Object>>>() {
                     });
         }
@@ -194,12 +195,12 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
             e.printStackTrace();
         }
 
-        if (childList.size()>0) {
+        if (childList.size() > 0) {
             tableId = childList.get(0).get("tableId") + "";
             pageId = childList.get(0).get("pageId") + "";
             titleName = childList.get(0).get("menuName") + "";
             list_more_menu.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tableId = itemMap.get("tableId") + "";
             Log.e("TAG", "List_tableId " + tableId);
             pageId = itemMap.get("pageId") + "";
@@ -211,9 +212,9 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
         paramsMap.put(Constant.pageId, pageId);
         paramsMap.put(Constant.timeName, dataTime + "");
         paramsStr = JSON.toJSONString(paramsMap);
-        Constant.paramsMapSearch=paramsMap;
-        Constant.mainTableIdValue=tableId;
-        Constant.mainPageIdValue=pageId;
+        Constant.paramsMapSearch = paramsMap;
+        Constant.mainTableIdValue = tableId;
+        Constant.mainPageIdValue = pageId;
     }
 
     @Override
@@ -263,24 +264,24 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
         if (delIdList.size() == 0) {
             Toast.makeText(ListActivity.this, "请选择", Toast.LENGTH_SHORT).show();
         } else {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("数据库中会同步删除");
-        builder.setTitle("删除学员");
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("数据库中会同步删除");
+            builder.setTitle("删除学员");
+            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                deleteItems();
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    deleteItems();
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
         }
     }
 
@@ -357,6 +358,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
 //        diskCheck();
 
     }
+
     /**
      * 1、顶栏右侧添加学员和返回按钮事件
      * 2、顶栏左侧返回上级页面
@@ -367,9 +369,9 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
 
     public void toSearchActivity() {
         try {
-            Intent intent=new Intent();
+            Intent intent = new Intent();
             intent.setClass(ListActivity.this, SearchActivity.class);
-            Bundle  bundle=new Bundle();
+            Bundle bundle = new Bundle();
             bundle.putString("searchSet", searchSet);
             bundle.putString("paramsStr", paramsStr);
             intent.putExtras(bundle);
@@ -420,7 +422,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                                         case 0://添加页面
                                             Intent intent = new Intent(ListActivity.this, AddItemsActivity.class);
                                             intent.putExtra("buttonSetItemStr", buttonSetItemStr);
-                                            startActivityForResult(intent,5);
+                                            startActivityForResult(intent, 5);
                                             break;
                                         case 3://批量删除操作
                                             listAdapter.flag = true;
@@ -502,7 +504,6 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                 } else {
 
 
-
                     final View toolLayout = getLayoutInflater().inflate(
                             R.layout.activity_list_childlist, null);
                     ListView childListPopView = (ListView) toolLayout
@@ -512,8 +513,8 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                             this,
                             childList,
                             R.layout.activity_list_childlist_item,
-                            new String[]{"image","menuName"},
-                            new int[]{R.id.childListItemImg,R.id.childListItemName});
+                            new String[]{"image", "menuName"},
+                            new int[]{R.id.childListItemImg, R.id.childListItemName});
                     childListPopView.setAdapter(adapter);
                     // 点击listview中item的处理
                     childListPopView
@@ -522,20 +523,20 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                                 public void onItemClick(AdapterView<?> arg0,
                                                         View arg1, int arg2, long arg3) {
                                     //
-                                    Map<String, Object> childItem=childList.get(arg2);
+                                    Map<String, Object> childItem = childList.get(arg2);
 
-                                        tableId = childList.get(arg2).get("tableId") + "";
-                                        pageId = childList.get(arg2).get("pageId") + "";
-                                        titleName = childList.get(arg2).get("menuName") + "";
+                                    tableId = childList.get(arg2).get("tableId") + "";
+                                    pageId = childList.get(arg2).get("pageId") + "";
+                                    titleName = childList.get(arg2).get("menuName") + "";
                                     //重新设置顶部名称
-                                        tv_title.setText(titleName);
-                                //重设参数值
+                                    tv_title.setText(titleName);
+                                    //重设参数值
                                     paramsMap.put(Constant.tableId, tableId);
                                     paramsMap.put(Constant.pageId, pageId);
                                     paramsStr = JSON.toJSONString(paramsMap);
-                                    Constant.paramsMapSearch=paramsMap;
-                                    Constant.mainTableIdValue=tableId;
-                                    Constant.mainPageIdValue=pageId;
+                                    Constant.paramsMapSearch = paramsMap;
+                                    Constant.mainTableIdValue = tableId;
+                                    Constant.mainPageIdValue = pageId;
 
                                     //重新刷新页面并装填数据
 
@@ -581,19 +582,19 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                     toolLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                     int popupWidth = toolLayout.getMeasuredWidth();
 
-                    Log.e("TAG","popupWidth "+popupWidth);
+                    Log.e("TAG", "popupWidth " + popupWidth);
 
 
                     //获取两者的宽度
 //                    int childListPopWith=Utils.getViewHeight(toolLayout, false);
 
-                    int rlTopBarWith=rlTopBar.getWidth();
-                    Log.e("TAG","rlTopBarWith "+rlTopBarWith);
+                    int rlTopBarWith = rlTopBar.getWidth();
+                    Log.e("TAG", "rlTopBarWith " + rlTopBarWith);
 
 
-                    int delta=(rlTopBarWith-popupWidth)/8;
-                    Log.e("TAG","X偏移量 "+delta);
-                    childListPop.showAsDropDown(rlTopBar,delta,0);
+                    int delta = (rlTopBarWith - popupWidth) / 8;
+                    Log.e("TAG", "X偏移量 " + delta);
+                    childListPop.showAsDropDown(rlTopBar, delta, 0);
 
                     childListPop.setTouchInterceptor(new View.OnTouchListener() {
 
@@ -611,9 +612,10 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                 }
             }
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
     }
+
     public void setGone() {
         search_title.setVisibility(View.GONE);
         button_set_view.setVisibility(View.GONE);
@@ -625,12 +627,12 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
     }
 
     public void setVisible() {
-        search_title.setVisibility(View.VISIBLE);
+//        search_title.setVisibility(View.VISIBLE);
         button_set_view.setVisibility(View.VISIBLE);
         backMenu.setVisibility(View.VISIBLE);
         deleteCommit.setVisibility(View.GONE);
         backList.setVisibility(View.GONE);
-        if (listAdapter!=null) {
+        if (listAdapter != null) {
             listAdapter.flag = false;
         }
 
@@ -654,7 +656,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
     public void requestSet() {
 
         final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
-        Log.e("TAG", "列表请求地址："+volleyUrl);
+        Log.e("TAG", "列表请求地址：" + volleyUrl);
 
         StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
                 new Response.Listener<String>() {
@@ -679,7 +681,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else{
+                } else {
                     stopAnim();
                 }
             }
@@ -689,14 +691,14 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
             protected Map<String, String> getParams() throws AuthFailureError {
                 paramsMap.put("start", start + "");
                 if (!Constant.stu_index.equals("")) {
-                    paramsMap.put("ctType",Constant.stu_index);
-                    paramsMap.put("SourceDataId",Constant.stu_homeSetId);
-                    paramsMap.put("pageType","1");
+                    paramsMap.put("ctType", Constant.stu_index);
+                    paramsMap.put("SourceDataId", Constant.stu_homeSetId);
+                    paramsMap.put("pageType", "1");
                     Log.e("TAG", "走了学员端请求");
                 }
 
                 paramsMap.put("limit", limit + "");
-                Log.e("TAG", "列表请求参数："+paramsMap.toString());
+                Log.e("TAG", "列表请求参数：" + paramsMap.toString());
                 return paramsMap;
             }
 
@@ -750,14 +752,14 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                     searchSet = JSONArray.toJSONString(searchSetList);
                     //暂时设置搜索按钮为隐藏，以后做好了再展现
 //                    if (searchSetList.size()==0) {
-                        search_title.setVisibility(View.GONE);
+                    search_title.setVisibility(View.GONE);
 //                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Log.e("TAG", "获取serachSet" + searchSet);
-            }else{//如果彻底无搜索字段则隐藏搜索框
+            } else {//如果彻底无搜索字段则隐藏搜索框
                 search_title.setVisibility(View.GONE);
             }
 
@@ -774,16 +776,15 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
             }
 //获得子表格：childTabs
 
-            String childTabss= null;
+            String childTabss = null;
 
-            if (pageSet.get("childTabs")!=null) {
+            if (pageSet.get("childTabs") != null) {
 
                 childTabss = String.valueOf(pageSet.get("childTabs"));
-                childTabs= JSON.parseObject(childTabss,
+                childTabs = JSON.parseObject(childTabss,
                         new TypeReference<List<Map<String, Object>>>() {
                         });
             }
-
 
 
 //数据左侧配置数据
@@ -793,7 +794,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
             if (pageSet.get("buttonSet") != null) {
                 buttonSet = (List<Map<String, Object>>) pageSet.get("buttonSet");//初始化下拉按钮数据
                 Log.e("TAG", "获取buttonSet" + buttonSet);
-                if (buttonSet.size()>0) {
+                if (buttonSet.size() > 0) {
                     button_set_view.setVisibility(View.VISIBLE);
                 }
             }
@@ -856,8 +857,8 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
                 map.put("limit", limit + "");
                 map.put("start", start + "");
                 if (!Constant.stu_index.equals("")) {
-                    map.put("index",Constant.stu_index);
-                    map.put("homeSetId",Constant.stu_homeSetId);
+                    map.put("index", Constant.stu_index);
+                    map.put("homeSetId", Constant.stu_homeSetId);
                 }
                 map.put(Constant.timeName, dataTime + "");
                 return map;
@@ -954,7 +955,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
             //放到adapter中展示
             if (flag == 0) {
                 toAdapter();
-            }else{
+            } else {
                 Log.e("TAG", "提醒适配器更新数据1");
                 listAdapter.notifyDataSetChanged();
                 Log.e("TAG", "提醒适配器更新数据2");
@@ -970,7 +971,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
     public void toAdapter() {
         Log.e("TAG", "准备进入适配器：setAndData " + setAndData.toString());
         Log.e("TAG", "获得子表格：childTabs " + childTabs.toString());
-        listAdapter = new ListAdapter(this, R.layout.activity_list_item, setAndData,childTabs);
+        listAdapter = new ListAdapter(this, R.layout.activity_list_item, setAndData, childTabs);
         refreshListView.setAdapter(listAdapter);
         stopAnim();
     }
@@ -1000,15 +1001,15 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
      */
     private void pullUpToRefresh() {
 
-                if (null != Utils.getActiveNetwork(ListActivity.this)) {
-                    try {
-                        Thread.sleep(1000);
-                        start += limit;
-                        requestData();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+        if (null != Utils.getActiveNetwork(ListActivity.this)) {
+            try {
+                Thread.sleep(1000);
+                start += limit;
+                requestData();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         mHandler.sendEmptyMessage(0);
 
 
@@ -1026,7 +1027,7 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
             intent.putExtra("childData", childData);
             intent.putExtra("tableId", tableId);
             intent.putExtra("operaButtonSet", operaButtonSet);
-            Log.e("TAG", "operaButtonSet"+operaButtonSet);
+            Log.e("TAG", "operaButtonSet" + operaButtonSet);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1035,14 +1036,14 @@ public class ListActivity extends BaseActivity implements  View.OnClickListener 
 
 //刷新主列表通用方法
 
-    public void refreshListView(){
+    public void refreshListView() {
         if (null != Utils.getActiveNetwork(ListActivity.this)) {
             try {
 
                 if (setAndData != null) {
                     setAndData.clear();
                     dataTime = -1;
-                    start=0;
+                    start = 0;
                     Log.e("TAG", "clear成功");
 
                 } else {

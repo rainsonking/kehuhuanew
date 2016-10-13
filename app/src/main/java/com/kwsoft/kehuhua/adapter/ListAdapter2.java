@@ -1,5 +1,6 @@
 package com.kwsoft.kehuhua.adapter;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,157 +15,192 @@ import com.alibaba.fastjson.JSON;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.TabActivity;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> implements View.OnClickListener{
 
-    private List<List<Map<String, String>>> mValues;
-    private Context context;
+    private List<List<Map<String, String>>> mDatas;
     private List<Map<String, Object>> childTab;
-    public boolean flag = false;
-    private static HashMap<Integer, Boolean> isSelected; // 用来控制CheckBox的选中状况
+    private Context mContext;
+    private OnRecyclerViewItemClickListener mOnItemClickListener = null;
 
 
-
-
-
-
-    public ListAdapter2(Context context, List<List<Map<String, String>>> items,List<Map<String, Object>> childTabs) {
-        mValues = items;
-        Log.e("TAG","mValues===>"+mValues);
-        this.context=context;
-        this.childTab=childTabs;
-        isSelected = new HashMap<>();
-        // 初始化数据
-        initDate();
+    public static interface OnRecyclerViewItemClickListener {
+        void onItemClick(View view , String data);
     }
-    // 初始化isSelected的数据
-    private void initDate() {
-        for (int i = 0; i < mValues.size(); i++) {
-            getIsSelected().put(i, false);
-        }
+    public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
+        this.mOnItemClickListener = listener;
     }
-
-    public static HashMap<Integer, Boolean> getIsSelected() {
-        return isSelected;
-    }
-
-    public static void setIsSelected(HashMap<Integer, Boolean> isSelected) {
-        ListAdapter2.isSelected = isSelected;
-    }
-
-    public void setData(List<List<Map<String, String>>> datas) {
-        mValues.clear();
-        mValues.addAll(datas);
-    }
-
-    public void addDatas(List<List<Map<String, String>>> datas) {
-        mValues.addAll(datas);
+    public ListAdapter2(List<List<Map<String, String>>> mDatas,List<Map<String, Object>> childTab){
+        this.mDatas = mDatas;
+        this.childTab = childTab;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_list_item, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mContext=parent.getContext();
+        LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
+        View view = mInflater.inflate(R.layout.activity_list_item,null);
+        //将创建的View注册点击事件
+        view.setOnClickListener(this);
         return new ViewHolder(view);
     }
 
+
+
+
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final ViewHolder mHolder = (ViewHolder) holder;
-        mHolder.mItem = mValues.get(position);
-        if(flag){
-            mHolder.checkboxOperateData.setVisibility(View.VISIBLE);
-            mHolder.checkboxOperateData.setOnClickListener(new View.OnClickListener() {
+        List<Map<String, String>> item = getData(position);
+        try {
+            final String title=item.get(0).get("fieldCnName2");
+            holder.studentName.setText(!title.equals("null")?title:"");
+            holder.studentName.setVisibility(View.VISIBLE);
+//左1
+            String left1Title=item.get(1).get("fieldCnName");
+            holder.left1.setText(!left1Title.equals("null")?left1Title:"");
+            holder.left1.setVisibility(View.VISIBLE);
+//右1
+            String right1Title=item.get(1).get("fieldCnName2");
+            holder.right1.setText(!right1Title.equals("null")?right1Title:"");
+            holder.right1.setVisibility(View.VISIBLE);
+//左2
+            String left2Title=item.get(2).get("fieldCnName");
+            holder.left2.setText(!left2Title.equals("null")?left2Title:"");
+            holder.left2.setVisibility(View.VISIBLE);
 
-                public void onClick(View v) {
-                    if (isSelected.get(position)) {
-                        isSelected.put(position, false);
-                        setIsSelected(isSelected);
-                        mValues.get(position).get(0).put("isCheck", String.valueOf(isSelected.get(position)));
-                    } else {
-                        isSelected.put(position, true);
-                        setIsSelected(isSelected);
-                        mValues.get(position).get(0).put("isCheck", String.valueOf(isSelected.get(position)));
-                    }
-                }
-            });
-            mHolder.checkboxOperateData.setChecked(isSelected.get(position));
+            String right2Title=item.get(2).get("fieldCnName2");
+            holder.right2.setText(!right2Title.equals("null")?right2Title:"");
+            holder.right2.setVisibility(View.VISIBLE);
+//左3
+            String left3Title=item.get(3).get("fieldCnName");
+            holder.left3.setText(!left3Title.equals("null")?left3Title:"");
+            holder.left3.setVisibility(View.VISIBLE);
+
+            String right3Title=item.get(3).get("fieldCnName2");
+            holder.right3.setText(!right3Title.equals("null")?right3Title:"");
+            holder.right3.setVisibility(View.VISIBLE);
+//左4
+            String left4Title=item.get(4).get("fieldCnName");
+            holder.left4.setText(!left4Title.equals("null")?left4Title:"");
+            holder.left4.setVisibility(View.VISIBLE);
+
+            String right4Title=item.get(4).get("fieldCnName2");
+            holder.right4.setText(!right4Title.equals("null")?right4Title:"");
+            holder.right4.setVisibility(View.VISIBLE);
+//左5
+            String left5Title=item.get(5).get("fieldCnName");
+            holder.left5.setText(!left5Title.equals("null")?left5Title:"");
+            holder.left5.setVisibility(View.VISIBLE);
+
+            String right5Title=item.get(5).get("fieldCnName2");
+            holder.right5.setText(!right5Title.equals("null")?right5Title:"");
+            holder.right5.setVisibility(View.VISIBLE);
+//左6
+            String left6Title=item.get(6).get("fieldCnName");
+            holder.left6.setText(!left6Title.equals("null")?left6Title:"");
+            holder.left6.setVisibility(View.VISIBLE);
+
+            String right6Title=item.get(6).get("fieldCnName2");
+            holder.right6.setText(!right6Title.equals("null")?right6Title:"");
+            holder.right6.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        final String title=mHolder.mItem.get(0).get("fieldCnName2");
-        mHolder.studentName.setText(!title.equals("null")?title:"");
 
-        String left1Title=mHolder.mItem.get(1).get("fieldCnName");
-        mHolder.left1.setText(!left1Title.equals("null")?left1Title:"");
+        Log.e("TAG", "适配List完毕  ");
 
-        String right1Title=mHolder.mItem.get(1).get("fieldCnName2");
-        mHolder.right1.setText(!right1Title.equals("null")?right1Title:"");
-
-        String left2Title=mHolder.mItem.get(2).get("fieldCnName");
-        mHolder.left2.setText(!left2Title.equals("null")?left2Title:"");
-
-        String right2Title=mHolder.mItem.get(2).get("fieldCnName2");
-        mHolder.right2.setText(!right2Title.equals("null")?right2Title:"");
-
-        String left3Title=mHolder.mItem.get(3).get("fieldCnName");
-        mHolder.left3.setText(!left3Title.equals("null")?left3Title:"");
-
-        String right3Title=mHolder.mItem.get(3).get("fieldCnName2");
-        mHolder.right3.setText(!right3Title.equals("null")?right3Title:"");
-
-        String left4Title=mHolder.mItem.get(4).get("fieldCnName");
-        mHolder.left4.setText(!left4Title.equals("null")?left4Title:"");
-
-        String right4Title=mHolder.mItem.get(4).get("fieldCnName2");
-        mHolder.right4.setText(!right4Title.equals("null")?right4Title:"");
-
-        String right5Title=mHolder.mItem.get(5).get("fieldCnName2");
-        mHolder.right5.setText(!right5Title.equals("null")?right5Title:"");
-
-        String right6Title=mHolder.mItem.get(6).get("fieldCnName2");
-        mHolder.right6.setText(!right6Title.equals("null")?right6Title:"");
-
-
-
-
-
-        Log.e("TAG", "titleName  "+title);
+//判断跳转子表格
+        final String titleName= item.get(0).get("fieldCnName2");
+        final String mainId= item.get(0).get("mainId");
         if (childTab.size()>0) {
 
-            mHolder.click_open.setVisibility(View.VISIBLE);
-            mHolder.click_open_btn.setOnClickListener(new View.OnClickListener() {
+            holder.click_open.setVisibility(View.VISIBLE);
+            holder.click_open_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
-                    intent.setClass(context, TabActivity.class);
-
+                    intent.setClass(mContext, TabActivity.class);
+                    intent.putExtra("mainId", mainId);
                     intent.putExtra("childTab", JSON.toJSONString(childTab));
-                    intent.putExtra("titleName",title);
-                    context.startActivity(intent);
+                    intent.putExtra("titleName",titleName);
+                    mContext.startActivity(intent);
                 }
             });
         }
-        View view=mHolder.mView;
-        view.setTag(position);
 
+        holder.itemView.setTag(item);
+    }
+    /**
+     * 获取单项数据
+     */
+
+    private List<Map<String, String>> getData(int position){
+
+        return mDatas.get(position);
+    }
+    /**
+     * 获取全部数据
+     */
+    public List<List<Map<String, String>>> getDatas(){
+
+        return  mDatas;
+    }
+
+    /**
+     * 清除数据
+     */
+    public void clearData(){
+
+        mDatas.clear();
+        notifyItemRangeRemoved(0,mDatas.size());
+    }
+    /**
+     *
+     *下拉刷新更新数据
+     */
+    public void addData(List<List<Map<String, String>>> datas){
+
+        addData(0,datas);
+    }
+    /**
+     *
+     * 上拉加载添加数据的方法
+     */
+    public void addData(int position,List<List<Map<String, String>>> datas){
+
+        if(datas !=null && datas.size()>0) {
+
+            mDatas.addAll(datas);
+            notifyItemRangeChanged(position, mDatas.size());
+        }
+
+    }
+    @Override
+    public int getItemCount() {
+        if(mDatas!=null && mDatas.size()>0)
+            return mDatas.size();
+        return 0;
     }
 
     @Override
-    public int getItemCount() {
-        return mValues.size();
+    public void onClick(View view) {
+        if (mOnItemClickListener != null) {
+            //注意这里使用getTag方法获取数据
+            mOnItemClickListener.onItemClick(view,(String)view.getTag());
+        }
     }
 
-    private class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
-        final TextView studentName,left1,left2,left3,left4,left5,left6,right1,right2,right3,right4,right5,right6,click_open_btn;
+        final TextView studentName,
+                left1,left2,left3,left4,left5,left6,
+                right1,right2,right3,right4,right5,right6,
+                click_open_btn;
         RelativeLayout click_open;
-        CheckBox checkboxOperateData;
-        List<Map<String, String>> mItem;
 
         ViewHolder(View view) {
             super(view);
@@ -188,47 +223,8 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             click_open= (RelativeLayout) view.findViewById(R.id.click_open);
             click_open_btn= (TextView) view.findViewById(R.id.click_open_btn);
-            checkboxOperateData = (CheckBox) view.findViewById(R.id.checkbox_operate_data);
         }
 
     }
+
 }
-
-
-//        if (!readState.equals("null")) {
-//            if (readState.equals("否")) {
-//                mHolder.iv_img.setText("未读");
-//                mHolder.iv_img.setBackgroundResource(R.drawable.no_read);
-//            } else {
-//                mHolder.iv_img.setText("已读");
-//                mHolder.iv_img.setBackgroundResource(R.drawable.read);
-//            }
-//        }
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent=new Intent(context,TestActivity.class);
-//                Bundle bundle=new Bundle();
-//                bundle.putString(JPushInterface.EXTRA_NOTIFICATION_TITLE,mValues.get(position).get("title")+"");
-//                bundle.putString(JPushInterface.EXTRA_ALERT,mValues.get(position).get("content")+"");
-//
-//                bundle.putString("dateStr",mValues.get(position).get("dateStr")+"");
-//                bundle.putString("notice_name",mValues.get(position).get("notice_name")+"");
-//                bundle.putString("",mValues.get(position).get("mainId")+"");
-//                bundle.putString("mainId",mValues.get(position).get("mainId")+"");
-//                bundle.putString("if_seeCn",mValues.get(position).get("if_seeCn")+"");
-//                intent.putExtras(bundle);
-//
-//                if (readState.equals("否")) {
-//                    mHolder.iv_img.setBackgroundResource(R.drawable.read);
-//                    SharedPreferences sp=context.getSharedPreferences("userInfo",Context.MODE_WORLD_READABLE);
-//                    int count=sp.getInt("count",0);
-//                    if (count > 0) {
-//                        count--;
-//                        sp.edit().putInt("count",count).commit();
-//                        BadgeUtil.sendBadgeNumber(context,count);
-//                    }
-//                }
-//                context.startActivity(intent);
-//            }
-//        });

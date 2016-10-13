@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.kwsoft.kehuhua.adcustom.CourseActivity;
 import com.kwsoft.kehuhua.adcustom.ListActivity;
 import com.kwsoft.kehuhua.adcustom.R;
+import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.version.StuPra;
 import com.kwsoft.version.TextAdapter;
 
@@ -38,9 +38,7 @@ public class MenuFragment extends Fragment {
     //    private TextView rightView;
 //    private ArrayList<String> groups = new ArrayList<String>();
     private TextAdapter earaListViewAdapter;
-    private Bundle menuBundle;
-    private LinearLayout lastTextView;
-    private List<Map<String, Object>> menuListMap, parentList;
+    private List<Map<String, Object>> parentList;
     private List<Map<String, Object>> childList = new ArrayList<>();
     private SimpleAdapter nextAdapter;
 
@@ -57,8 +55,13 @@ public class MenuFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 earaListViewAdapter.setSelectPos(position);
                 earaListViewAdapter.notifyDataSetChanged();
-                getChildMap(position);
-                nextAdapter.notifyDataSetChanged();
+               int childNum= getChildMap(position);
+                if (childNum==0) {
+                    toItem(parentList.get(position));
+                }else{
+                    nextAdapter.notifyDataSetChanged();
+                }
+
             }
         });
 
@@ -72,31 +75,22 @@ public class MenuFragment extends Fragment {
     }
 
     private void getIntentData() {
-        menuBundle = getArguments();
+        Bundle menuBundle = getArguments();
 
         String menuStr = menuBundle.getString("menuDataMap");
         if (menuStr != null) {
-            menuListMap = JSON.parseObject(menuStr,
+            List<Map<String, Object>> menuListMap = JSON.parseObject(menuStr,
                     new TypeReference<List<Map<String, Object>>>() {
                     });
             if (menuListMap.size() > 0) {
-                parentList = menuListMap;
-                addParentImage();
+                parentList = DataProcess.noPhoneList(menuListMap);
+
             } else {
                 Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
             }
             Log.e("TAG", "获得学员端菜单数据：" + menuStr);
         }
     }
-
-    public void addParentImage(){
-        for (int i=0;i<parentList.size();i++) {
-            parentList.get(i).remove("image");
-//            parentList.get(i).put("normalImage", StuPra.imgs[2*i]);
-//            parentList.get(i).put("selectedImage", StuPra.imgs[2*i+1]);
-        }
-    }
-
 
 
     private void initView(View view) {
@@ -127,7 +121,7 @@ public class MenuFragment extends Fragment {
     }
 
 
-    public void getChildMap(int position) {
+    public int getChildMap(int position) {
         childList.clear();
         if (parentList.get(position).get("meunColl")!=null) {
             childList.addAll((List<Map<String, Object>>)parentList.get(position).get("meunColl"));
@@ -137,6 +131,7 @@ public class MenuFragment extends Fragment {
                 childList.get(i).put("images", StuPra.images[i]);
             }
         }
+        return childList.size();
     }
 
     public void toItem(Map<String, Object> itemData) {

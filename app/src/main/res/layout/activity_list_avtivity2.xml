@@ -5,78 +5,19 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ListActivity2">
-    <RelativeLayout
-        android:id="@+id/topBar"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="#393F4D">
 
-        <ImageView
-            android:id="@+id/backMenu"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/back"
-            android:layout_marginTop="20dp"
-            android:layout_alignParentBottom="true"/>
-        <ImageView
-            android:id="@+id/IV_back_list"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/back"
-            android:layout_marginTop="20dp"
-            android:layout_alignParentBottom="true"
-            />
-
-        <ImageView
-            android:id="@+id/button_set"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:padding="16dp"
-            android:src="@drawable/more_operate"
-            android:layout_marginTop="20dp"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone"
-            />
-        <ImageView
-            android:id="@+id/button_set_delete_commint"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:padding="16dp"
-            android:src="@drawable/edit_commit"
-            android:layout_marginTop="20dp"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone"
-            />
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="zzzz"
-            android:textSize="21sp"
-            android:textColor="@color/white"
-            android:layout_marginTop="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentBottom="true"/>
-
-
-    </RelativeLayout>
-
+    <com.kwsoft.kehuhua.widget.CommonToolbar
+        android:id="@+id/common_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="?attr/colorPrimary"
+        app:isShowRightButton="true"
+        app:isShowTitle="true">
+    </com.kwsoft.kehuhua.widget.CommonToolbar>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_below="@+id/topBar"
+        android:layout_below="@+id/common_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
@@ -86,14 +27,15 @@
             android:layout_gravity="center"
             android:src="@drawable/search_munion_item_selector"
             android:scaleType="fitXY"
+            android:visibility="gone"
             />
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <com.cjj.MaterialRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.kwsoft.kehuhua.view.LoadMoreRecyclerView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/lv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -101,31 +43,31 @@
                 tools:listitem="@layout/activity_list_item"
                 >
 
-            </com.kwsoft.kehuhua.view.LoadMoreRecyclerView>
+            </android.support.v7.widget.RecyclerView>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </com.cjj.MaterialRefreshLayout>
 
     </LinearLayout>
 
 
 
-    <RelativeLayout
-        android:id="@+id/avloadingIndicatorViewLayoutList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#50323232"
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/avloadingIndicatorViewLayoutList"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="#50323232"-->
 
-        >
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/avloadingIndicatorView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <!--&gt;-->
+        <!--<com.wang.avi.AVLoadingIndicatorView-->
+            <!--android:id="@+id/avloadingIndicatorView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
 
-            app:indicator="LineScale"
-            app:indicator_color="@color/blue"
-            android:layout_centerInParent="true"
-            />
-    </RelativeLayout>
+            <!--app:indicator="LineScale"-->
+            <!--app:indicator_color="@color/blue"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--/>-->
+    <!--</RelativeLayout>-->
 
 
 </RelativeLayout>

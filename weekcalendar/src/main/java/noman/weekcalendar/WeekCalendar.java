@@ -43,9 +43,9 @@ public class WeekCalendar extends LinearLayout {
     private WeekDateChaListener weekDateChaListener;
 
     //设置返回时间的接口
-    public void setWeekDateChaListener(WeekDateChaListener weekDateChaListener){
+    public void setWeekDateChaListener(WeekDateChaListener weekDateChaListener) {
         weekPager.setWeekDateChaListener(weekDateChaListener);
-        this.weekDateChaListener=weekDateChaListener;
+        this.weekDateChaListener = weekDateChaListener;
     }
 
 
@@ -128,12 +128,14 @@ public class WeekCalendar extends LinearLayout {
                 }
                 TextView day = (TextView) convertView.findViewById(R.id.daytext);
                 day.setText(days[position]);
+
                 if (typedArray != null) {
                     day.setTextColor(typedArray.getColor(R.styleable.WeekCalendar_weekTextColor,
                             Color.WHITE));
                     day.setTextSize(TypedValue.COMPLEX_UNIT_PX, typedArray.getDimension(R.styleable
                             .WeekCalendar_weekTextSize, day.getTextSize()));
                 }
+                //day.setTextSize(12);
                 return convertView;
             }
 
@@ -145,10 +147,10 @@ public class WeekCalendar extends LinearLayout {
 
                 if (typedArray.getInt(R.styleable.WeekCalendar_dayNameLength, 0) == 0)
                     for (int i = 0; i < daysName.size(); i++)
-                        if (daysName.get(i).contains("周")){
-                            String weekDay=daysName.get(i).replace("周","星期");
-                            daysName.set(i,weekDay);
-                        }else {
+                        if (daysName.get(i).contains("周")) {
+                            String weekDay = daysName.get(i).replace("周", "星期");
+                            daysName.set(i, weekDay);
+                        } else {
                             break;
                         }
                 names = new String[daysName.size()];
@@ -176,12 +178,13 @@ public class WeekCalendar extends LinearLayout {
         BusProvider.getInstance().post(new Event.ResetEvent());
     }
 
-    public void setSelectedDate(DateTime selectedDate){
+    public void setSelectedDate(DateTime selectedDate) {
         BusProvider.getInstance().post(new Event.SetSelectedDateEvent(selectedDate));
         //返回时间
         weekDateChaListener.getDate(selectedDate);
     }
-    public void setStartDate(DateTime startDate){
+
+    public void setStartDate(DateTime startDate) {
         BusProvider.getInstance().post(new Event.SetStartDateEvent(startDate));
     }
 

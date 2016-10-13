@@ -80,7 +80,7 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
     //课程表日期的布局
     private RelativeLayout rl_top;
     //选中日期时添加的view
-    private View selectView, selectViewButtom;
+    //   private View selectView, selectViewButtom;
     //添加课程信息的布局
     private RelativeLayout courseInfoLayout;
     //课程信息的背景布局
@@ -231,23 +231,23 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
 
         RelativeLayout.LayoutParams lpButtom = new RelativeLayout.LayoutParams((int) courseInfoWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         lpButtom.setMargins((int) marginLeft, 0, 0, 0);
-        if (selectView == null) {
-            selectView = new View(getActivity());
-            selectView.setBackgroundResource(R.color.selectColor);
-        } else {
-            rl_top.removeView(selectView);
-        }
-        selectView.setLayoutParams(layoutParams);
-        rl_top.addView(selectView);
-
-        if (selectViewButtom == null) {
-            selectViewButtom = new View(getContext());
-            selectViewButtom.setBackgroundResource(R.color.selectColorButtom);
-        } else {
-            layout_course_bg.removeView(selectViewButtom);
-        }
-        selectViewButtom.setLayoutParams(lpButtom);
-        layout_course_bg.addView(selectViewButtom);
+//        if (selectView == null) {
+//            selectView = new View(getActivity());
+//            selectView.setBackgroundResource(R.color.selectColor);
+//        } else {
+//            rl_top.removeView(selectView);
+//        }
+//        selectView.setLayoutParams(layoutParams);
+//        rl_top.addView(selectView);
+//
+//        if (selectViewButtom == null) {
+//            selectViewButtom = new View(getContext());
+//            selectViewButtom.setBackgroundResource(R.color.selectColorButtom);
+//        } else {
+//            layout_course_bg.removeView(selectViewButtom);
+//        }
+//        selectViewButtom.setLayoutParams(lpButtom);
+//        layout_course_bg.addView(selectViewButtom);
     }
 
     private void getIntentData() {

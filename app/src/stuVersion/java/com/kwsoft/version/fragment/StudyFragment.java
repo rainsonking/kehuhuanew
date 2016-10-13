@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -30,7 +29,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.adapter.StaticPagerAdapter;
 import com.jude.rollviewpager.hintview.ColorPointHintView;
-import com.kwsoft.kehuhua.adcustom.CourseActivity;
 import com.kwsoft.kehuhua.adcustom.ListActivity;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
@@ -41,7 +39,7 @@ import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.StuMainActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
-import com.kwsoft.version.view.KanbanGridView;
+import com.kwsoft.version.view.StudyGridView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,8 +57,9 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class StudyFragment extends Fragment implements View.OnClickListener {
 
+    private TextView stuName;
     //PullToRefreshGridView homeGridView;
-    private KanbanGridView homeGridView;
+    private StudyGridView homeGridView;
     private List<Map<String, Object>> parentList = new ArrayList<>();
 
     private int[] imgs2 = {R.drawable.stu_see_record_task, R.drawable.stu_see_record_curriculum,
@@ -81,9 +80,8 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     public void initView(View view) {
-        TextView stuName = (TextView) view.findViewById(R.id.stu_name);
+        stuName = (TextView) view.findViewById(R.id.stu_name);
 
-        Log.e("TAG", "测试打印");
         try {
             String username = Constant.loginName;
             stuName.setText(username);
@@ -107,7 +105,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         mRollViewPager.setHintView(new ColorPointHintView(getActivity(), getResources().getColor(R.color.text6), getResources().getColor(R.color.text5)));
         mRollViewPager.setHintPadding(0, 0, 0, 40);
 
-        homeGridView = (KanbanGridView) view.findViewById(R.id.home_grid);
+        homeGridView = (StudyGridView) view.findViewById(R.id.home_grid);
         homeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -117,7 +115,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 itemData.put("menuName", String.valueOf(parentList.get(position).get("cnName")));
 
                 Constant.stu_index = String.valueOf(parentList.get(position).get("ctType"));
-                Log.e("TAG", "Constant.stu_index："+Constant.stu_index);
+
                 Constant.stu_homeSetId = String.valueOf(parentList.get(position).get("SourceDataId"));
                 try {
                     Intent intent = new Intent();
@@ -167,7 +165,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     });
             if (menuListAll.size() > 0) {
                 //展示菜单
-                menuListMap = getMenuListData(menuListAll);
+                menuListMap = DataProcess.toStuParentList(menuListAll);
                 setMenuAdapter(menuListMap);
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -176,8 +174,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                             StuMainActivity activity = (StuMainActivity) getActivity();
                             activity.fragmentClick();
                         } else {
-                            int menuId = (int) menuListMap.get(i).get("menuId");
-                            toItem(menuId, menuListMap.get(i));
+//                            int menuId = (int) menuListMap.get(i).get("menuId");
+//                            toItem(menuId, menuListMap.get(i));
+                            DataProcess.toList(getActivity(),menuListMap.get(i));
                         }
                     }
                 });
@@ -195,6 +194,13 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     public void setKanbanAdapter(List<Map<String, Object>> parentLists) {
+        if ((parentLists.size()) % 2 == 1) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("image",R.color.white);
+            map.put("cnName","");
+            map.put("name","");
+            parentLists.add(map);
+        }
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), parentLists,
                 R.layout.activity_stu_study_item, new String[]{"image", "cnName", "name"},
                 new int[]{R.id.iv_item, R.id.text1, R.id.text2});
@@ -210,7 +216,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     });
             String cnName;
             for (int i = 0; i < listMap.size(); i++) {
-                Log.e("TAG", "事务看板数量：" + listMap.size() + "");
                 Map<String, Object> map = new HashMap<>();
                 cnName = String.valueOf(listMap.get(i).get("cnName"));
                 map.put("ctType", "3");
@@ -228,7 +233,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                         name = String.valueOf(listMap1.get(0).get("name"));
                     }
                 }
-                map.put("name", name);
+                map.put("name", name+"个");
                 parentLists.add(map);
             }
         } catch (Exception e) {
@@ -348,35 +353,35 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void toItem(int menuId, Map<String, Object> itemData) {
-
-        //获取子列表
-        List<Map<String, Object>> childList = new ArrayList<>();
-        for (int i = 0; i < menuListAll.size(); i++) {
-            if (Integer.valueOf(String.valueOf(menuListAll.get(i).get("parent_menuId"))) == menuId) {
-                childList.add(menuListAll.get(i));
-            }
-        }
-
-        if (childList.size() > 0) {
-            childList = DataProcess.toImgList(childList);
-
-        }
-        //转换整项为字符串准备发送
-        String itemDataString = JSONArray.toJSONString(itemData);
-
-        //转换子列表对象为字符串准备发送
-        String childString = JSONArray.toJSONString(childList);
-        Intent intent = new Intent();
-        if (itemData.get("menuPageUrl") == null) {
-            intent.setClass(getActivity(), ListActivity.class);
-        } else {
-            intent.setClass(getActivity(), CourseActivity.class);
-        }
-        intent.putExtra("itemData", itemDataString);
-        intent.putExtra("childData", childString);
-        startActivity(intent);
-    }
+//    public void toItem(FragmentActivity menuId, Map<String, Object> itemData) {
+//
+//        //获取子列表
+//        List<Map<String, Object>> childList = new ArrayList<>();
+//        for (int i = 0; i < menuListAll.size(); i++) {
+//            if (Integer.valueOf(String.valueOf(menuListAll.get(i).get("parent_menuId"))) == menuId) {
+//                childList.add(menuListAll.get(i));
+//            }
+//        }
+//
+//        if (childList.size() > 0) {
+//            childList = DataProcess.toImgList(childList);
+//
+//        }
+//        //转换整项为字符串准备发送
+//        String itemDataString = JSONArray.toJSONString(itemData);
+//
+//        //转换子列表对象为字符串准备发送
+//        String childString = JSONArray.toJSONString(childList);
+//        Intent intent = new Intent();
+//        if (itemData.get("menuPageUrl") == null) {
+//            intent.setClass(getActivity(), ListActivity.class);
+//        } else {
+//            intent.setClass(getActivity(), CourseActivity.class);
+//        }
+//        intent.putExtra("itemData", itemDataString);
+//        intent.putExtra("childData", childString);
+//        startActivity(intent);
+//    }
 
     public void getLoginData(String url) {
         StringRequest mStringRequest = new StringRequest(Request.Method.POST, url,
@@ -449,7 +454,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 if (menuListAll.size() > 0) {
                     //展示菜单
                     menuListMap.clear();
-                    menuListMap = getMenuListData(menuListAll);
+                    menuListMap =  DataProcess.toStuParentList(menuListAll);
                     setMenuAdapter(menuListMap);
 
                 } else {

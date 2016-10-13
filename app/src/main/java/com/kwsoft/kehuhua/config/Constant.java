@@ -19,7 +19,6 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by Administrator on 2015/11/28 0028.
- *
  */
 public class Constant {
     /**
@@ -29,8 +28,10 @@ public class Constant {
      * <p>
      * 阿里服务器地址  http://182.92.108.162:8124/edus_auto/
      */
-//    public static String sysUrl = "http://192.168.6.117:8080/edus_auto/";//红伟电脑
-    public static String sysUrl = "http://192.168.6.150:8081/edus_auto/";//陈蒙电脑项目
+
+//    public static String sysUrl = "http://192.168.6.171:8080/edus_auto/";//小庞项目
+    // public static String sysUrl = "http://192.168.6.117:8080/edus_auto/";//红伟项目
+    public static String sysUrl = "http://192.168.6.150:8081/edus_auto/";//陈蒙项目
     public final static String sysLoginUrl = "login_interfaceProLogin.do";//项目选择方法
     public final static String projectLoginUrl = "login_interfaceLogin.do";//登陆方法
 
@@ -61,10 +62,10 @@ public class Constant {
     public static String menuData = "";
     public static String proId = "";
     public static String proName = "";
-//    public static String stuProId = "57159822f07e75084cb8a1fe";//陈蒙学员端
+    //    public static String stuProId = "57159822f07e75084cb8a1fe";//陈蒙学员端
     //public static String stuProId="5704e45c7cf6c0b2d9873da6";//主项目
     public static String stuCourseTableId = "19";
-    public  static String stuCourseUserId="" ;
+    public static String stuCourseUserId = "";
 
     public static String timeName = "alterTime";
     public static String menuTime = "";
@@ -138,7 +139,9 @@ public class Constant {
     public final static String itemName = "true_defaultShowValName";// 内部对象的名称集合
     public final static String commitValue = "commitValue";// commitValue
 
-
+    public static String pictureStr = "";//上传图片路径
+    public static List<String> listPath=new ArrayList<>();//上传图片路径
+    public final static String pictureUrl = "servlet/OmFileUploadServlet";
 
     public static int topBarColor;
 
@@ -221,7 +224,7 @@ public class Constant {
     /**
      * @param context
      */
-    public static void goHuaWeiSetting(Context context)  {
+    public static void goHuaWeiSetting(Context context) {
         try {
             //HUAWEI H60-l02 P8max测试通过
             //Log.d(MainActivity.class.getSimpleName(), "进入指定app悬浮窗管理页面失败，自动进入所有app悬浮窗管理页面");
@@ -230,7 +233,7 @@ public class Constant {
             //   ComponentName comp = new ComponentName("com.huawei.systemmanager","com.huawei.permissionmanager.ui.MainActivity");//华为权限管理
             //   ComponentName comp = new ComponentName("com.huawei.systemmanager",
             //      "com.huawei.permissionmanager.ui.SingleAppActivity");//华为权限管理，跳转到本app的权限管理页面,这个需要华为接口权限，未解决
-            ComponentName comp = new ComponentName("com.huawei.systemmanager","com.huawei.systemmanager.addviewmonitor.AddViewMonitorActivity");//悬浮窗管理页面
+            ComponentName comp = new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.addviewmonitor.AddViewMonitorActivity");//悬浮窗管理页面
             intent.setComponent(comp);
             context.startActivity(intent);
 
@@ -244,20 +247,19 @@ public class Constant {
             intent.setComponent(comp);
             context.startActivity(intent);
             //Log.d(MainActivity.class.getSimpleName(), "正在进入指定app悬浮窗开启位置..");
-        }catch(ActivityNotFoundException e){
+        } catch (ActivityNotFoundException e) {
             /**
              * 手机管家版本较低 HUAWEI SC-UL10
              */
             //   Toast.makeText(MainActivity.this, "act找不到", Toast.LENGTH_LONG).show();
             Intent intent = new Intent("com.kwsoft.version.fragment");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ComponentName comp = new ComponentName("com.android.settings","com.android.settings.permission.TabItem");//权限管理页面 android4.4
+            ComponentName comp = new ComponentName("com.android.settings", "com.android.settings.permission.TabItem");//权限管理页面 android4.4
             //   ComponentName comp = new ComponentName("com.android.settings","com.android.settings.permission.single_app_activity");//此处可跳转到指定app对应的权限管理页面，但是需要相关权限，未解决
             intent.setComponent(comp);
             context.startActivity(intent);
             e.printStackTrace();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             //抛出异常时提示信息
             Toast.makeText(context, "进入设置页面失败，请手动设置", Toast.LENGTH_LONG).show();
         }
