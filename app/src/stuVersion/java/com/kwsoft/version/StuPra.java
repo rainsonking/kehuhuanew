@@ -9,10 +9,10 @@ import com.kwsoft.kehuhua.adcustom.R;
 public class StuPra {
 
 
-    static String studentProId = "57159822f07e75084cb8a1fe";//学员端项目的Id
-    final static String changePsw = "phone_resetStuPassword.do?";//修改密码
-    static String stuInfoTableId = "19";//学员个人资料tableId
-    static String stuInfoPageId = "2512";//学员个人资料pageId
+    public static String studentProId = "57159822f07e75084cb8a1fe";//学员端项目的Id
+    public final static String changePsw = "phone_resetStuPassword.do?";//修改密码
+    public  static String stuInfoTableId = "19";//学员个人资料tableId
+    public static String stuInfoPageId = "2512";//学员个人资料pageId
     //存储学员端父类菜单的图标
     public static int[] imgs = {R.drawable.stu_see_order, R.drawable.stu_see_task,
             R.drawable.stu_see_journal, R.drawable.stu_see_attendance,
