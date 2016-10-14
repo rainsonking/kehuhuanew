@@ -160,6 +160,7 @@ public class Add_EditAdapter extends BaseAdapter {
 //初始化上传图片框
         RelativeLayout image_upload_layout = (RelativeLayout) convertView.findViewById(R.id.image_upload_layout);
 
+        TextView picNumber = (TextView) convertView.findViewById(R.id.pic_number);
         Button image_upload = (Button) convertView.findViewById(R.id.image_upload);
 
 //初始化编辑框
@@ -508,18 +509,25 @@ public class Add_EditAdapter extends BaseAdapter {
                         mActivity.startActivityForResult(intent, 2);
                     }
                 });
-//                image_upload_commit.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        fieldSet.get(position).put(Constant.itemValue, codeListStr);
-//                        fieldSet.get(position).put(Constant.itemName, codeListStr);
-//                        notifyDataSetChanged();
-//
-//                    }
-//                });
+
+                //判断选择了x张图片
+
+                String numPic=String.valueOf(fieldSet.get(position).get(Constant.itemValue));
+
+                if (!numPic.equals("null")&&!numPic.equals("")) {
+
+                   String[] numPicArray= numPic.split(",");
+                   int picLength=numPicArray.length;
+                    String picContent="已选"+picLength+"张图片";
+                    picNumber.setText(picContent);
+                }else{
+                    picNumber.setText("尚无附件");
+                }
 
 
-//                image_upload_path.setText(Constant.pictureStr);
+
+
+
             }else{
                 addGeneral.setVisibility(View.VISIBLE);
                 addGeneral.setText(defaultName);

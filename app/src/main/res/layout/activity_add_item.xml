@@ -55,7 +55,7 @@
             android:layout_centerInParent="true"
             android:textColor="@color/list_item_right"
             android:textSize="18sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
 
         <org.angmarch.views.NiceSpinner
@@ -84,10 +84,21 @@
                 android:id="@+id/image_upload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="选择图片"
-                android:textColor="@color/black"
+                android:layout_centerVertical="true"
+                android:text="点击拍照"
+                android:textColor="@color/white"
+                android:background="?attr/colorPrimary"
                 android:textSize="20sp" />
 
+            <TextView
+                android:id="@+id/pic_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/image_upload"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/list_item_right"
+                android:textSize="18sp" />
 
         </RelativeLayout>
 
