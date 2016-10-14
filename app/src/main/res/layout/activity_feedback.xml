@@ -19,12 +19,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_margin="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
 
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:textColor="#b2b2b2"
             android:text=" 问题和意见"
@@ -35,9 +40,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-
             android:focusable="true"
             android:gravity="top"
+            android:textCursorDrawable="@drawable/feedback_color_cursor"
+            android:padding="5dp"
             android:hint=" 请简要描述您的问题和意见"
             android:textColorHint="@color/list_item_left"
             android:background="@drawable/feeback_edt_bg"
@@ -54,6 +60,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/leave_sumit_btn_selector"
         android:onClick="summit"
+        android:textSize="18sp"
         android:text="提交反馈" />
 
 </LinearLayout>
