@@ -60,7 +60,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     private List<Map<String, String>> infoDataList=new ArrayList<>();
     private List<Map<String, Object>> operaButtonSet=new ArrayList<>();
     private String mainId;
-
+    private String titleName="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,8 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             Log.e("TAG","infoData "+infoData);
             mainId=infoDataList.get(0).get("mainId");
             tableId=infoDataList.get(0).get("tableId");
+            titleName=infoDataList.get(0).get("fieldCnName2");
+
             Constant.mainIdValue=mainId;
             Log.e("TAG","Info  getIntent+mainId: "+mainId);
 
@@ -131,7 +133,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         rlTopBar= (RelativeLayout) findViewById(R.id.info_title);
         //mTextViewTitle.setText(listMap.get(0).get("fieldCnName2")+"");
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
-        mToolbar.setTitle("属性");
+        mToolbar.setTitle(titleName);
         mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
         //左侧返回按钮
         mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.often_more));

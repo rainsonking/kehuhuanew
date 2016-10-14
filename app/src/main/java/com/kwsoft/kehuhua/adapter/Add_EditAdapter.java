@@ -392,7 +392,8 @@ public class Add_EditAdapter extends BaseAdapter {
                                 @Override
                                 public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
                                     //获得年月日
-                                    final String dateTime2 = year + "-" + month + "-" + day;
+                                    int monthNew=month+1;
+                                    final String dateTime2 = year + "-" + monthNew+ "-" + day;
                                     TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
                                             (new TimePickerDialog.OnTimeSetListener() {
                                                 @Override
