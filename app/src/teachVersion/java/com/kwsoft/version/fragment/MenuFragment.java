@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
 import com.kwsoft.kehuhua.adcustom.CourseActivity;
-import com.kwsoft.kehuhua.adcustom.ListActivity;
+import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.version.StuPra;
@@ -136,12 +136,16 @@ public class MenuFragment extends Fragment {
 
     public void toItem(Map<String, Object> itemData) {
         if (itemData.get("menuPageUrl") == null) {
-            String itemDataString = JSONArray.toJSONString(itemData);
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), ListActivity.class);
-            Log.e("TAG", "itemData" + itemDataString);
-            intent.putExtra("itemData", itemDataString);
-            startActivity(intent);
+            try {
+                String itemDataString = JSONArray.toJSONString(itemData);
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), ListActivity2.class);
+                Log.e("TAG", "itemData" + itemDataString);
+                intent.putExtra("itemData", itemDataString);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             String itemDataString = JSONArray.toJSONString(itemData);
             Intent intent = new Intent();

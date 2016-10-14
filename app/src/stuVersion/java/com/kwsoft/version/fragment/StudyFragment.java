@@ -165,7 +165,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     });
             if (menuListAll.size() > 0) {
                 //展示菜单
-                menuListMap = DataProcess.toStuParentList(menuListAll);
+                menuListMap = getMenuListData(menuListAll);
                 setMenuAdapter(menuListMap);
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -245,7 +245,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     //获取父类菜单数据，并取不大于7个
     public List<Map<String, Object>> getMenuListData(List<Map<String, Object>> menuListAlls) {
         List<Map<String, Object>> menuListMaps = new ArrayList<>();
-        menuListMap = DataProcess.toParentList(menuListAlls);
+        menuListMap = DataProcess.toStuParentList(menuListAlls);
         //大于7个的情况
         if (menuListMap.size() > 7) {
             for (int k = 0; k < 7; k++) {

@@ -115,9 +115,8 @@ public class ListActivity2 extends AppCompatActivity {
 
                     loadMoreData();
                 }
-
                 else {
-//                    Toast.makeText(ListActivity2.this, "没有更多了", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(mRecyclerView,"没有更多了",Snackbar.LENGTH_SHORT).show();
                     mRefreshLayout.finishRefreshLoadMore();
                 }
             }
@@ -397,6 +396,7 @@ public class ListActivity2 extends AppCompatActivity {
                     mAdapter.addData(mAdapter.getDatas().size(), datas);
                     mRecyclerView.scrollToPosition(mAdapter.getDatas().size());
                     mRefreshLayout.finishRefreshLoadMore();
+                   Snackbar.make(mRecyclerView,"更新了"+datas.size()+"条数据",Snackbar.LENGTH_SHORT).show();
                 }
 
                 break;
