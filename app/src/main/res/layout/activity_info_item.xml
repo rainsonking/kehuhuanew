@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingTop="20dp"
 
@@ -12,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
+        android:paddingStart="20dp"
         android:text="学员姓名"
         android:textColor="@color/list_item_left"
         android:layout_centerVertical="true"
@@ -29,11 +29,11 @@
         android:layout_centerVertical="true"
         android:textColor="@color/list_item_right"
         />
-    <TextView
-
+    <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/lightgray"
+        android:layout_height="1dp"
+        android:layout_marginLeft="15dp"
+        android:background="@color/stu_into_line"
         android:layout_alignParentBottom="true"
         />
 
