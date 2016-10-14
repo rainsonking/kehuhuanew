@@ -69,13 +69,9 @@ public class RowsAddActivity extends AppCompatActivity {
         CloseActivityClass.activityList.add(this);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        Log.e("TAG", "关联添加页面启动 ");
         getIntentData();
-        Log.e("TAG", "关联添加获取上层传递数据完毕 ");
         init();
-        Log.e("TAG", "关联添加初始化参数完毕 ");
         requestAdd();
-        Log.e("TAG", "关联添加获取数据展示完毕 ");
     }
 
     private void init() {
@@ -344,27 +340,21 @@ public class RowsAddActivity extends AppCompatActivity {
                 Log.e("TAG", "secondValue " + secondValue);
                 fieldSet.get(positionLast).put(Constant.itemValue, myValueList.size() + "&" + secondValue);
                 adapter.notifyDataSetChanged();
+            }else if (resultCode == 101) {
+                //返回添加页面后复位jump值
+                Constant.jumpNum = 0;
+                Log.e("TAG", "RESULT_OK " + 101);
+                Bundle bundle = data.getBundleExtra("bundle");
+                String positionStr = bundle.getString("position");
+                String codeListStr = bundle.getString("codeListStr");
+                int position=Integer.valueOf(positionStr);
+                fieldSet.get(position).put(Constant.itemValue, codeListStr);
+                fieldSet.get(position).put(Constant.itemName, codeListStr);
+                Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(position).toString());
+                adapter.notifyDataSetChanged();
             }
         }
-//
-//        else if (REQUEST_CODE == requestCode) {
-//            if (resultCode == RESULT_OK) {
-//                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
-//                assert mResults != null;
-//
-//                // show results in textview
-//                StringBuilder sb = new StringBuilder();
-//                listPath.clear();
-////                sb.append(String.format("Totally %d images selected:", mResults.size())).append("\n");
-//                for (String result : mResults) {
-//                    sb.append(result).append("\n");
-//                    listPath.add(result);
-//                }
-//                Constant.pictureStr = sb.toString();
-//                Log.e("picture", Constant.pictureStr);
-//                adapter.notifyDataSetChanged();
-//            }
-//        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 

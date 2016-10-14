@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.kwsoft.kehuhua.widget.CommonToolbar
+        android:id="@+id/common_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="?attr/colorPrimary"
+        app:isShowRightButton="false"
+        app:isShowTitle="true">
+    </com.kwsoft.kehuhua.widget.CommonToolbar>
+
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:columnWidth="90dp"
+        android:gravity="center"
+        android:horizontalSpacing="5dp"
+        android:numColumns="3"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp" />
+</LinearLayout>

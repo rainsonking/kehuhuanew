@@ -69,7 +69,7 @@ public class RowsEditActivity extends AppCompatActivity {
     private Map<String, String> paramsMap = new HashMap<>();
     private List<Map<String, Object>> fieldSet = new ArrayList<>();
     private Add_EditAdapter adapter;
-
+    private static final int REQUEST_CODE = 732;
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +230,7 @@ public class RowsEditActivity extends AppCompatActivity {
 
     }
     private void requestEditCommit() {
+        Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(6).toString());
         String value = DataProcess.commit(RowsEditActivity.this, fieldSet);
         if (!value.equals("no")) {
             String volleyUrl1 = Constant.sysUrl + Constant.commitEdit + "?" +
@@ -338,6 +339,18 @@ public class RowsEditActivity extends AppCompatActivity {
                     }
 
                 }
+            }else if (resultCode == 101) {
+                //返回添加页面后复位jump值
+                Constant.jumpNum = 0;
+                Log.e("TAG", "RESULT_OK " + 101);
+                Bundle bundle = data.getBundleExtra("bundle");
+                String positionStr = bundle.getString("position");
+                String codeListStr = bundle.getString("codeListStr");
+                int position=Integer.valueOf(positionStr);
+                fieldSet.get(position).put(Constant.itemValue, codeListStr);
+                fieldSet.get(position).put(Constant.itemName, codeListStr);
+                Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(position).toString());
+                adapter.notifyDataSetChanged();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

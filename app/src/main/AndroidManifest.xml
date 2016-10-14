@@ -129,7 +129,7 @@
         <activity
             android:name="com.kwsoft.kehuhua.adcustom.MessagAlertActivity"
             android:label="消息" />
-
+        <activity android:name="com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity" />
         <activity android:name="com.kwsoft.kehuhua.wechatPicture.SelectPicActivity" />
         <activity android:name="com.kwsoft.kehuhua.wechatPicture.EnlargePicActivity">
 
