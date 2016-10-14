@@ -7,24 +7,40 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.FeedbackActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.Utils;
+import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.version.Common.DataCleanManager;
 import com.kwsoft.version.ResetPwdActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.StuLoginActivity;
+import com.kwsoft.version.StuPra;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.kwsoft.kehuhua.config.Constant.tableId;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
@@ -56,13 +72,86 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         tvCleanCache.setText(getCache());
         stuName.setText(Constant.loginName);
         stuPhone.setText(Constant.USERNAME_ALL);
-        stuSchoolArea.setText("北京校区");
+       // stuSchoolArea.setText("北京校区");
         try {
             //开始获取版本号
             String stuVersionCode = "v " + Utils.getVersionName(getActivity());
             stuVersion.setText(stuVersionCode);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        requestSet();
+    }
+
+    /**
+     * 获取个人信息、主要校区
+     */
+    public void requestSet() {
+
+        final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
+        Log.e("TAG", "学员端请求个人信息地址：" + volleyUrl);
+
+        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String jsonData) {//磁盘存储后转至处理
+                        Log.e("TAG", "获取学生资料信息" + jsonData);
+
+                        setStore(jsonData);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
+
+            }
+        }
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> paramsMap = new HashMap<>();
+                paramsMap.put(tableId, StuPra.stuInfoTableId);
+                paramsMap.put(Constant.pageId, StuPra.stuInfoPageId);
+                Log.e("TAG", "学员端请求个人信息参数：" + paramsMap.toString());
+                return paramsMap;
+            }
+            //重写getHeaders 默认的key为cookie，value则为localCookie
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("cookie", Constant.localCookie);
+                    //Log.d("调试", "headers----------------" + headers);
+                    return headers;
+                } else {
+                    return super.getHeaders();
+                }
+            }
+        };
+        VolleySingleton.getVolleySingleton(getActivity()).addToRequestQueue(
+                loginInterfaceData);
+    }
+
+    List<Map<String, Object>> fieldSet=new ArrayList<>();
+
+    @SuppressWarnings("unchecked")
+    private void setStore(String jsonData) {
+        String jsonData1=jsonData.replaceAll("00:00:00","");
+        Map<String, Object> stuInfoMap = Utils.str2map(jsonData1);
+        List<Map<String, Object>> dataList = new ArrayList<>();
+
+        try {
+            dataList = (List<Map<String, Object>>) stuInfoMap.get("dataList");
+            Map<String, Object> map = dataList.get(0);
+            if (map.containsKey("AFM_14")) {
+                String school = (String) map.get("AFM_14");
+                stuSchoolArea.setText(school);
+            } else {
+                stuSchoolArea.setText("");
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            stuSchoolArea.setText("");
         }
     }
 

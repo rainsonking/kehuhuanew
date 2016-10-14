@@ -71,7 +71,6 @@ public class StuInfoActivity extends AppCompatActivity {
     private void initData() {
 
         CommonToolbar mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
-
         mToolbar.setTitle("个人资料");
         mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,9 +169,10 @@ public class StuInfoActivity extends AppCompatActivity {
         List<Map<String, Object>> dataList = new ArrayList<>();
         Map<String, Object> pageSet;
         try {
-            dataList = (List<Map<String, Object>>) stuInfoMap.get("dataList");
+           dataList = (List<Map<String, Object>>) stuInfoMap.get("dataList");
             pageSet= (Map<String, Object>) stuInfoMap.get("pageSet");
             fieldSet = (List<Map<String, Object>>) pageSet.get("fieldSet");
+            Log.e("fieldSet",fieldSet.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,9 +182,8 @@ public class StuInfoActivity extends AppCompatActivity {
 //            dataList.remove(dataList.size()-1);
             if (stuInfo==null) {
                 stuInfo = unionAnalysis(dataList);
-                stuInfo.remove(stuInfo.size()-1);
-
-                stuInfo.remove(stuInfo.size()-1);
+//                stuInfo.remove(stuInfo.size()-1);
+//                stuInfo.remove(stuInfo.size()-1);
                 Log.e("TAG", "=================" + stuInfo.toString());
                 //设置适配器
                 adapter = new SimpleAdapter(StuInfoActivity.this, stuInfo, R.layout.activity_info_item,
@@ -194,9 +193,9 @@ public class StuInfoActivity extends AppCompatActivity {
             }else{
                 stuInfo.removeAll(stuInfo);
                 stuInfo.addAll(unionAnalysis(dataList));
-                stuInfo.remove(stuInfo.size()-1);
-
-                stuInfo.remove(stuInfo.size()-1);
+//                stuInfo.remove(stuInfo.size()-1);
+//
+//                stuInfo.remove(stuInfo.size()-1);
 
             }
 
