@@ -55,7 +55,7 @@ public class PhotoPickerAdapter extends BaseAdapter {
         }
 
         if (position == listPath.size()) {
-            holder.image.setImageResource(R.mipmap.ic_add_pic);
+            holder.image.setImageResource(R.drawable.selector_select_picture_press);
             if (position == 9) {
                 holder.image.setVisibility(View.GONE);
             }

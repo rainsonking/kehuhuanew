@@ -14,17 +14,24 @@
         app:isShowTitle="true">
     </com.kwsoft.kehuhua.widget.CommonToolbar>
 
-
+<TextView
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="22dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="图片附件列表"
+    android:textSize="22sp"
+    android:textColor="#858585"/>
     <GridView
         android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_margin="18dp"
         android:background="@android:color/white"
         android:columnWidth="90dp"
         android:gravity="center"
         android:horizontalSpacing="5dp"
-        android:numColumns="3"
+        android:numColumns="4"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
         android:verticalSpacing="5dp" />

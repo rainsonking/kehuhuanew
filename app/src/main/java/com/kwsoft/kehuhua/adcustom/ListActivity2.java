@@ -108,10 +108,12 @@ public class ListActivity2 extends BaseActivity {
         mRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+
                 refreshData();
             }
             @Override
             public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
+
                 if (mAdapter.getItemCount() < totalNum){
 
                     loadMoreData();
@@ -341,6 +343,12 @@ public class ListActivity2 extends BaseActivity {
 //将dataList与fieldSet合并准备适配数据
 //        if (dataList != null && dataList.size() > 0) {
             datas = DataProcess.combineSetData(tableId,fieldSet, dataList);
+        if (datas==null) {
+            Snackbar.make(mRecyclerView,"本页无数据",Snackbar.LENGTH_SHORT).show();
+
+        }
+
+
 //        } else {
 //            Toast.makeText(ListActivity2.this, "列表无数据",
 //                    Toast.LENGTH_SHORT).show();

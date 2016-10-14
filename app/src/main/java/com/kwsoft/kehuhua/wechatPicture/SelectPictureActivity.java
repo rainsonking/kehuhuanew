@@ -70,10 +70,10 @@ public class SelectPictureActivity extends AppCompatActivity implements View.OnC
 
 
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
-        mToolbar.setTitle("属性");
+        mToolbar.setTitle("作业");
         mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
         //左侧返回按钮
-        mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.often_more));
+        mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.nav_scan_file));
         mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

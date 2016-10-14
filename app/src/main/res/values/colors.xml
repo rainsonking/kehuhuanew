@@ -241,7 +241,6 @@
     <color name="common_bg">#F0F0F0</color>
 <!--powerpopwindow-->
     <color name="littlegray">#EEEEEE</color>
-    <color name="progressColor">#20000000</color>
-
+    <color name="dialogBackground">#00ffffff</color>
 
 </resources>
