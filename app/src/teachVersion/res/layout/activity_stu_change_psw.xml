@@ -37,6 +37,7 @@
             android:gravity="center"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
+            android:textCursorDrawable="@drawable/feedback_color_cursor"
             android:layout_marginTop="16dp"
             android:background="@drawable/et_repwd"
             android:hint="请输入原密码："
@@ -63,6 +64,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/et_repwd"
             android:hint="请输入新密码："
+            android:textCursorDrawable="@drawable/feedback_color_cursor"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:textColor="#5b5b5b"
@@ -73,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="确认密码"
+
             android:textColor="@color/text2"
             android:textSize="15dp" />
 
@@ -85,6 +88,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/et_repwd"
+            android:textCursorDrawable="@drawable/feedback_color_cursor"
             android:hint="确认密码："
             android:imeOptions="actionDone"
             android:inputType="textPassword"
