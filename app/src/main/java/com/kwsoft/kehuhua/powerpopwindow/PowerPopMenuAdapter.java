@@ -14,6 +14,7 @@ import com.kwsoft.kehuhua.adcustom.R;
 
 /**
  * Created by HMY on 2015/12/25.
+ *
  */
 public class PowerPopMenuAdapter extends BaseRecyclerViewAdapter<PowerPopMenuModel> {
 
@@ -47,8 +48,7 @@ public class PowerPopMenuAdapter extends BaseRecyclerViewAdapter<PowerPopMenuMod
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_power_pop_menu, viewGroup, false);
-        PowerPopViewHolder viewHolder = new PowerPopViewHolder(v);
-        return viewHolder;
+        return new PowerPopViewHolder(v);
     }
 
     @Override

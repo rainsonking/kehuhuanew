@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +35,10 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.kehuhua.powerpopwindow.BaseRecyclerViewAdapter;
-import com.kwsoft.kehuhua.powerpopwindow.PowerPopMenu;
 import com.kwsoft.kehuhua.powerpopwindow.PowerPopMenuModel;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.view.WrapContentLinearLayoutManager;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 
 import java.util.ArrayList;
@@ -161,7 +159,8 @@ public class ListActivity2 extends AppCompatActivity {
             mToolbar.setTextTitleOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popChildMenu(v);
+//                    popChildMenu(v);
+                    childChose();
                 }
             });
         } else {
@@ -293,9 +292,6 @@ public class ListActivity2 extends AppCompatActivity {
                     operaButtonSet = JSONArray.toJSONString(operaButtonSetList);
                     Log.e("TAG", "获取operaButtonSet" + operaButtonSet);
 
-                    //        //判断条件显示右侧按钮
-                    Log.e("TAG", "详情页operaButtonSet " + operaButtonSet);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -324,10 +320,13 @@ public class ListActivity2 extends AppCompatActivity {
                     mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            showButtonSet();
+//                            showButtonSet();
+                            buttonList();
                         }
                     });
 
+                }else{
+                    mToolbar.hideRightImageButton();
                 }
             }
 //获取dataList
@@ -355,6 +354,7 @@ public class ListActivity2 extends AppCompatActivity {
     private void refreshData() {
         start = 0;
         state = STATE_REFREH;
+
         getData();
 
     }
@@ -378,10 +378,19 @@ public class ListActivity2 extends AppCompatActivity {
                 normalRequest();
                 break;
             case STATE_REFREH:
+                if (mAdapter!=null) {
+
                     mAdapter.clearData();
                     mAdapter.addData(datas);
                     mRecyclerView.scrollToPosition(0);
                     mRefreshLayout.finishRefresh();
+                    if (datas.size()==0) {
+                        Snackbar.make(mRecyclerView,"本页无数据",Snackbar.LENGTH_SHORT).show();
+                    }else{
+                        Snackbar.make(mRecyclerView,"更新完成",Snackbar.LENGTH_SHORT).show();
+                    }
+
+                }
                 break;
             case STATE_MORE:
                 if (mAdapter!=null) {
@@ -397,10 +406,9 @@ public class ListActivity2 extends AppCompatActivity {
     public void normalRequest(){
         mAdapter = new ListAdapter2(datas, childTab);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity2.this));
+        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(ListActivity2.this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 //                mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
-
         mAdapter.setOnItemClickListener(new ListAdapter2.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, String data) {
@@ -449,18 +457,18 @@ public class ListActivity2 extends AppCompatActivity {
         }
     }
 
-    private void popChildMenu(View v) {
-        PowerPopMenu mPowerPopMenu1 = new PowerPopMenu(mContext, LinearLayoutManager.VERTICAL, PowerPopMenu.POP_UP_TO_DOWN);
-        mPowerPopMenu1.setIsShowIcon(true);
-        mPowerPopMenu1.setListResource(mChildMenuList);
-        mPowerPopMenu1.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                refreshPage(position);
-            }
-        });
-        mPowerPopMenu1.show(v);
-    }
+//    private void popChildMenu(View v) {
+//        PowerPopMenu mPowerPopMenu1 = new PowerPopMenu(mContext, LinearLayoutManager.VERTICAL, PowerPopMenu.POP_UP_TO_DOWN);
+//        mPowerPopMenu1.setIsShowIcon(true);
+//        mPowerPopMenu1.setListResource(mChildMenuList);
+//        mPowerPopMenu1.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                refreshPage(position);
+//            }
+//        });
+//        mPowerPopMenu1.show(v);
+//    }
 
 
     private void initButtonsetData() {
@@ -473,24 +481,24 @@ public class ListActivity2 extends AppCompatActivity {
         }
 
     }
-//展示右上角按钮
-    public void showButtonSet() {
-        PowerPopMenu mPowerPopMenu2 = new PowerPopMenu(mContext, LinearLayoutManager.HORIZONTAL, PowerPopMenu
-                .POP_UP_TO_DOWN);
-        //必须放在setListResource之前
-        mPowerPopMenu2.setIsShowIcon(false);
-        mPowerPopMenu2.setListResource(mRightButtonData);
-        mPowerPopMenu2.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                toPage(position);
-            }
-        });
-        mPowerPopMenu2.addView(mEmptyView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams
-                .MATCH_PARENT, 50));
-        mPowerPopMenu2.show();
-
-    }
+////展示右上角按钮
+//    public void showButtonSet() {
+//        PowerPopMenu mPowerPopMenu2 = new PowerPopMenu(mContext, LinearLayoutManager.HORIZONTAL, PowerPopMenu
+//                .POP_UP_TO_DOWN);
+//        //必须放在setListResource之前
+//        mPowerPopMenu2.setIsShowIcon(false);
+//        mPowerPopMenu2.setListResource(mRightButtonData);
+//        mPowerPopMenu2.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                toPage(position);
+//            }
+//        });
+//        mPowerPopMenu2.addView(mEmptyView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams
+//                .MATCH_PARENT, 50));
+//        mPowerPopMenu2.show();
+//
+//    }
 
     public void toPage(int position){
         int buttonType = (int) buttonSet.get(position).get("buttonType");
@@ -513,10 +521,12 @@ public class ListActivity2 extends AppCompatActivity {
 
 
     public void refreshPage(int position){
-
+        Log.e("TAG", "list子菜单position "+position);
         tableId = childList.get(position).get("tableId") + "";
         pageId = childList.get(position).get("pageId") + "";
         titleName = childList.get(position).get("menuName") + "";
+
+        Log.e("TAG", "list子菜单position "+position);
         //重新设置顶部名称
         mToolbar.setTitle(titleName);
         //重设参数值
@@ -529,5 +539,203 @@ public class ListActivity2 extends AppCompatActivity {
         //重新请求数据
         refreshData();
 
+    }
+
+    //顶部展开popwindow 选择子菜单切换
+    public void childChose() {
+        Log.e("TAG", "展开子菜单popWindow");
+        try {
+            if (childList.size() > 0) {
+
+                if (childListPop != null && childListPop.isShowing()) {
+                    childListPop.dismiss();
+                } else {
+
+
+                    final View toolLayout = getLayoutInflater().inflate(
+                            R.layout.activity_list_childlist, null);
+                    ListView childListPopView = (ListView) toolLayout
+                            .findViewById(R.id.child_menu_List);
+
+                    final SimpleAdapter adapter = new SimpleAdapter(
+                            this,
+                            childList,
+                            R.layout.activity_list_childlist_item,
+                            new String[]{"image", "menuName"},
+                            new int[]{R.id.childListItemImg, R.id.childListItemName});
+                    childListPopView.setAdapter(adapter);
+                    // 点击listview中item的处理
+                    childListPopView
+                            .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> arg0,
+                                                        View arg1, int arg2, long arg3) {
+                                    refreshPage(arg2);
+
+                                    // 隐藏弹出窗口
+                                    if (childListPop != null && childListPop.isShowing()) {
+                                        childListPop.dismiss();
+                                    }
+                                }
+                            });
+                    // 创建弹出窗口
+                    // 窗口内容为layoutLeft，里面包含一个ListView
+                    // 窗口宽度跟tvLeft一样
+                    childListPop = new PopupWindow(toolLayout, ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    //设置颜色
+                    ColorDrawable cd = new ColorDrawable(0b1);
+                    childListPop.setBackgroundDrawable(cd);
+                    //设置半透明
+                    WindowManager.LayoutParams params = getWindow().getAttributes();
+                    params.alpha = 0.7f;
+                    getWindow().setAttributes(params);
+
+                    childListPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            WindowManager.LayoutParams params = getWindow().getAttributes();
+                            params.alpha = 1f;
+                            getWindow().setAttributes(params);
+                        }
+                    });
+
+//                    childListPop.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                    childListPop.setTouchable(true); // 设置popupwindow可点击
+                    childListPop.setOutsideTouchable(true); // 设置popupwindow外部可点击
+                    childListPop.setFocusable(true); // 获取焦点
+//                    childListPop.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+                    // 设置popupwindow的位置（位于顶栏下方）
+
+                    childListPop.update();
+
+                    toolLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                    int popupWidth = toolLayout.getMeasuredWidth();
+
+                    Log.e("TAG", "popupWidth " + popupWidth);
+
+
+                    //获取两者的宽度
+//                    int childListPopWith=Utils.getViewHeight(toolLayout, false);
+
+                    int rlTopBarWith = mToolbar.getWidth();
+                    Log.e("TAG", "rlTopBarWith " + rlTopBarWith);
+
+
+                    int delta = (rlTopBarWith - popupWidth) / 8;
+                    Log.e("TAG", "X偏移量 " + delta);
+                    childListPop.showAsDropDown(mToolbar, delta, 0);
+
+                    childListPop.setTouchInterceptor(new View.OnTouchListener() {
+
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // 如果点击了popupwindow的外部，popupwindow也会消失
+                            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                                childListPop.dismiss();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void buttonList() {
+        try {
+
+
+                if (toolListPop != null && toolListPop.isShowing()) {
+                    toolListPop.dismiss();
+                } else {
+                    final View toolLayout = getLayoutInflater().inflate(
+                            R.layout.activity_list_buttonlist, null);
+                    ListView toolListPopView = (ListView) toolLayout
+                            .findViewById(R.id.buttonList);
+                    TextView tv_dismiss = (TextView) toolLayout.findViewById(R.id.tv_dismiss);
+                    tv_dismiss.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            toolListPop.dismiss();
+                        }
+                    });
+                    final SimpleAdapter adapter = new SimpleAdapter(
+                            this,
+                            buttonSet,
+                            R.layout.activity_list_buttonlist_item,
+                            new String[]{"buttonName"},
+                            new int[]{R.id.listItem});
+                    toolListPopView.setAdapter(adapter);
+                    // 点击listview中item的处理
+                    toolListPopView
+                            .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(AdapterView<?> arg0,
+                                                        View arg1, int arg2, long arg3) {
+                                    toPage(arg2);
+                                    // 隐藏弹出窗口
+                                    if (toolListPop != null && toolListPop.isShowing()) {
+                                        toolListPop.dismiss();
+                                    }
+                                }
+                            });
+                    // 创建弹出窗口
+                    // 窗口内容为layoutLeft，里面包含一个ListView
+                    // 窗口宽度跟tvLeft一样
+                    toolListPop = new PopupWindow(toolLayout, ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    ColorDrawable cd = new ColorDrawable(0b1);
+                    toolListPop.setBackgroundDrawable(cd);
+                    toolListPop.setAnimationStyle(R.style.PopupWindowAnimation);
+                    //设置半透明
+                    WindowManager.LayoutParams params = getWindow().getAttributes();
+                    params.alpha = 0.7f;
+                    getWindow().setAttributes(params);
+
+                    toolListPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            WindowManager.LayoutParams params = getWindow().getAttributes();
+                            params.alpha = 1f;
+                            getWindow().setAttributes(params);
+                        }
+                    });
+                    toolListPop.update();
+                    toolListPop.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                    toolListPop.setTouchable(true); // 设置popupwindow可点击
+                    toolListPop.setOutsideTouchable(true); // 设置popupwindow外部可点击
+                    toolListPop.setFocusable(true); // 获取焦点
+                    toolListPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                    toolListPop.showAtLocation(toolLayout, Gravity.BOTTOM, 0, 0);
+
+                    // 设置popupwindow的位置（相对tvLeft的位置）
+                    int topBarHeight = mToolbar.getBottom();
+                    toolListPop.showAsDropDown(toolListPopView, 0,
+                            (topBarHeight - toolListPopView.getHeight()) / 2);
+
+                    toolListPop.setTouchInterceptor(new View.OnTouchListener() {
+
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // 如果点击了popupwindow的外部，popupwindow也会消失
+                            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                                toolListPop.dismiss();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+
+                }
+        } catch (Exception e) {
+            Toast.makeText(ListActivity2.this, "无按钮数据", Toast.LENGTH_SHORT).show();
+        }
     }
 }

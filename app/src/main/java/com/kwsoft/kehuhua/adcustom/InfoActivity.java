@@ -154,6 +154,8 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 }
             });
 
+        }else{
+            mToolbar.hideRightImageButton();
         }
 
 

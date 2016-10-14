@@ -86,6 +86,14 @@ public class CommonToolbar extends Toolbar {
 
     }
 
+    public void hideRightImageButton() {
+
+        if(mRightImageButton !=null)
+            mRightImageButton.setVisibility(GONE);
+
+
+    }
+
 
     private void initView() {
         if(mView == null) {
