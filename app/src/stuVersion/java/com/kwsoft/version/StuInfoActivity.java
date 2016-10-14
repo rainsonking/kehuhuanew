@@ -40,14 +40,14 @@ public class StuInfoActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Map<String, String>> stuInfo;
     //下拉刷新handler
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0x101:
                     Log.e("TAG", "学员端开始handler通知跳转后 ");
-                    if (swipeRefreshLayout.isRefreshing()){
+                    if (swipeRefreshLayout.isRefreshing()) {
                         adapter.notifyDataSetChanged();
                         swipeRefreshLayout.setRefreshing(false);//设置不刷新
                         Toast.makeText(getApplicationContext(), "数据已更新", Toast.LENGTH_SHORT).show();
@@ -65,7 +65,6 @@ public class StuInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initData();
         requestSet();
-
     }
 
     private void initData() {
@@ -80,7 +79,7 @@ public class StuInfoActivity extends AppCompatActivity {
             }
         });
         //下拉刷新设置
-        swipeRefreshLayout=(SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         //设置下拉刷新监听
@@ -93,10 +92,11 @@ public class StuInfoActivity extends AppCompatActivity {
         });
 
     }
+
     /**
      * 加载菜单数据的线程
      */
-    class LoadDataThread extends  Thread{
+    class LoadDataThread extends Thread {
         @Override
         public void run() {
             //下载数据，重新设定dataList
@@ -111,6 +111,7 @@ public class StuInfoActivity extends AppCompatActivity {
             handler.sendEmptyMessage(0x101);//通过handler发送一个更新数据的标记，适配器进行dataSetChange，然后停止刷新动画
         }
     }
+
     /**
      * 3、获取字段接口数据,如果没有网络或者其他情况则读取本地
      */
@@ -144,6 +145,7 @@ public class StuInfoActivity extends AppCompatActivity {
                 Log.e("TAG", "学员端请求个人信息参数：" + paramsMap.toString());
                 return paramsMap;
             }
+
             //重写getHeaders 默认的key为cookie，value则为localCookie
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -161,17 +163,17 @@ public class StuInfoActivity extends AppCompatActivity {
                 loginInterfaceData);
     }
 
-    List<Map<String, Object>> fieldSet=new ArrayList<>();
+    List<Map<String, Object>> fieldSet = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     private void setStore(String jsonData) {
-        String jsonData1=jsonData.replaceAll("00:00:00","");
+        String jsonData1 = jsonData.replaceAll("00:00:00", "");
         Map<String, Object> stuInfoMap = Utils.str2map(jsonData1);
         List<Map<String, Object>> dataList = new ArrayList<>();
         Map<String, Object> pageSet;
         try {
             dataList = (List<Map<String, Object>>) stuInfoMap.get("dataList");
-            pageSet= (Map<String, Object>) stuInfoMap.get("pageSet");
+            pageSet = (Map<String, Object>) stuInfoMap.get("pageSet");
             fieldSet = (List<Map<String, Object>>) pageSet.get("fieldSet");
         } catch (Exception e) {
             e.printStackTrace();
@@ -180,26 +182,23 @@ public class StuInfoActivity extends AppCompatActivity {
         if (dataList.size() > 0) {
 //            dataList.remove(dataList.size()-1);
 //            dataList.remove(dataList.size()-1);
-            if (stuInfo==null) {
+            if (stuInfo == null) {
                 stuInfo = unionAnalysis(dataList);
-                stuInfo.remove(stuInfo.size()-1);
+                stuInfo.remove(stuInfo.size() - 1);
 
-                stuInfo.remove(stuInfo.size()-1);
+                stuInfo.remove(stuInfo.size() - 1);
                 Log.e("TAG", "=================" + stuInfo.toString());
                 //设置适配器
                 adapter = new SimpleAdapter(StuInfoActivity.this, stuInfo, R.layout.activity_info_item,
                         new String[]{"fieldCnName", "fieldCnName2"}, new int[]{R.id.tv_name,
                         R.id.tv_entity_name});
                 stuInfoLv.setAdapter(adapter);
-            }else{
+            } else {
                 stuInfo.removeAll(stuInfo);
                 stuInfo.addAll(unionAnalysis(dataList));
-                stuInfo.remove(stuInfo.size()-1);
-
-                stuInfo.remove(stuInfo.size()-1);
-
+                stuInfo.remove(stuInfo.size() - 1);
+                stuInfo.remove(stuInfo.size() - 1);
             }
-
         }
     }
 
