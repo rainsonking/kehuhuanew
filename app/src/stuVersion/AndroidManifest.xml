@@ -29,6 +29,9 @@
     <activity android:name="com.kwsoft.version.StuLoginActivity">
 
     </activity>
+    <activity android:name="com.kwsoft.version.FeedbackActivity">
+
+    </activity>
 </application>
 
 </manifest>
