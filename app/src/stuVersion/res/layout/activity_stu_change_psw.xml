@@ -184,7 +184,7 @@ android:layout_marginLeft="@dimen/text_size_10"-->
             android:layout_height="wrap_content"
             android:text="确认修改"
             android:textColor="#ffffff"
-            android:textSize="16dp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -202,6 +202,6 @@ android:layout_marginLeft="@dimen/text_size_10"-->
             android:layout_height="wrap_content"
             android:text="确认修改"
             android:textColor="#ffffff"
-            android:textSize="16dp" />
+            android:textSize="18sp" />
     </LinearLayout>
 </RelativeLayout>
