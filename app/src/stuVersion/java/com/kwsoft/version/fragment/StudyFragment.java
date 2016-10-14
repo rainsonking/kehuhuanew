@@ -29,7 +29,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.adapter.StaticPagerAdapter;
 import com.jude.rollviewpager.hintview.ColorPointHintView;
-import com.kwsoft.kehuhua.adcustom.ListActivity;
+import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
@@ -119,7 +119,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 Constant.stu_homeSetId = String.valueOf(parentList.get(position).get("SourceDataId"));
                 try {
                     Intent intent = new Intent();
-                    intent.setClass(getActivity(), ListActivity.class);
+                    intent.setClass(getActivity(), ListActivity2.class);
                     intent.putExtra("itemData", JSON.toJSONString(itemData));
                     startActivity(intent);
                 } catch (Exception e) {

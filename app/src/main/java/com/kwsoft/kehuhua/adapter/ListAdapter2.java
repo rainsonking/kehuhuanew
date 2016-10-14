@@ -53,7 +53,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
+        Log.e("TAG", "recyclerView "+position);
         List<Map<String, String>> item = getData(position);
         try {
             final String title=item.get(0).get("fieldCnName2");
