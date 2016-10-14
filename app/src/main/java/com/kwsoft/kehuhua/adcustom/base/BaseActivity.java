@@ -2,6 +2,7 @@ package com.kwsoft.kehuhua.adcustom.base;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,8 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.application.MyApplication;
+import com.kwsoft.kehuhua.utils.Utils;
 
 /**
  * Activity的基类，实现了IActivitySupport接口
@@ -35,15 +36,14 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseAct
     protected MyApplication myApplication;
     protected ProgressDialog pg = null;
     protected NotificationManager notificationManager;
-
+    protected Dialog dialog =null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         preferences = getSharedPreferences("userInfo", MODE_WORLD_READABLE);
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        pg = new ProgressDialog(mContext);
-        pg.setMessage(getResources().getString(R.string.loadind));
+        dialog= Utils.createLoadingDialog(mContext, "");
         myApplication = (MyApplication) getApplication();
         myApplication.addActivity(this);
     }

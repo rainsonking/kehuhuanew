@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,6 +33,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.ListAdapter2;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.powerpopwindow.PowerPopMenuModel;
 import com.kwsoft.kehuhua.utils.DataProcess;
@@ -52,7 +52,7 @@ import butterknife.OnClick;
 
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
-public class ListActivity2 extends AppCompatActivity {
+public class ListActivity2 extends BaseActivity {
 
 
     @Bind(R.id.lv)
@@ -93,6 +93,7 @@ public class ListActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_avtivity2);
         ButterKnife.bind(this);
+        dialog.show();
         initRefreshLayout();//初始化空间
         initView();
         getDataIntent();//获取初始化数据
@@ -214,6 +215,7 @@ public class ListActivity2 extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 VolleySingleton.onErrorResponseMessege(ListActivity2.this, volleyError);
+                dialog.dismiss();
             }
         }
         ) {
@@ -334,6 +336,7 @@ public class ListActivity2 extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
+            dialog.dismiss();
         }
 //将dataList与fieldSet合并准备适配数据
 //        if (dataList != null && dataList.size() > 0) {
@@ -416,7 +419,7 @@ public class ListActivity2 extends AppCompatActivity {
                         toItem(data);
             }
         });
-
+        dialog.dismiss();
 
     }
 

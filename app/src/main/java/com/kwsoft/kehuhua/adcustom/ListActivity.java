@@ -491,6 +491,7 @@ public class ListActivity extends BaseActivity implements View.OnClickListener {
             Toast.makeText(ListActivity.this, "无按钮数据", Toast.LENGTH_SHORT).show();
         }
     }
+
     //顶部展开popwindow 选择子菜单切换
     public void childChose() {
         Log.e("TAG", "展开子菜单popWindow");
