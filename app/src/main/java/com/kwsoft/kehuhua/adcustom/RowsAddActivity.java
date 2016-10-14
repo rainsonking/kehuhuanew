@@ -69,13 +69,9 @@ public class RowsAddActivity extends AppCompatActivity {
         CloseActivityClass.activityList.add(this);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        Log.e("TAG", "关联添加页面启动 ");
         getIntentData();
-        Log.e("TAG", "关联添加获取上层传递数据完毕 ");
         init();
-        Log.e("TAG", "关联添加初始化参数完毕 ");
         requestAdd();
-        Log.e("TAG", "关联添加获取数据展示完毕 ");
     }
 
     private void init() {
@@ -120,7 +116,6 @@ public class RowsAddActivity extends AppCompatActivity {
 
 
     private void requestAddCommit() {
-        Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(6).toString());
         String value = DataProcess.commit(RowsAddActivity.this, fieldSet);
         if (!value.equals("no")) {
             String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
