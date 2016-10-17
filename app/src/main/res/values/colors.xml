@@ -246,5 +246,6 @@
     <color name="progressColor">#20000000</color>
     <color name="stu_into_line">#e2e2e2</color>
 
+    <color name="dialogBackground">#00ffffff</color>
 
 </resources>
