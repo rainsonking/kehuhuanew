@@ -4,6 +4,19 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 <!--改高度30  ——0918-->
+    <!--<TextView-->
+        <!--android:id="@+id/daytext"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="@dimen/day_text_wh"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:gravity="center"-->
+        <!--android:padding="2dp"-->
+        <!--android:ellipsize="end"-->
+        <!--android:maxLines="4"-->
+        <!--android:text="20"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textSize="17sp"/>-->
     <TextView
         android:id="@+id/daytext"
         android:layout_width="wrap_content"
