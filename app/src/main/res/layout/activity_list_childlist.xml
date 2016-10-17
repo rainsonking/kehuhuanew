@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:background="@mipmap/often_drop_curriculum_bg"
+    android:background="@drawable/often_drop_curriculum_bg"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,7 +17,6 @@
         android:layout_height="wrap_content"
         android:divider="#e3e3e3"
         android:dividerHeight="1px"
-        android:padding="10dp"
         android:scrollbars="none">
 
     </ListView>
