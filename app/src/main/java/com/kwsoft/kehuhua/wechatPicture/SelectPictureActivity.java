@@ -3,7 +3,6 @@ package com.kwsoft.kehuhua.wechatPicture;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +16,7 @@ import com.kwsoft.kehuhua.adcustom.AddItemsActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.RowsAddActivity;
 import com.kwsoft.kehuhua.adcustom.RowsEditActivity;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.MultipartRequest;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
@@ -37,12 +37,14 @@ import static com.kwsoft.kehuhua.config.Constant.pictureUrl;
 import static com.kwsoft.kehuhua.config.Constant.sysUrl;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
+//import static com.google.gson.jpush.internal.a.z.R;
+
 /**
  * Created by Administrator on 2016/10/13 0013.
  *
  */
 
-public class SelectPictureActivity extends AppCompatActivity implements View.OnClickListener {
+public class SelectPictureActivity extends BaseActivity implements View.OnClickListener {
     private CommonToolbar mToolbar;
     String position;
     @Bind(R.id.gridView)
@@ -64,7 +66,7 @@ public class SelectPictureActivity extends AppCompatActivity implements View.OnC
 //        initData();
 //        setListener();
     }
-    private void initView() {
+    public void initView() {
         Intent intent = getIntent();
         position = intent.getStringExtra("position");
 
@@ -86,6 +88,7 @@ public class SelectPictureActivity extends AppCompatActivity implements View.OnC
         mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.show();
                 upload();
             }
         });
@@ -178,7 +181,7 @@ public class SelectPictureActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onResponse(String response) {
-
+                dialog.dismiss();
                 getFileCode(response);
 
 
@@ -188,6 +191,7 @@ public class SelectPictureActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                dialog.dismiss();
                 Toast.makeText(SelectPictureActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
 //                TrendCreateHttpManager.toTrendCreateHttpActionError();
             }
