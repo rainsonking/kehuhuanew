@@ -177,6 +177,7 @@
     <color name="course_type_color4">#5a4dbb</color>
     <color name="course_type_color5">#9f2a3b</color>
     <color name="selectColor">#5ca7ff</color>
+    <color name="pwdselectColor">#ee5151</color>
     <color name="selectColorButtom">#ffeff1</color>
 
     <!--zxing-->
@@ -222,6 +223,7 @@
     <color name="text4">#787878</color>
     <color name="kanban_line">#dddddd</color>
     <color name="press_color">#ccd7000f</color>
+    <color name="pwdpress_color">#ee515151</color>
     <color name="text5">#C9C9C9</color>
     <color name="text6">#A5A5A5</color>
     <color name="tabtext1">#d7000f</color>
@@ -242,6 +244,7 @@
 <!--powerpopwindow-->
     <color name="littlegray">#EEEEEE</color>
     <color name="progressColor">#20000000</color>
+    <color name="stu_into_line">#e2e2e2</color>
 
 
 </resources>
