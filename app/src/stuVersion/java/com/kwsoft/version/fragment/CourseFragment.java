@@ -449,6 +449,12 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
                 int week=week(date);
                 //左边距
                 float marginLeft=((week-1)*courseInfoWidth)+leftTextViewWidth+lineHeight*2;
+                if (week==7){
+                    Log.e(week+"7",courseInfoWidth+"");
+                }else {
+                    Log.e(week+"1-6",courseInfoWidth+"");
+                }
+
                 //上边距跨过横线的条数总和的高度像素
                 float topLineSumHeight=((left-480)/30)*lineHeight;
                 //上边距
@@ -460,6 +466,9 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
                 Log.e("TAG","课程表检测3");
                 float courseHeight=(right-left)*oneMinWidth+chLineSumHeight;
                 RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams((int)courseInfoWidth,(int)courseHeight);
+//               if (week==7){
+//                   layoutParams=new RelativeLayout.LayoutParams((int)courseInfoWidth-5,(int)courseHeight);
+//               }
                 layoutParams.setMargins((int)marginLeft,(int)marginTop,0,0);
 //                courseView.getTopRightIv().setAdjustViewBounds(true);
 //                courseView.getTopRightIv().setMaxWidth((int)(courseInfoWidth/2));
