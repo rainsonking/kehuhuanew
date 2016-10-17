@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adapter.Add_EditAdapter;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
@@ -38,7 +39,7 @@ import butterknife.OnClick;
 
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
-public class RowsAddActivity extends AppCompatActivity {
+public class RowsAddActivity extends BaseActivity {
 
     @Bind(R.id.rows_tv_add_item_title)
     TextView rowsTvAddItemTitle;
@@ -69,9 +70,15 @@ public class RowsAddActivity extends AppCompatActivity {
         CloseActivityClass.activityList.add(this);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        dialog.show();
         getIntentData();
         init();
         requestAdd();
+    }
+
+    @Override
+    public void initView() {
+
     }
 
     private void init() {
@@ -188,6 +195,7 @@ public class RowsAddActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 VolleySingleton.onErrorResponseMessege(RowsAddActivity.this, volleyError);
+                dialog.dismiss();
             }
         }
         ) {
@@ -245,6 +253,11 @@ public class RowsAddActivity extends AppCompatActivity {
         if (fieldSet != null && fieldSet.size() > 0) {
             adapter = new Add_EditAdapter(RowsAddActivity.this, fieldSet, paramsMap);
             rowsLvAddItem.setAdapter(adapter);
+            dialog.dismiss();
+        }else{
+            dialog.dismiss();
+
+            Snackbar.make(rowsLvAddItem,"本页无数据",Snackbar.LENGTH_SHORT).show();
         }
 
     }

@@ -397,7 +397,7 @@ public class ListActivity2 extends BaseActivity {
                     if (datas.size()==0) {
                         Snackbar.make(mRecyclerView,"本页无数据",Snackbar.LENGTH_SHORT).show();
                     }else{
-                        Snackbar.make(mRecyclerView,"更新完成",Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRecyclerView,"刷新完成",Snackbar.LENGTH_SHORT).show();
                     }
 
                 }
