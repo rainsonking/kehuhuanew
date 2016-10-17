@@ -131,7 +131,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         gridView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         pull_refresh_scrollview = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
         //上拉、下拉设定
-        pull_refresh_scrollview.setMode(PullToRefreshBase.Mode.BOTH);
+//        pull_refresh_scrollview.setMode(PullToRefreshBase.Mode.BOTH);
         //上拉监听函数
         pull_refresh_scrollview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
 
