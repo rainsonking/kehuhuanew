@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/normal_bg2"
-    android:paddingRight="5dp"
     tools:context="com.kwsoft.kehuhua.adcustom.CourseActivity">
 
 
