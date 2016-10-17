@@ -53,7 +53,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
- *
  */
 public class StudyFragment extends Fragment implements View.OnClickListener {
 
@@ -61,6 +60,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     //PullToRefreshGridView homeGridView;
     private StudyGridView homeGridView;
     private List<Map<String, Object>> parentList = new ArrayList<>();
+    private SimpleAdapter simpleAdapter = null;
 
     private int[] imgs2 = {R.drawable.stu_see_record_task, R.drawable.stu_see_record_curriculum,
             R.drawable.stu_see_record_leave, R.drawable.stu_see_record_curriculumb};
@@ -170,13 +170,14 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (i == 7) {
+                          if ((simpleAdapter.getCount()==(i+1))){
+                       // if (i == 7) {
                             StuMainActivity activity = (StuMainActivity) getActivity();
                             activity.fragmentClick();
                         } else {
 //                            int menuId = (int) menuListMap.get(i).get("menuId");
 //                            toItem(menuId, menuListMap.get(i));
-                            DataProcess.toList(getActivity(),menuListMap.get(i));
+                            DataProcess.toList(getActivity(), menuListMap.get(i));
                         }
                     }
                 });
@@ -187,7 +188,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     public void setMenuAdapter(List<Map<String, Object>> menuListMaps) {
-        SimpleAdapter simpleAdapter = new SimpleAdapter(getActivity(), menuListMaps,
+        simpleAdapter = new SimpleAdapter(getActivity(), menuListMaps,
                 R.layout.fragment_study_gridview_item, new String[]{"image", "menuName"},
                 new int[]{R.id.itemImage, R.id.itemName});
         gridView.setAdapter(simpleAdapter);
@@ -196,9 +197,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     public void setKanbanAdapter(List<Map<String, Object>> parentLists) {
         if ((parentLists.size()) % 2 == 1) {
             Map<String, Object> map = new HashMap<>();
-            map.put("image",R.color.white);
-            map.put("cnName","");
-            map.put("name","");
+            map.put("image", R.color.white);
+            map.put("cnName", "");
+            map.put("name", "");
             parentLists.add(map);
         }
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), parentLists,
@@ -233,7 +234,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                         name = String.valueOf(listMap1.get(0).get("name"));
                     }
                 }
-                map.put("name", name+"个");
+                map.put("name", name + "个");
                 parentLists.add(map);
             }
         } catch (Exception e) {
@@ -321,11 +322,8 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 
     @OnClick(R.id.stu_homepage_info)
     public void onClick() {
-
         Intent intent = new Intent(getActivity(), StuInfoActivity.class);
         startActivity(intent);
-
-
     }
 
     private class TestNormalAdapter extends StaticPagerAdapter {
@@ -454,7 +452,8 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 if (menuListAll.size() > 0) {
                     //展示菜单
                     menuListMap.clear();
-                    menuListMap =  DataProcess.toStuParentList(menuListAll);
+//                    menuListMap =  DataProcess.toStuParentList(menuListAll);
+                    menuListMap = getMenuListData(menuListAll);
                     setMenuAdapter(menuListMap);
 
                 } else {
