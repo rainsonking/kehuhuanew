@@ -32,7 +32,9 @@
         <com.cjj.MaterialRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:overlay="true"
+            app:wave_color="@android:color/transparent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/lv"

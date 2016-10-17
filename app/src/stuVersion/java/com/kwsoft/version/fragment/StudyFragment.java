@@ -465,6 +465,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 // Call onRefreshComplete when the list has been refreshed.
                 //在更新UI后，无需其它Refresh操作，系统会自己加载新的listView
                 pull_refresh_scrollview.onRefreshComplete();
+                Toast.makeText(getActivity(), "数据已刷新", Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {

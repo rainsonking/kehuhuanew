@@ -1,6 +1,5 @@
 package com.kwsoft.version;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -203,7 +202,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         if (!hasInternetConnected()) {
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
         } else {
-            final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
+//            final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
 //            proDia.setTitle("正在登陆。。。");
 //            proDia.show();
             dialog.show();
@@ -222,10 +221,9 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-
+                        dialog.dismiss();
                         VolleySingleton.onErrorResponseMessege(StuLoginActivity.this, volleyError);
-                        //  stopAnim();
-//                        proDia.dismiss();
+
                     }
                 }
                 ) {
