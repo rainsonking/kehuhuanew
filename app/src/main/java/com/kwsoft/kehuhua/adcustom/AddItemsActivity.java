@@ -1,8 +1,10 @@
 package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adapter.Add_EditAdapter;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
@@ -36,7 +39,7 @@ import butterknife.OnClick;
 import static com.kwsoft.kehuhua.adcustom.R.id.add_item_title;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
-public class AddItemsActivity extends AppCompatActivity {
+public class AddItemsActivity extends BaseActivity {
 
     @Bind(R.id.IV_back_list_item_tadd)
     ImageView IVBackListItemTadd;
@@ -60,6 +63,7 @@ public class AddItemsActivity extends AppCompatActivity {
     private String keyRelation = "";
 //  private Map<String, Object> defaultValArr;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +71,16 @@ public class AddItemsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_items);
         ButterKnife.bind(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        dialog.show();
+
         getIntentData();
         init();
         requestAdd();
+    }
+
+    @Override
+    public void initView() {
+
     }
 
     private void init() {
@@ -118,6 +129,7 @@ public class AddItemsActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 VolleySingleton.onErrorResponseMessege(AddItemsActivity.this, volleyError);
+                dialog.dismiss();
             }
         }
         ) {
@@ -181,6 +193,11 @@ public class AddItemsActivity extends AppCompatActivity {
             Constant.fieldSetTemp = fieldSet;
             adapter = new Add_EditAdapter(AddItemsActivity.this, fieldSet, paramsMap);
             lvAddItem.setAdapter(adapter);
+            dialog.dismiss();
+        }else{
+            dialog.dismiss();
+
+            Snackbar.make(lvAddItem,"本页无数据",Snackbar.LENGTH_SHORT).show();
         }
 
     }

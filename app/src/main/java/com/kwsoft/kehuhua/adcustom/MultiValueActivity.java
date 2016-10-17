@@ -1,8 +1,9 @@
 package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.kwsoft.kehuhua.adapter.MultiValueAdapter;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
@@ -35,7 +37,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MultiValueActivity extends AppCompatActivity {
+public class MultiValueActivity extends BaseActivity {
 
     Map<String, Object> dataMap;
     Map<String, String> paramsMap = new HashMap<>();
@@ -61,7 +63,7 @@ public class MultiValueActivity extends AppCompatActivity {
     private String position;
 
 
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,8 @@ public class MultiValueActivity extends AppCompatActivity {
 //            e.printStackTrace();
         //       }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        dialog.show();
         getIntentData();
         requestData();
         lvMultiValue.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,6 +86,11 @@ public class MultiValueActivity extends AppCompatActivity {
                 toItem(itemData);
             }
         });
+    }
+
+    @Override
+    public void initView() {
+
     }
 
     public void toItem(List<Map<String, Object>> itemData) {
@@ -105,23 +114,22 @@ public class MultiValueActivity extends AppCompatActivity {
         pageId = String.valueOf(dataMap.get("pageDialog"));
         String idArrStr = intent.getStringExtra("idArrs");
         isMulti = String.valueOf(intent.getStringExtra("isMulti"));
-        Log.e("TAG","position "+intent.getStringExtra("position"));
-        position= String.valueOf(intent.getStringExtra("position"));
+        Log.e("TAG", "position " + intent.getStringExtra("position"));
+        position = String.valueOf(intent.getStringExtra("position"));
 
-        String viewName=intent.getStringExtra("viewName");
+        String viewName = intent.getStringExtra("viewName");
 
         textViewTitle.setText(viewName);
 
 
-        String  needFilterListStr = String.valueOf(intent.getStringExtra("needFilterListStr"));
+        String needFilterListStr = String.valueOf(intent.getStringExtra("needFilterListStr"));
 
-        List<Map<String,String>> needFilterList=JSON.parseObject(needFilterListStr,
+        List<Map<String, String>> needFilterList = JSON.parseObject(needFilterListStr,
                 new TypeReference<List<Map<String, String>>>() {
                 });
 
 
-
-        Log.e("TAG","传递到普通多选activity中多值的Id"+idArrStr);
+        Log.e("TAG", "传递到普通多选activity中多值的Id" + idArrStr);
 
         try {
             String[] idArr = idArrStr.split(",");
@@ -131,7 +139,7 @@ public class MultiValueActivity extends AppCompatActivity {
         }
 
 
-        Log.e("TAG","传递到多选activity中多值后转换的Id"+idArrList);
+        Log.e("TAG", "传递到多选activity中多值后转换的Id" + idArrList);
 
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
@@ -139,8 +147,8 @@ public class MultiValueActivity extends AppCompatActivity {
         paramsMap.put(Constant.mainPageId, "");
         paramsMap.put(Constant.mainId, "");
 
-        if (needFilterList!=null&&needFilterList.size()>0) {
-            for (int i=0;i<needFilterList.size();i++) {
+        if (needFilterList != null && needFilterList.size() > 0) {
+            for (int i = 0; i < needFilterList.size(); i++) {
                 paramsMap.putAll(needFilterList.get(i));
             }
         }
@@ -148,7 +156,7 @@ public class MultiValueActivity extends AppCompatActivity {
 
     }
 
-    private void requestData() {
+    public void requestData() {
         final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
 
         Log.e("TAG", "网络获取内多dataUrl " + volleyUrl);
@@ -168,7 +176,7 @@ public class MultiValueActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
                 //refreshListView.hideFooterView();
                 VolleySingleton.onErrorResponseMessege(MultiValueActivity.this, volleyError);
-
+                dialog.dismiss();
             }
         }
         ) {
@@ -228,16 +236,17 @@ public class MultiValueActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (dataList != null ) {//&& dataList.size() > 0
+        if (dataList != null) {//&& dataList.size() > 0
             unionAnalysis(dataList);
         } else {
+            dialog.dismiss();
             Toast.makeText(MultiValueActivity.this, "无数据",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
     private void unionAnalysis(List<Map<String, Object>> dataList) {
-        if (fieldSet != null && fieldSet.size() > 0&& dataList.size() > 0) {
+        if (fieldSet != null && fieldSet.size() > 0 && dataList.size() > 0) {
             for (int i = 0; i < dataList.size(); i++) {
                 List<Map<String, Object>> itemNum = new ArrayList<>();
                 for (int j = 0; j < fieldSet.size(); j++) {
@@ -254,7 +263,7 @@ public class MultiValueActivity extends AppCompatActivity {
 
                         if (idArrList.contains(mainIdValue)) {
                             property.put("isCheck", true);
-                        }else{
+                        } else {
                             property.put("isCheck", false);
                         }
                     }
@@ -273,13 +282,15 @@ public class MultiValueActivity extends AppCompatActivity {
             //放到adapter中展示
             toAdapter();
         } else {
+            dialog.dismiss();
             Toast.makeText(this, "列表中无数据", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void toAdapter() {
-        adapter = new MultiValueAdapter(this, setAndData,isMulti);
+        adapter = new MultiValueAdapter(this, setAndData, isMulti);
         lvMultiValue.setAdapter(adapter);
+        dialog.dismiss();
 
     }
 
@@ -300,33 +311,33 @@ public class MultiValueActivity extends AppCompatActivity {
         map.put("num", num);
         map.put("isMulti", isMulti);
         map.put("position", position);
-        if(!ids.equals("")){
+        if (!ids.equals("")) {
             map.put("ids", ids.substring(0, ids.length() - 1));
             map.put("names", names.substring(0, names.length() - 1));
-        }else{
+        } else {
             map.put("ids", ids);
             map.put("names", names);
         }
 
-        Log.e("TAG","选中后的值 ： "+ids);
+        Log.e("TAG", "选中后的值 ： " + ids);
 
         String myValue = JSON.toJSONString(map);
-            Intent intent = new Intent();
-        if(Constant.jumpNum1==4){
+        Intent intent = new Intent();
+        if (Constant.jumpNum1 == 4) {
             intent.setClass(MultiValueActivity.this, AddTemplateDataActivity.class);
-        }else if (Constant.jumpNum==1) {
+        } else if (Constant.jumpNum == 1) {
             intent.setClass(MultiValueActivity.this, AddItemsActivity.class);
-        }else if(Constant.jumpNum==2){
+        } else if (Constant.jumpNum == 2) {
             intent.setClass(MultiValueActivity.this, RowsEditActivity.class);
-        }else if(Constant.jumpNum==3){
+        } else if (Constant.jumpNum == 3) {
             intent.setClass(MultiValueActivity.this, RowsAddActivity.class);
         }
 
-            Bundle bundle = new Bundle();
-            bundle.putString("myValue", myValue);
-            intent.putExtra("bundle", bundle);
-            setResult(2, intent);
-            this.finish();
+        Bundle bundle = new Bundle();
+        bundle.putString("myValue", myValue);
+        intent.putExtra("bundle", bundle);
+        setResult(2, intent);
+        this.finish();
 
     }
 

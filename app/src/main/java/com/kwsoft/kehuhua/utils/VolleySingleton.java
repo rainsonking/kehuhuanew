@@ -71,15 +71,15 @@ public class VolleySingleton {
         Class errorClass = volleyError.getClass();
         if (errorClass == com.android.volley.NetworkError.class) {
             Log.d("TAG", "NetworkError");
-            Toast.makeText(context, "网络连接失败", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "网络连接失败", Toast.LENGTH_SHORT).show();
         } else if (errorClass == com.android.volley.NoConnectionError.class) {
             Log.d("TAG", "NoConnectionError");
         } else if (errorClass == com.android.volley.ServerError.class) {
             Log.d("TAG", "ServerError");
-            Toast.makeText(context, "服务器未知错误", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "服务器未知错误", Toast.LENGTH_SHORT).show();
         } else if (errorClass == com.android.volley.TimeoutError.class) {
             Log.d("TAG", "TimeoutError");
-            Toast.makeText(context, "连接超时", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "连接超时", Toast.LENGTH_SHORT).show();
         }
 
     }

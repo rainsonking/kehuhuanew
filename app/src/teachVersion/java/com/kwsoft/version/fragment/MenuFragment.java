@@ -58,9 +58,8 @@ public class MenuFragment extends Fragment {
                int childNum= getChildMap(position);
                 if (childNum==0) {
                     toItem(parentList.get(position));
-                }else{
-                    nextAdapter.notifyDataSetChanged();
                 }
+                    nextAdapter.notifyDataSetChanged();
 
             }
         });

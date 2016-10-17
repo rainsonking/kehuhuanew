@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -25,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adapter.Add_EditAdapter;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
@@ -42,7 +43,7 @@ import butterknife.OnClick;
 import static com.kwsoft.kehuhua.adcustom.R.id.edit_title;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
-public class RowsEditActivity extends AppCompatActivity {
+public class RowsEditActivity extends BaseActivity {
 
 
     @Bind(R.id.tv_cancel_edit)
@@ -79,11 +80,16 @@ public class RowsEditActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         CloseActivityClass.activityList.add(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
+        dialog.show();
         Log.e("TAG", "跳转到修改页面 ");
         getIntentData();
         Log.e("TAG", "修改页面获取信息完毕 ");
         requestEdit();
+    }
+
+    @Override
+    public void initView() {
+
     }
 
     private void getIntentData() {
@@ -130,6 +136,7 @@ public class RowsEditActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 VolleySingleton.onErrorResponseMessege(RowsEditActivity.this, volleyError);
+                dialog.dismiss();
             }
         }
         ) {
@@ -188,8 +195,11 @@ public class RowsEditActivity extends AppCompatActivity {
         if (fieldSet != null && fieldSet.size() > 0) {
             adapter = new Add_EditAdapter(RowsEditActivity.this, fieldSet, paramsMap);
             lvEditItem.setAdapter(adapter);
+            dialog.dismiss();
         } else {
-            Log.e("TAG", "无内容");
+            dialog.dismiss();
+
+            Snackbar.make(lvEditItem,"本页无数据",Snackbar.LENGTH_SHORT).show();
         }
 
     }

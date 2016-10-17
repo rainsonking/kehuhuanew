@@ -208,7 +208,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         } else {
             final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
 
-            startAnim();
+           dialog.show();
             nameValue = mUserName.getText().toString();//trim去掉首尾空格
             pwdValue = mPassword.getText().toString();
             if (!nameValue.equals("") && !pwdValue.equals("")) {//判断用户名密码非空
@@ -218,15 +218,14 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String menuData) {
-                                //      stopAnim();
-                                check(menuData, proDia);
+                                check(menuData);
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-
+                        dialog.dismiss();
                         VolleySingleton.onErrorResponseMessege(StuLoginActivity.this, volleyError);
-                        //  stopAnim();
+
                     }
                 }
                 ) {
@@ -259,7 +258,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                 };
                 VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
             } else {
-                stopAnim();
+                dialog.dismiss();
                 Toast.makeText(StuLoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             }
         }
@@ -270,13 +269,13 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     // 则提示用户名密码输入问题，sp中并不存储
     // 新密码，为0则跳转，sp存储新密码
 
-    private void check(String menuData, ProgressDialog proDia) {
+    private void check(String menuData) {
         if (menuData != null) {
             //获取error的值，判断
             LoginError loginError = JSON.parseObject(menuData, LoginError.class);
             if (loginError.getError() != 0) {
                 Toast.makeText(this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
-                stopAnim();
+                dialog.dismiss();
             } else {
                 //当成功登陆后存储正确的用户名和密码,
                 Constant.USERNAME_ALL = nameValue;
@@ -294,17 +293,17 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
 
 
                 //跳转至主页面并传递菜单数据
-                mainPage(menuData, proDia);//保存完用户名和密码，跳转到主页面
+                mainPage(menuData);//保存完用户名和密码，跳转到主页面
             }
         } else {
-            stopAnim();
+            dialog.dismiss();
             Toast.makeText(StuLoginActivity.this, "服务器超时", Toast.LENGTH_SHORT).show();
         }
     }
 
     //此方法传递菜单JSON数据
     @SuppressWarnings("unchecked")
-    private void mainPage(String menuData, ProgressDialog proDia) {
+    private void mainPage(String menuData) {
         try {
             Map<String, Object> menuMap = JSON.parseObject(menuData,
                     new TypeReference<Map<String, Object>>() {
@@ -322,23 +321,12 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             intent.putExtra("menuDataMap", JSON.toJSONString(menuListMap2));
             startActivity(intent);
             finish();
-            stopAnim();
+            dialog.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
-            stopAnim();
+            dialog.dismiss();
         }
     }
-
-    void startAnim() {
-
-        avloadingIndicatorViewLayout.setVisibility(View.VISIBLE);
-
-    }
-
-    void stopAnim() {
-        avloadingIndicatorViewLayout.setVisibility(View.GONE);
-    }
-
 
     //获得用户名方法
     @SuppressWarnings("unchecked")
