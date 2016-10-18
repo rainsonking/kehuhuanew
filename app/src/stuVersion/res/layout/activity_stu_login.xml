@@ -6,7 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     tools:context="com.kwsoft.version.StuLoginActivity">
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/ic_notifications_black_24dp"
+        android:onClick="toSetIpPortProject"/>
     <TextView
         android:paddingTop="50dp"
         android:id="@+id/headline"

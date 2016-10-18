@@ -4,14 +4,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    android:orientation="vertical">
+    >
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:src="@mipmap/ic_launcher"
-        android:visibility="gone" />
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/ic_notifications_black_24dp"
+        android:onClick="toSetIpPortProject"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,14 +69,16 @@
                     android:id="@+id/ed_userName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="22dp"
+                    android:layout_marginStart="22dp"
                     android:layout_weight="4"
                     android:background="@null"
                     android:hint="请输入手机号"
                     android:singleLine="true"
                     android:textColor="#333333"
                     android:textColorHint="#b2b2b2"
-                    android:textSize="18sp"></EditText>
+                    android:textSize="18sp">
+
+                </EditText>
 
                 <ImageView
                     android:id="@+id/iv_phone_clear"
@@ -204,31 +207,5 @@
 
 
     </LinearLayout>
-
-<RelativeLayout
-    android:id="@+id/avloadingIndicatorViewLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#40636363"
-    android:clickable="false"
-    android:visibility="gone">
-
-    <RelativeLayout
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:background="#b0393f4d"
-        android:layout_centerInParent="true"
-        >
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/avloadingIndicatorView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:indicator="BallClipRotatePulse"
-            app:indicator_color="@color/white"
-            android:layout_centerInParent="true"
-            />
-    </RelativeLayout>
-
-</RelativeLayout>
 
 </RelativeLayout>

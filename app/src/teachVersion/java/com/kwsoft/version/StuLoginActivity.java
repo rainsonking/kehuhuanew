@@ -17,7 +17,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -28,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.kwsoft.kehuhua.SetIpPortActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.bean.LoginError;
@@ -53,7 +53,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     private ImageView iv_phone_clear;
     private ImageView iv_password_clear;
     private CheckBox cb_rmb_pwd;
-    private RelativeLayout avloadingIndicatorViewLayout;
+
     static {
         //学员端设置成顶栏红色
         Constant.topBarColor = R.color.prim_topBarColor;
@@ -89,8 +89,6 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
 
     @SuppressWarnings("unchecked")
     public void initView() {
-        avloadingIndicatorViewLayout= (RelativeLayout) findViewById(R.id.avloadingIndicatorViewLayout);
-        avloadingIndicatorViewLayout.setOnClickListener(null);
         mUserName = (EditText) findViewById(R.id.ed_userName);
         mPassword = (EditText) findViewById(R.id.ed_passWord);
         layout_enabled = (LinearLayout) findViewById(R.id.layout_enabled);
@@ -208,7 +206,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         } else {
             final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
 
-           dialog.show();
+            dialog.show();
             nameValue = mUserName.getText().toString();//trim去掉首尾空格
             pwdValue = mPassword.getText().toString();
             if (!nameValue.equals("") && !pwdValue.equals("")) {//判断用户名密码非空
@@ -359,5 +357,11 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     }
 
 
+    public void toSetIpPortProject(View view) {
+        Intent intent = new Intent();
+        intent.setClass(StuLoginActivity.this, SetIpPortActivity.class);
+        startActivity(intent);
+
+    }
 }
 

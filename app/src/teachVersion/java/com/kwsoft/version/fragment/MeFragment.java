@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -137,6 +136,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     @SuppressWarnings("unchecked")
     private void setStore(String jsonData) {
         String jsonData1=jsonData.replaceAll("00:00:00","");
+        Log.e("TAG", "jsonData1 " + jsonData1);
         Map<String, Object> stuInfoMap = Utils.str2map(jsonData1);
         List<Map<String, Object>> dataList = new ArrayList<>();
 

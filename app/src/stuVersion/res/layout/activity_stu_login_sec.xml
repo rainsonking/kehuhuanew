@@ -9,9 +9,10 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:src="@mipmap/ic_launcher"
-        android:visibility="gone" />
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/ic_notifications_black_24dp"
+        android:onClick="toSetIpPortProject"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -206,22 +207,4 @@
 
 
     </LinearLayout>
-    <RelativeLayout
-        android:id="@+id/avloadingIndicatorViewLayout"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:background="#b0FF4040"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        >
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/avloadingIndicatorView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            app:indicator="BallClipRotatePulse"
-            app:indicator_color="@color/white"
-            android:layout_centerInParent="true"
-            />
-    </RelativeLayout>
 </RelativeLayout>
