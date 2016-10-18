@@ -19,7 +19,6 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by Administrator on 2015/11/28 0028.
- *
  */
 public class Constant {
     /**
@@ -31,7 +30,7 @@ public class Constant {
      */
 
     //public static String sysUrl = "http://192.168.6.171:8080/edus_auto/";//小庞项目
-     //public static String sysUrl = "http://192.168.6.117:8080/edus_auto/";//红伟项目
+    // public static String sysUrl = "http://192.168.6.117:8080/edus_auto/";//红伟项目
     public static String sysUrl = "http://192.168.6.150:8081/edus_auto/";//陈蒙项目
     public final static String sysLoginUrl = "login_interfaceProLogin.do";//项目选择方法
     public final static String projectLoginUrl = "login_interfaceLogin.do";//登陆方法
@@ -80,6 +79,10 @@ public class Constant {
     public final static String loginUserId = "loginUserId";
     public final static String delIds = "delIds";
     public static String USERID;
+
+    public static String PAGEID = "";
+    public static String TABLEID = "";
+
     public static int menuIsAlter = 0;
     public static String menuAlterTime = "";
 
@@ -141,7 +144,7 @@ public class Constant {
     public final static String commitValue = "commitValue";// commitValue
 
     public static String pictureStr = "";//上传图片路径
-    public static ArrayList<String> img_Paths=new ArrayList<>();//上传图片路径
+    public static ArrayList<String> img_Paths = new ArrayList<>();//上传图片路径
     public final static String pictureUrl = "servlet/OmFileUploadServlet";
 
     public static int topBarColor;
