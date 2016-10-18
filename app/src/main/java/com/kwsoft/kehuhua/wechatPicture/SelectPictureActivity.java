@@ -1,8 +1,10 @@
 package com.kwsoft.kehuhua.wechatPicture;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +32,9 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import kr.co.namee.permissiongen.PermissionFail;
+import kr.co.namee.permissiongen.PermissionGen;
+import kr.co.namee.permissiongen.PermissionSuccess;
 import me.iwf.photopicker.PhotoPicker;
 
 import static com.kwsoft.kehuhua.config.Constant.img_Paths;
@@ -41,7 +46,6 @@ import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 /**
  * Created by Administrator on 2016/10/13 0013.
- *
  */
 
 public class SelectPictureActivity extends BaseActivity implements View.OnClickListener {
@@ -55,9 +59,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
     String codeListStr;
 
 
-
-
-        @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_picture_layout);
@@ -66,6 +68,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
 //        initData();
 //        setListener();
     }
+
     public void initView() {
         Intent intent = getIntent();
         position = intent.getStringExtra("position");
@@ -100,22 +103,49 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == imgPaths.size()) {
-                    PhotoPicker.builder()
-                            .setPhotoCount(9)
-                            .setShowCamera(true)
-                            .setSelected(imgPaths)
-                            .setShowGif(true)
-                            .setPreviewEnabled(true)
-                            .start(SelectPictureActivity.this, PhotoPicker.REQUEST_CODE);
+                    PermissionGen.with(SelectPictureActivity.this)
+                            .addRequestCode(100)
+                            .permissions(
+                                    Manifest.permission.CAMERA,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            .request();
+//                    PhotoPicker.builder()
+//                            .setPhotoCount(9)
+//                            .setShowCamera(true)
+//                            .setSelected(imgPaths)
+//                            .setShowGif(true)
+//                            .setPreviewEnabled(true)
+//                            .start(SelectPictureActivity.this, PhotoPicker.REQUEST_CODE);
                 } else {
                     Bundle bundle = new Bundle();
-                    bundle.putStringArrayList("imgPaths",imgPaths);
-                    bundle.putInt("position",position);
+                    bundle.putStringArrayList("imgPaths", imgPaths);
+                    bundle.putInt("position", position);
                     goToActivityForResult(SelectPictureActivity.this, EnlargePicActivity.class, bundle, position);
                 }
 
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+
+    @PermissionSuccess(requestCode = 100)
+    public void doCapture() {
+        PhotoPicker.builder()
+                .setPhotoCount(9)
+                .setShowCamera(true)
+                .setSelected(imgPaths)
+                .setShowGif(true)
+                .setPreviewEnabled(true)
+                .start(SelectPictureActivity.this, PhotoPicker.REQUEST_CODE);
+    }
+
+    @PermissionFail(requestCode = 100)
+    public void doFailedCapture() {
+        Toast.makeText(SelectPictureActivity.this, "获取权限失败", Toast.LENGTH_SHORT).show();
     }
 
     public void goToActivityForResult(Context context, Class<?> cls, Bundle bundle, int requestCode) {
@@ -250,11 +280,11 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
 
     private void jump2Activity() {
         Intent intentTree = new Intent();
-        if (Constant.jumpNum==1) {
+        if (Constant.jumpNum == 1) {
             intentTree.setClass(SelectPictureActivity.this, AddItemsActivity.class);
-        }else if(Constant.jumpNum==2){
+        } else if (Constant.jumpNum == 2) {
             intentTree.setClass(SelectPictureActivity.this, RowsEditActivity.class);
-        }else if(Constant.jumpNum==3){
+        } else if (Constant.jumpNum == 3) {
             intentTree.setClass(SelectPictureActivity.this, RowsAddActivity.class);
         }
 
@@ -266,6 +296,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
         setResult(101, intentTree);
         this.finish();
     }
+
     @Override
     public void onClick(View view) {
 
