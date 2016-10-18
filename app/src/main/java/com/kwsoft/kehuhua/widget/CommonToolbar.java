@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kwsoft.kehuhua.adcustom.R;
@@ -26,8 +27,9 @@ public class CommonToolbar extends Toolbar {
 
     private View mView;
     private TextView mTextTitle;
-    private ImageButton mRightImageButton,mLeftImageButton;
-    private ImageView isChildIv;
+    private ImageButton mRightImageButton;
+    private ImageView isChildIv,mLeftImageView;
+    private LinearLayout mLeftLayoutButton;
 
     public CommonToolbar(Context context) {
         this(context,null);
@@ -80,8 +82,8 @@ public class CommonToolbar extends Toolbar {
 
     public void hideLeftImageButton() {
 
-        if(mLeftImageButton !=null)
-            mLeftImageButton.setVisibility(GONE);
+        if(mLeftLayoutButton !=null)
+            mLeftLayoutButton.setVisibility(GONE);
 
 
     }
@@ -102,7 +104,8 @@ public class CommonToolbar extends Toolbar {
             mTextTitle = (TextView) mView.findViewById(R.id.child_toolbar_title);
             isChildIv= (ImageView) mView.findViewById(R.id.is_child_iv);
             mRightImageButton = (ImageButton) mView.findViewById(R.id.child_toolbar_rightButton);
-            mLeftImageButton = (ImageButton) mView.findViewById(R.id.child_toolbar_leftButton);
+            mLeftLayoutButton = (LinearLayout) mView.findViewById(R.id.child_toolbar_leftButton);
+            mLeftImageView = (ImageView) mView.findViewById(R.id.child_toolbar_leftimg);
             LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
             addView(mView, lp);
         }
@@ -119,7 +122,7 @@ public class CommonToolbar extends Toolbar {
     }
     public  void setLeftButtonOnClickListener(OnClickListener li){
 
-        mLeftImageButton.setOnClickListener(li);
+        mLeftLayoutButton.setOnClickListener(li);
     }
 
     public void showRightImageButton(){
@@ -171,10 +174,10 @@ public class CommonToolbar extends Toolbar {
 
         public void  setLeftButtonIcon(Drawable icon){
 
-        if(mLeftImageButton !=null){
+        if(mLeftImageView !=null){
 
-            mLeftImageButton.setImageDrawable(icon);
-//            mLeftImageButton.setVisibility(VISIBLE);
+            mLeftImageView.setImageDrawable(icon);
+//            mLeftLayoutButton.setVisibility(VISIBLE);
         }
 
     }
