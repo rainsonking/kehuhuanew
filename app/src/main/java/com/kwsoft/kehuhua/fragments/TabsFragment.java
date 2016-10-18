@@ -101,7 +101,7 @@ public class TabsFragment extends Fragment {
             @Override
             public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
 
-                if (mAdapter.getItemCount() < totalNum) {
+                if (mAdapter!=null &&mAdapter.getItemCount() < totalNum) {
 
                     loadMoreData();
                 } else {

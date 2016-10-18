@@ -154,7 +154,13 @@ public class UnGetFragment extends Fragment implements View.OnClickListener{
 //                getProgressDialog().dismiss();
                 swipeRefreshLayout.setRefreshing(false);
                 Log.i("123", "请求失败！");
-                Toast.makeText(getActivity(), "系统正在维护中,请稍后再试...", Toast.LENGTH_LONG).show();
+                try {
+                    Toast.makeText(getActivity(), "系统正在维护中,请稍后再试...", Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
                 VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
 
             }
@@ -256,7 +262,7 @@ public class UnGetFragment extends Fragment implements View.OnClickListener{
                 int count = sp.getInt("count", 0);
                 if (count > 0) {
                     count--;
-                    sp.edit().putInt("count", count).commit();
+                    sp.edit().putInt("count", count).apply();
                     BadgeUtil.sendBadgeNumber(getActivity(), count);
                 }
             }
