@@ -188,7 +188,7 @@ public class ListActivity2 extends BaseActivity {
     public void initView() {
         mContext = this;
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
-        mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
+        mToolbar.setBackgroundColor(getResources().getColor(Constant.topBarColor));
         mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.often_more)); //右侧pop
         mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() { //左侧返回按钮
             @Override
