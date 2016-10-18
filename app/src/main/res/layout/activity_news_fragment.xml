@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:background="#f4f4f4">
 
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <com.cjj.MaterialRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:orientation="vertical">
+        app:overlay="true"
+        app:wave_color="@android:color/transparent">
         <!--<ImageView-->
             <!--android:id="@+id/open_searchButton"-->
             <!--android:layout_width="match_parent"-->
@@ -24,37 +23,16 @@
             <!--android:scaleType="fitXY"-->
             <!--/>-->
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/open_lv"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:dividerHeight="8dp"
-            android:divider="#f4f4f4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:smoothScrollbar="true"
-            ptr:ptrMode="both"
-            />
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/activity_list_item"
+            >
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        </android.support.v7.widget.RecyclerView>
 
+    </com.cjj.MaterialRefreshLayout>
 
-
-    <RelativeLayout
-        android:id="@+id/open_avloadingIndicatorViewLayoutList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#50323232"
-        android:visibility="gone"
-         >
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/open_avloadingIndicatorView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            app:indicator="LineScale"
-            app:indicator_color="@color/blue"
-            android:layout_centerInParent="true"
-            />
-    </RelativeLayout>
 </RelativeLayout>

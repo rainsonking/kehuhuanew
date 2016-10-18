@@ -1,20 +1,15 @@
 package com.kwsoft.kehuhua.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -24,169 +19,122 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.kwsoft.kehuhua.adapter.ListAdapter;
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
+import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.adcustom.InfoActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
-import com.wang.avi.AVLoadingIndicatorView;
+import com.kwsoft.kehuhua.view.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Administrator on 2016/7/19 0019.
  *
  */
 public class TabsFragment extends Fragment {
+    @Bind(R.id.open_lv)
+    RecyclerView mRecyclerView;
+    @Bind(R.id.refresh_layout)
+    MaterialRefreshLayout mRefreshLayout;
     private String tableId;
     private String pageId;
     private String mainId;
-
-    private ListView open_lv;
-    private ListAdapter listAdapter;
     private Map<String, String> paramsMap;
-    private List<Map<String, Object>> fieldSet = new ArrayList<>();
-    private List<Map<String, Object>> dataList = new ArrayList<>();
-
-    private List<List<Map<String, String>>> setAndData;
-
-    private List<Map<String, Object>> childTabs=new ArrayList<>();
-
     private String operaButtonSet;
 
-    AVLoadingIndicatorView animationList;
-RelativeLayout animationListLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    //下拉刷新handler
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case 0x101:
-                    Log.e("TAG", "学员端开始handler通知跳转后 ");
-                    if (swipeRefreshLayout.isRefreshing()){
-                        listAdapter.notifyDataSetChanged();
-                        swipeRefreshLayout.setRefreshing(false);//设置不刷新
-                        Toast.makeText(getActivity().getApplicationContext(), "数据已更新", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-            }
-        }
-    };
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
+    private int totalNum = 0;
+    private int start = 0;
+    private final int limit = 20;
+    private static final int STATE_NORMAL = 0;
+    private static final int STATE_REFREH = 1;
+    private static final int STATE_MORE = 2;
+    private int state = STATE_NORMAL;
+    private ListAdapter2 mAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.activity_news_fragment, container, false);
-            //优化View减少View的创建次数
-            //该部分可通过xml文件设计Fragment界面，再通过LayoutInflater转换为View组件
-            //这里通过代码为fragment添加一个TextView
-//            TextView tvTitle=new TextView(getActivity());
-//            tvTitle.setText(channelName);
-//            tvTitle.setTextSize(16);
-//            tvTitle.setGravity(Gravity.CENTER);
-//            tvTitle.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//            view=tvTitle;
-//        ImageView open_backMenu = (ImageView) view.findViewById(R.id.open_backMenu);
-        open_lv=(ListView) view.findViewById(R.id.open_lv);
-
-        animationListLayout= (RelativeLayout) view.findViewById(R.id.open_avloadingIndicatorViewLayoutList);
-        animationList= (AVLoadingIndicatorView) view.findViewById(R.id.open_avloadingIndicatorView);
-        //下拉刷新设置
-        swipeRefreshLayout=(SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        //设置下拉刷新监听
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
-            @Override
-            public void onRefresh() {
-                new LoadDataThread().start();
-            }
-        });
-        startAnim();
-        initValue();
-        requestSet();
-        ViewGroup parent=(ViewGroup)view.getParent();
-        if(parent!=null){//如果View已经添加到容器中，要进行删除，负责会报错
+        View view = inflater.inflate(R.layout.activity_news_fragment, container, false);
+        ButterKnife.bind(this, view);
+        initRefreshLayout();
+        getData();
+        ViewGroup parent = (ViewGroup) view.getParent();
+        if (parent != null) {//如果View已经添加到容器中，要进行删除，负责会报错
             parent.removeView(view);
         }
-
-        open_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //将需要的数据打包：需要展示的子项属性，operabutton数据
-                List<Map<String, String>> itemData = new ArrayList<>();
-                if (position > 0) {
-                    itemData = setAndData.get(position - 1);
-                }
-                toItem(itemData);
-            }
-        });
         return view;
     }
-    /**
-     * 加载菜单数据的线程
-     */
-    class LoadDataThread extends  Thread{
-        @Override
-        public void run() {
-            //下载数据，重新设定dataList
-            requestSet();
-            //防止数据加载过快动画效果差
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.e("TAG", "学员端开始handler通知 ");
-            handler.sendEmptyMessage(0x101);//通过handler发送一个更新数据的标记，适配器进行dataSetChange，然后停止刷新动画
-        }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
-    private void initValue() {
+
+    //初始化SwipeRefreshLayout
+    private void initRefreshLayout() {
         paramsMap = new HashMap<>();
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
         paramsMap.put(Constant.mainId, mainId);
         paramsMap.put(Constant.mainTableId, Constant.mainTableIdValue);
         paramsMap.put(Constant.mainPageId, Constant.mainPageIdValue);
+        mRefreshLayout.setLoadMore(true);
+        mRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+            @Override
+            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
 
-        String paramsStr = JSON.toJSONString(paramsMap);
+                refreshData();
+            }
+
+            @Override
+            public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
+
+                if (mAdapter.getItemCount() < totalNum) {
+
+                    loadMoreData();
+                } else {
+                    Snackbar.make(mRecyclerView, "没有更多了", Snackbar.LENGTH_SHORT).show();
+                    mRefreshLayout.finishRefreshLoadMore();
+                }
+            }
+        });
+
 
     }
 
     @Override
     public void setArguments(Bundle bundle) {//接收传入的数据
-        tableId=bundle.getString("tableId");
-        pageId=bundle.getString("pageId");
-        mainId=bundle.getString("mainId");
-//        String channelName = bundle.getString("name");
+        tableId = bundle.getString("tableId");
+        pageId = bundle.getString("pageId");
+        mainId = bundle.getString("mainId");
     }
 
 
     /**
-     * 3、获取字段接口数据,如果没有网络或者其他情况则读取本地
+     * 获取字段接口数据
      */
     @SuppressWarnings("unchecked")
-    public void requestSet() {
+    public void getData() {
 
         final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
-        Log.e("TAG", "tab列表请求地址："+volleyUrl);
-        Log.e("TAG", "tab列表请求参数："+paramsMap.toString());
+        Log.e("TAG", "列表请求地址：" + volleyUrl);
         StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "tab网络请求获取数据" + jsonData);
-
+                        Log.e("TAG", "获取set" + jsonData);
                         setStore(jsonData);
                     }
                 }, new Response.ErrorListener() {
@@ -198,7 +146,9 @@ RelativeLayout animationListLayout;
         ) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
+                paramsMap.put("start", start + "");
+                paramsMap.put("limit", limit + "");
+                Log.e("TAG", "列表请求参数：" + paramsMap.toString());
                 return paramsMap;
             }
 
@@ -215,136 +165,201 @@ RelativeLayout animationListLayout;
                 }
             }
         };
-        VolleySingleton.getVolleySingleton(getActivity().getApplicationContext()).addToRequestQueue(
+        VolleySingleton.getVolleySingleton(getContext()).addToRequestQueue(
                 loginInterfaceData);
     }
 
-    private void setStore(String jsonData) {
 
-        Log.e("TAG", "tab解析列表数据" + jsonData);
+    private List<Map<String, Object>> childTab = new ArrayList<>();
+    private List<List<Map<String, String>>> datas;
+
+
+    /**
+     * 4、处理字段接口数据,方法 下一步请求列表数据
+     */
+    @SuppressWarnings("unchecked")
+    public void setStore(String jsonData) {
+        List<Map<String, Object>> dataList = new ArrayList<>();
+        List<Map<String, Object>> fieldSet = new ArrayList<>();
+        Log.e("TAG", "解析set" + jsonData);
         try {
             Map<String, Object> setMap = JSON.parseObject(jsonData,
                     new TypeReference<Map<String, Object>>() {
                     });
-            //获取fieldSet
+//获取各项总配置pageSet父级
             Map<String, Object> pageSet = (Map<String, Object>) setMap.get("pageSet");
+////获取时间戳，暂时屏蔽
+//            if (setMap.get("alterTime") != null) {
+//                dataTime = Utils.ObjectTOLong(setMap.get("alterTime"));
+//                //Constant.dataTime= (long) pageSet.get("alterTime");
+//                Log.e("TAG", "获取Constant.dataTime" + dataTime);
+//            }
+//获取条目总数
+            totalNum = Integer.valueOf(String.valueOf(setMap.get("dataCount")));
 
 
-
-
-//行级按钮数据 for 下个页面
+//获取搜索数据，如果有搜索数据但是仅仅是方括号没内容则隐藏搜索框
+//            if (pageSet.get("serachSet") != null) {
+//                List<Map<String, Object>> searchSetList = (List<Map<String, Object>>) pageSet.get("serachSet");
+//                searchSet = JSONArray.toJSONString(searchSetList);
+//                //暂时设置搜索按钮为隐藏，以后做好了再展现
+////                    if (searchSetList.size()==0) {
+//                searchButton.setVisibility(View.GONE);
+////                    }
+//                Log.e("TAG", "获取serachSet" + searchSet);
+//            } else {//如果彻底无搜索字段则隐藏搜索框
+//                searchButton.setVisibility(View.GONE);
+//            }
+//获取子项内部按钮
             if (pageSet.get("operaButtonSet") != null) {
+                try {
                     List<Map<String, Object>> operaButtonSetList = (List<Map<String, Object>>) pageSet.get("operaButtonSet");
                     operaButtonSet = JSONArray.toJSONString(operaButtonSetList);
-                    Log.e("TAG", "tab获取operaButtonSet" + operaButtonSet);
+                    Log.e("TAG", "获取operaButtonSet" + operaButtonSet);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 //获得子表格：childTabs
-
-            if (pageSet.get("childTabs")!=null) {
-                String childTabss = String.valueOf(pageSet.get("childTabs"));
-                childTabs= JSON.parseObject(childTabss,
+            String childTabs;
+            if (pageSet.get("childTabs") != null) {
+                childTabs = String.valueOf(pageSet.get("childTabs"));
+                childTab = JSON.parseObject(childTabs,
                         new TypeReference<List<Map<String, Object>>>() {
                         });
-                Log.e("TAG", "tab获得子表格：childTabs   " + childTabss);
             }
 
-
-
-
-
 //数据左侧配置数据
-
             fieldSet = (List<Map<String, Object>>) pageSet.get("fieldSet");
+            Log.e("TAG", "获取fieldSet" + fieldSet.toString());
+//获取buttonSet
 //            if (pageSet.get("buttonSet") != null) {
-//                List<Map<String, Object>> buttonSet = (List<Map<String, Object>>) pageSet.get("buttonSet");
-//                if (buttonSet.size()>0) {
-//                    //button_set_view.setVisibility(View.VISIBLE);
+//                buttonSet = (List<Map<String, Object>>) pageSet.get("buttonSet");//初始化下拉按钮数据
+//                Log.e("TAG", "获取buttonSet" + buttonSet);
+//                //判断右上角按钮是否可见
+//                if (buttonSet.size() > 0) {
+//                    mToolbar.showRightImageButton();
+//                    //右侧下拉按钮
+//                    initButtonsetData();
+//                    mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+////                            showButtonSet();
+//                            buttonList();
+//                        }
+//                    });
+//
+//                } else {
+//                    mToolbar.hideRightImageButton();
 //                }
 //            }
 //获取dataList
-
             dataList = (List<Map<String, Object>>) setMap.get("dataList");
-            Log.e("TAG", "tab获取dataList" + dataList);
+            Log.e("TAG", "获取dataList" + dataList);
 
         } catch (Exception e) {
             e.printStackTrace();
+//            dialog.dismiss();
         }
-            if (dataList != null) {
-                unionAnalysis(dataList);
-            } else {
-                    stopAnim();
-                    Toast.makeText(getActivity(), "列表无数据",
-                            Toast.LENGTH_SHORT).show();
+//将dataList与fieldSet合并准备适配数据
+        datas = DataProcess.combineSetData(tableId, fieldSet, dataList);
+        if (datas == null) {
+            Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
 
-            }
+        }
+//用适配器并判断展示数据
+        showData();
+    }
+
+    /**
+     * 下拉刷新方法
+     */
+    private void refreshData() {
+        start = 0;
+        state = STATE_REFREH;
+
+        getData();
 
     }
-    public void unionAnalysis(List<Map<String, Object>> dataListMap) {
 
-        List<List<Map<String, String>>> tabDataList = new ArrayList<>();
+    /**
+     * 上拉加载方法
+     */
+    private void loadMoreData() {
 
-        if (fieldSet != null && fieldSet.size() > 0) {
-            for (int i = 0; i < dataListMap.size(); i++) {
-                List<Map<String, String>> itemNum = new ArrayList<>();
-                for (int j = 0; j < fieldSet.size(); j++) {
+        start += limit;
+        state = STATE_MORE;
+        getData();
 
-                    Map<String, String> property = new HashMap<>();
-                    if (j == 0) {
-                        property.put("isCheck", "false");
+    }
 
-                        String mainId = "T_" + tableId + "_0";
-                        if (dataListMap.get(i).get(mainId) != null) {
-                            property.put("mainId", String.valueOf(dataListMap.get(i).get(mainId)));
+    /**
+     * 分动作展示数据
+     */
+    private void showData() {
+        switch (state) {
+            case STATE_NORMAL:
+                normalRequest();
+                break;
+            case STATE_REFREH:
+                if (mAdapter != null) {
 
-                        } else {
-                            property.put("mainId", "");
-
-                        }
-                        property.put("tableId", tableId);
-
-
+                    mAdapter.clearData();
+                    mAdapter.addData(datas);
+                    mRecyclerView.scrollToPosition(0);
+                    mRefreshLayout.finishRefresh();
+                    if (datas.size() == 0) {
+                        Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(mRecyclerView, "更新完成", Snackbar.LENGTH_SHORT).show();
                     }
-                    property.put("fieldCnName", String.valueOf(fieldSet.get(j).get("fieldCnName")));
-                    String fieldAliasName = String.valueOf(fieldSet.get(j).get("fieldAliasName"));
-                    String fieldCnName2 = "";
-                    if (dataListMap.get(i).get(fieldAliasName) != null) {
-                        fieldCnName2 = String.valueOf(dataListMap.get(i).get(fieldAliasName));
-                    }
-                    property.put("fieldCnName2", fieldCnName2);
-                    itemNum.add(property);
+
                 }
-                tabDataList.add(itemNum);
-            }
+                break;
+            case STATE_MORE:
+                if (mAdapter != null) {
+                    mAdapter.addData(mAdapter.getDatas().size(), datas);
+                    mRecyclerView.scrollToPosition(mAdapter.getDatas().size());
+                    mRefreshLayout.finishRefreshLoadMore();
+                    Snackbar.make(mRecyclerView, "更新了" + datas.size() + "条数据", Snackbar.LENGTH_SHORT).show();
+                }
 
-            if (setAndData==null) {
-                setAndData=tabDataList;
-                Log.e("TAG", "tab新建adapter" + setAndData.toString());
-                toAdapter();
-            }else{
-                setAndData.removeAll(setAndData);
-                setAndData.addAll(tabDataList);
-                Log.e("TAG", "tab下拉刷新" + setAndData.toString());
-            }
-
-        } else {
-            Toast.makeText(getActivity(), "列表中无数据", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
-    public void toAdapter() {
-        Log.e("TAG", "tab准备进入适配器" + setAndData);
-        listAdapter = new ListAdapter(getActivity(), R.layout.activity_list_item, setAndData,childTabs);
-        open_lv.setAdapter(listAdapter);
-        stopAnim();
+    public void normalRequest() {
+        mAdapter = new ListAdapter2(datas, childTab);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//      mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+        mAdapter.setOnItemClickListener(new ListAdapter2.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, String data) {
+                Log.e("TAG", "data " + data);
+                toItem(data);
+            }
+        });
+
+    }
+    /**
+     * 跳转至子菜单列表
+     */
+    public void toItem(String itemData) {
+        try {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), InfoActivity.class);
+            intent.putExtra("childData", itemData);
+            intent.putExtra("tableId", tableId);
+            intent.putExtra("operaButtonSet", operaButtonSet);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    void startAnim() {
-        animationList.setVisibility(View.VISIBLE);
-    }
-
-    void stopAnim() {
-        animationList.setVisibility(View.GONE);
-    }
     /**
      * 跳转至子菜单列表
      */
@@ -355,9 +370,7 @@ RelativeLayout animationListLayout;
             Intent intent = new Intent();
             intent.setClass(getActivity(), InfoActivity.class);
             intent.putExtra("childData", childData);
-            Log.e("TAG", "tab的childData"+childData);
             intent.putExtra("tableId", tableId);
-            Log.e("TAG", "tab的ListToItem: " + tableId);
             intent.putExtra("operaButtonSet", operaButtonSet);
             startActivity(intent);
         } catch (Exception e) {
