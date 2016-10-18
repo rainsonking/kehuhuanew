@@ -1,8 +1,10 @@
 package com.kwsoft.version.fragment;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.GridView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -36,6 +39,7 @@ import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.StuInfoActivity;
+import com.kwsoft.version.StuMainActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
 import com.kwsoft.version.view.StudyGridView;
 
@@ -46,6 +50,9 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import kr.co.namee.permissiongen.PermissionFail;
+import kr.co.namee.permissiongen.PermissionGen;
+import kr.co.namee.permissiongen.PermissionSuccess;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -168,8 +175,12 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
-                    Intent intent = new Intent(getActivity(), CaptureActivity.class);
-                    startActivity(intent);
+                    PermissionGen.needPermission(StudyFragment.this, 106,
+                            new String[] {
+                                    Manifest.permission.CAMERA,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            }
+                    );
                 } else if (i == 1) {
                     Intent intent = new Intent(getActivity(), BlankActivity.class);
                     startActivity(intent);
@@ -182,6 +193,21 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+    @PermissionSuccess(requestCode = 106)
+    public void doCapture() {
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivity(intent);
+    }
+
+    @PermissionFail(requestCode = 106)
+    public void doFailedCapture() {
+        Toast.makeText(getActivity(), "获取权限失败", Toast.LENGTH_SHORT).show();
     }
 
     public void setKanbanAdapter(List<Map<String, Object>> parentLists) {

@@ -1,7 +1,9 @@
 package com.kwsoft.version;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
+import com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity;
 import com.kwsoft.kehuhua.widget.CnToolbar;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
@@ -26,6 +29,11 @@ import com.kwsoft.version.fragment.StudyFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import kr.co.namee.permissiongen.PermissionFail;
+import kr.co.namee.permissiongen.PermissionGen;
+import kr.co.namee.permissiongen.PermissionSuccess;
+import me.iwf.photopicker.PhotoPicker;
 
 /**
  * 学员端看板界面
@@ -65,8 +73,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         menuDataMap = intent.getStringExtra("menuDataMap");
 
 
-
-        mToolbar=(CnToolbar) findViewById(R.id.stu_toolbar);
+        mToolbar = (CnToolbar) findViewById(R.id.stu_toolbar);
 //        Resources resources = mContext.getResources().getDrawable(R.drawable.nav_news);
 //        Drawable drawable = resources.getDrawable(R.drawable.nav_news);
 //        mToolbar.setRightButtonIcon(mContext.getResources().getDrawable(R.drawable.nav_news));
@@ -83,7 +90,12 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toCamera();
+                PermissionGen.with(StuMainActivity.this)
+                        .addRequestCode(105)
+                        .permissions(
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .request();
             }
         });
 
@@ -124,7 +136,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
                 switch (checkedId) {
                     case R.id.radio0:
                         mToolbar.setTitle("学习");
-                       break;
+                        break;
                     case R.id.radio1:
                         mToolbar.setTitle("课程表");
                         break;
@@ -145,41 +157,56 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
 
+    @PermissionSuccess(requestCode = 105)
+    public void doCapture() {
+        toCamera();
+    }
 
+    @PermissionFail(requestCode = 105)
+    public void doFailedCapture() {
+        Toast.makeText(StuMainActivity.this, "获取权限失败", Toast.LENGTH_SHORT).show();
+    }
 
-    public void toCamera(){
+    public void toCamera() {
 
-        boolean emui = AndtoidRomUtil.isEMUI();
-        boolean miui = AndtoidRomUtil.isMIUI();
-        boolean flyme = AndtoidRomUtil.isFlyme();
+        Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
+        startActivityForResult(intent, 1);
 
-        if (emui) {
-            //华为
-//                    PackageManager pm = getActivity().getPackageManager();
-//                    //MediaStore.ACTION_IMAGE_CAPTURE android.permission.RECORD_AUDIO
-//                    boolean permission = (PackageManager.PERMISSION_GRANTED ==
-//                            pm.checkPermission("MediaStore.ACTION_IMAGE_CAPTURE", "packageName"));
-//                    if (permission) {
-//                        Intent intent = new Intent(getActivity(), CaptureActivity.class);
-//                        startActivityForResult(intent, 1);
-//                    } else {
-//                        Constant.goHuaWeiSetting(getActivity());
-//                    }
-            Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
-            startActivityForResult(intent, 1);
-        } else if (miui) {
-            //小米
-            Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
-            startActivityForResult(intent, 1);
-        } else if (flyme) {
-            //魅族rom
-            Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
-            startActivityForResult(intent, 1);
-        }else {
-            Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
-            startActivityForResult(intent, 1);
-        }
+//        boolean emui = AndtoidRomUtil.isEMUI();
+//        boolean miui = AndtoidRomUtil.isMIUI();
+//        boolean flyme = AndtoidRomUtil.isFlyme();
+//
+//        if (emui) {
+//            //华为
+////                    PackageManager pm = getActivity().getPackageManager();
+////                    //MediaStore.ACTION_IMAGE_CAPTURE android.permission.RECORD_AUDIO
+////                    boolean permission = (PackageManager.PERMISSION_GRANTED ==
+////                            pm.checkPermission("MediaStore.ACTION_IMAGE_CAPTURE", "packageName"));
+////                    if (permission) {
+////                        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+////                        startActivityForResult(intent, 1);
+////                    } else {
+////                        Constant.goHuaWeiSetting(getActivity());
+////                    }
+//            Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
+//            startActivityForResult(intent, 1);
+//        } else if (miui) {
+//            //小米
+//            Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
+//            startActivityForResult(intent, 1);
+//        } else if (flyme) {
+//            //魅族rom
+//            Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
+//            startActivityForResult(intent, 1);
+//        }else {
+//            Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
+//            startActivityForResult(intent, 1);
+//        }
     }
 
     private static long exitTime = 0;// 退出时间
@@ -209,7 +236,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
         switch (item.getItemId()) {
             case android.R.id.home:
-             toCamera();
+                toCamera();
 
                 break;
         }
