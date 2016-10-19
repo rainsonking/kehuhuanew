@@ -1,8 +1,5 @@
 package com.kwsoft.kehuhua.adcustom;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +9,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -95,7 +91,11 @@ public class CourseActivity extends AppCompatActivity implements OnDataListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course2);
-        getSupportActionBar().hide();
+        try {
+            getSupportActionBar().hide();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         getIntentData();
         init();
         url=Constant.sysUrl+"dataPlAdd_interfaceShowDateCourse.do";
