@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.version.Common.DataCleanManager;
@@ -43,7 +46,6 @@ import static com.kwsoft.kehuhua.config.Constant.tableId;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
- *
  */
 public class MeFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.tv_clean_cache)
@@ -71,13 +73,39 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         tvCleanCache.setText(getCache());
         stuName.setText(Constant.loginName);
         stuPhone.setText(Constant.USERNAME_ALL);
-       // stuSchoolArea.setText("北京校区");
+        // stuSchoolArea.setText("北京校区");
         try {
             //开始获取版本号
             String stuVersionCode = "v " + Utils.getVersionName(getActivity());
             stuVersion.setText(stuVersionCode);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        Bundle meBundle = getArguments();
+        String meStr = meBundle.getString("hideMenuList");
+        if (meStr != null) {
+            List<Map<String, Object>> meListMap = JSON.parseObject(meStr,
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
+            if (meListMap.size() > 0) {
+                for (int i = 0; i < meListMap.size(); i++) {
+                    Map<String, Object> map = meListMap.get(i);
+                    String menuName = map.get("menuName").toString();
+                    if (menuName.contains("个人资料")) {
+                        Constant.teachPerPAGEID = map.get("pageId").toString();
+                        Constant.teachPerTABLEID = map.get("tableId").toString();
+                    }else if (menuName.contains("反馈信息")){
+                        Constant.teachBackPAGEID = map.get("pageId").toString();
+                        Constant.teachBackTABLEID = map.get("tableId").toString();
+                    }
+                }
+
+                Log.e("pagetable",Constant.teachPerPAGEID+"**"+Constant.teachPerTABLEID+"**"+Constant.teachBackPAGEID+"*"+Constant.teachBackTABLEID);
+            } else {
+                Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
+            }
+            Log.e("TAG", "获得学员端菜单数据：" + meStr);
         }
         requestSet();
     }
@@ -109,11 +137,14 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> paramsMap = new HashMap<>();
-                paramsMap.put(tableId, StuPra.stuInfoTableId);
-                paramsMap.put(Constant.pageId, StuPra.stuInfoPageId);
+//                paramsMap.put(tableId, StuPra.stuInfoTableId);
+//                paramsMap.put(Constant.pageId, StuPra.stuInfoPageId);
+                paramsMap.put(tableId, Constant.teachPerTABLEID);
+                paramsMap.put(Constant.pageId, Constant.teachPerPAGEID);
                 Log.e("TAG", "学员端请求个人信息参数：" + paramsMap.toString());
                 return paramsMap;
             }
+
             //重写getHeaders 默认的key为cookie，value则为localCookie
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -131,11 +162,11 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 loginInterfaceData);
     }
 
-    List<Map<String, Object>> fieldSet=new ArrayList<>();
+    List<Map<String, Object>> fieldSet = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     private void setStore(String jsonData) {
-        String jsonData1=jsonData.replaceAll("00:00:00","");
+        String jsonData1 = jsonData.replaceAll("00:00:00", "");
         Log.e("TAG", "jsonData1 " + jsonData1);
         Map<String, Object> stuInfoMap = Utils.str2map(jsonData1);
         List<Map<String, Object>> dataList = new ArrayList<>();
@@ -162,7 +193,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.stu_head_image, R.id.stu_log_out, R.id.stu_resetPwd, R.id.stu_info_data, R.id.ll_stu_clear_cache,R.id.ll_stu_feedback})
+    @OnClick({R.id.stu_head_image, R.id.stu_log_out, R.id.stu_resetPwd, R.id.stu_info_data, R.id.ll_stu_clear_cache, R.id.ll_stu_feedback})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.stu_head_image:
@@ -222,7 +253,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         String cache = "";
         try {
 //           cache = DataCleanManager.getVolleyCache(getActivity());
-             cache = DataCleanManager.getTotalCacheSize(getActivity());
+            cache = DataCleanManager.getTotalCacheSize(getActivity());
         } catch (Exception e) {
             e.printStackTrace();
         }
