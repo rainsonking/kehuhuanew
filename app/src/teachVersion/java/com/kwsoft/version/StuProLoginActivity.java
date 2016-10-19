@@ -187,11 +187,14 @@ public class StuProLoginActivity extends BaseActivity {
             sPreferences.edit().putString("userid", userid).apply();
             List<Map<String, Object>> menuListMap1 = (List<Map<String, Object>>) menuMap.get("roleFollowList");
             List<Map<String, Object>> menuListMap2 = (List<Map<String, Object>>) menuMap.get("menuList");
+            List<Map<String, Object>> menuListMap3 = (List<Map<String, Object>>) menuMap.get("hideMenuList");
+
 
             Intent intent = new Intent();
             intent.setClass(StuProLoginActivity.this, StuMainActivity.class);
             intent.putExtra("jsonArray", JSON.toJSONString(menuListMap1));
             intent.putExtra("menuDataMap", JSON.toJSONString(menuListMap2));
+            intent.putExtra("hideMenuList", JSON.toJSONString(menuListMap3));
             startActivity(intent);
             finish();
 
