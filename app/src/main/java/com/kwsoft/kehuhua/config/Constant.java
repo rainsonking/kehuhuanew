@@ -80,8 +80,10 @@ public class Constant {
     public final static String delIds = "delIds";
     public static String USERID;
 
-    public static String PAGEID = "";
-    public static String TABLEID = "";
+    public static String teachPerPAGEID = "";
+    public static String teachPerTABLEID = "";
+    public static String teachBackPAGEID = "";
+    public static String teachBackTABLEID = "";
 
     public static int menuIsAlter = 0;
     public static String menuAlterTime = "";
