@@ -51,8 +51,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.kwsoft.kehuhua.config.Constant.topBarColor;
-
 public class ListActivity2 extends BaseActivity {
 
 
@@ -120,7 +118,7 @@ public class ListActivity2 extends BaseActivity {
 
                     loadMoreData();
                 } else {
-                    Snackbar.make(mRecyclerView, "没有更多了", Snackbar.LENGTH_SHORT).show();
+//                    Snackbar.make(mRecyclerView, "没有更多了", Snackbar.LENGTH_SHORT).show();
                     mRefreshLayout.finishRefreshLoadMore();
                 }
             }
@@ -205,6 +203,7 @@ public class ListActivity2 extends BaseActivity {
      */
     @SuppressWarnings("unchecked")
     public void getData() {
+        if (hasInternetConnected()) {
 
         final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
         Log.e("TAG", "列表请求地址：" + volleyUrl);
@@ -219,6 +218,7 @@ public class ListActivity2 extends BaseActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 VolleySingleton.onErrorResponseMessege(ListActivity2.this, volleyError);
+                mRefreshLayout.finishRefresh();
                 dialog.dismiss();
             }
         }
@@ -252,8 +252,12 @@ public class ListActivity2 extends BaseActivity {
         };
         VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
                 loginInterfaceData);
+    }else{
+            Log.e("TAG", "无网络");
+            mRefreshLayout.finishRefresh();
+            Snackbar.make(mRecyclerView, "请连接网络", Snackbar.LENGTH_SHORT).show();
+        }
     }
-
 
     /**
      * 4、处理字段接口数据,方法 下一步请求列表数据
@@ -762,5 +766,13 @@ public class ListActivity2 extends BaseActivity {
         } catch (Exception e) {
             Toast.makeText(ListActivity2.this, "无按钮数据", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        //重新请求数据
+        refreshData();
+
+        super.onResume();
     }
 }

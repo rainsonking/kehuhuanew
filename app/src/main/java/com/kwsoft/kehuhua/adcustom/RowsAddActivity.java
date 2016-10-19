@@ -125,53 +125,60 @@ public class RowsAddActivity extends BaseActivity {
     private void requestAddCommit() {
         String value = DataProcess.commit(RowsAddActivity.this, fieldSet);
         if (!value.equals("no")) {
-            String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
-                    Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
-                    value + "&" + hideFieldParagram + "&" + keyRelation;
+            if (hasInternetConnected()) {
+                dialog.show();
+                String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
+                        Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
+                        value + "&" + hideFieldParagram + "&" + keyRelation;
 
 
-            String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
-            Log.e("TAG", "关联添加提交地址：" + volleyUrl);
-            StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String jsonData) {//磁盘存储后转至处理
-                            Log.e("TAG", "获得添加结果" + jsonData);
-                            int isCommitSuccess = Integer.valueOf(jsonData);
-                            if (isCommitSuccess != 0) {
-                                toListActivity();
-                            } else {
-                                Toast.makeText(RowsAddActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
+                String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
+                Log.e("TAG", "关联添加提交地址：" + volleyUrl);
+                StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String jsonData) {//磁盘存储后转至处理
+                                Log.e("TAG", "获得添加结果" + jsonData);
+                                int isCommitSuccess = Integer.valueOf(jsonData);
+                                if (isCommitSuccess != 0) {
+                                    toListActivity();
+                                } else {
+                                    Toast.makeText(RowsAddActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    VolleySingleton.onErrorResponseMessege(RowsAddActivity.this, volleyError);
-                }
-            }
-            ) {
-                //重写getHeaders 默认的key为cookie，value则为localCookie
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                        HashMap<String, String> headers = new HashMap<>();
-                        headers.put("cookie", Constant.localCookie);
-                        //Log.d("调试", "headers----------------" + headers);
-                        return headers;
-                    } else {
-                        return super.getHeaders();
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        VolleySingleton.onErrorResponseMessege(RowsAddActivity.this, volleyError);
+                        dialog.dismiss();
                     }
                 }
-            };
-            VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                    loginInterfaceData);
+                ) {
+                    //重写getHeaders 默认的key为cookie，value则为localCookie
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                            HashMap<String, String> headers = new HashMap<>();
+                            headers.put("cookie", Constant.localCookie);
+                            //Log.d("调试", "headers----------------" + headers);
+                            return headers;
+                        } else {
+                            return super.getHeaders();
+                        }
+                    }
+                };
+                VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                        loginInterfaceData);
+            }else{
+                Toast.makeText(this, "无网络", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
 
     public void toListActivity() {
         Toast.makeText(RowsAddActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
         this.finish();
     }
 

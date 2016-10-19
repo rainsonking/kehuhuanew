@@ -240,50 +240,58 @@ public class RowsEditActivity extends BaseActivity {
 
     }
     private void requestEditCommit() {
-        Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(6).toString());
+
+
+
         String value = DataProcess.commit(RowsEditActivity.this, fieldSet);
         if (!value.equals("no")) {
-            String volleyUrl1 = Constant.sysUrl + Constant.commitEdit + "?" +
-                    Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
-                    value + "&" + hideFieldParagram + "&t0_au_" + tableId + "_" + pageId + "=" + dataId;
-            String volleyUrl=volleyUrl1.replaceAll(" ","%20");
-            Log.e("TAG", "修改页面提交地址：" + volleyUrl);
-            StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String jsonData) {//磁盘存储后转至处理
-                            Log.e("TAG", "获得修改结果" + jsonData);
-                            if (jsonData != null && !jsonData.equals("")) {
-                                toListActivity();
-                            } else {
-                                Toast.makeText(RowsEditActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
-                            }
+            if (hasInternetConnected()) {
+                dialog.show();
+                String volleyUrl1 = Constant.sysUrl + Constant.commitEdit + "?" +
+                        Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
+                        value + "&" + hideFieldParagram + "&t0_au_" + tableId + "_" + pageId + "=" + dataId;
+                String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
+                Log.e("TAG", "修改页面提交地址：" + volleyUrl);
+                StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String jsonData) {//磁盘存储后转至处理
+                                Log.e("TAG", "获得修改结果" + jsonData);
+                                if (jsonData != null && !jsonData.equals("")) {
+                                    toListActivity();
+                                } else {
+                                    Toast.makeText(RowsEditActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+                                }
 
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    VolleySingleton.onErrorResponseMessege(RowsEditActivity.this, volleyError);
-                }
-            }
-            ) {
-                //重写getHeaders 默认的key为cookie，value则为localCookie
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                        HashMap<String, String> headers = new HashMap<>();
-                        headers.put("cookie", Constant.localCookie);
-                        //Log.d("调试", "headers----------------" + headers);
-                        return headers;
-                    } else {
-                        return super.getHeaders();
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        VolleySingleton.onErrorResponseMessege(RowsEditActivity.this, volleyError);
+                        dialog.dismiss();
+
                     }
                 }
-            };
-            VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                    loginInterfaceData);
+                ) {
+                    //重写getHeaders 默认的key为cookie，value则为localCookie
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                            HashMap<String, String> headers = new HashMap<>();
+                            headers.put("cookie", Constant.localCookie);
+                            //Log.d("调试", "headers----------------" + headers);
+                            return headers;
+                        } else {
+                            return super.getHeaders();
+                        }
+                    }
+                };
+                VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                        loginInterfaceData);
+            }else{
+                Toast.makeText(this, "无网络", Toast.LENGTH_SHORT).show();
+            }
         }
-
     }
 
 
@@ -292,6 +300,7 @@ public class RowsEditActivity extends BaseActivity {
      */
     public void toListActivity() {
         Toast.makeText(RowsEditActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
         this.finish();
     }
 

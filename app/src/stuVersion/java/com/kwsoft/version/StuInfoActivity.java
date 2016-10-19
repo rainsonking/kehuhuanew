@@ -2,9 +2,9 @@ package com.kwsoft.version;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.R;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
@@ -32,7 +33,7 @@ import butterknife.ButterKnife;
 
 import static com.kwsoft.kehuhua.config.Constant.tableId;
 
-public class StuInfoActivity extends AppCompatActivity {
+public class StuInfoActivity extends BaseActivity {
 
     @Bind(R.id.stu_info_lv)
     ListView stuInfoLv;
@@ -47,10 +48,14 @@ public class StuInfoActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 0x101:
                     Log.e("TAG", "学员端开始handler通知跳转后 ");
-                    if (swipeRefreshLayout.isRefreshing()) {
-                        adapter.notifyDataSetChanged();
-                        swipeRefreshLayout.setRefreshing(false);//设置不刷新
-                        Toast.makeText(getApplicationContext(), "数据已更新", Toast.LENGTH_SHORT).show();
+                    try {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            adapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);//设置不刷新
+                            Toast.makeText(getApplicationContext(), "数据已更新", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     break;
             }
@@ -65,6 +70,11 @@ public class StuInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initData();
         requestSet();
+    }
+
+    @Override
+    public void initView() {
+
     }
 
     private void initData() {
@@ -117,52 +127,62 @@ public class StuInfoActivity extends AppCompatActivity {
      */
     @SuppressWarnings("unchecked")
     public void requestSet() {
+        if (hasInternetConnected()) {
+            final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
+            Log.e("TAG", "学员端请求个人信息地址：" + volleyUrl);
 
-        final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
-        Log.e("TAG", "学员端请求个人信息地址：" + volleyUrl);
+            StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String jsonData) {//磁盘存储后转至处理
+                            Log.e("TAG", "获取学生资料信息" + jsonData);
 
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "获取学生资料信息" + jsonData);
+                            setStore(jsonData);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    VolleySingleton.onErrorResponseMessege(StuInfoActivity.this, volleyError);
 
-                        setStore(jsonData);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(StuInfoActivity.this, volleyError);
-
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> paramsMap = new HashMap<>();
-                paramsMap.put(tableId, StuPra.stuInfoTableId);
-                paramsMap.put(Constant.pageId, StuPra.stuInfoPageId);
-                Log.e("TAG", "学员端请求个人信息参数：" + paramsMap.toString());
-                return paramsMap;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
                 }
             }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                loginInterfaceData);
-    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> paramsMap = new HashMap<>();
+                    paramsMap.put(tableId, StuPra.stuInfoTableId);
+                    paramsMap.put(Constant.pageId, StuPra.stuInfoPageId);
+                    Log.e("TAG", "学员端请求个人信息参数：" + paramsMap.toString());
+                    return paramsMap;
+                }
 
+                //重写getHeaders 默认的key为cookie，value则为localCookie
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("cookie", Constant.localCookie);
+                        //Log.d("调试", "headers----------------" + headers);
+                        return headers;
+                    } else {
+                        return super.getHeaders();
+                    }
+                }
+            };
+            VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                    loginInterfaceData);
+        }else{
+            try {
+                Looper.prepare();
+                Toast.makeText(getApplicationContext(), "无网络！", Toast.LENGTH_SHORT).show();
+                Looper.loop();
+                swipeRefreshLayout.setRefreshing(false);//设置不刷新
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
     List<Map<String, Object>> fieldSet = new ArrayList<>();
 
     @SuppressWarnings("unchecked")

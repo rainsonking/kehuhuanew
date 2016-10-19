@@ -27,7 +27,6 @@ import com.kwsoft.kehuhua.adcustom.R;
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -216,13 +215,10 @@ public class Utils {
     }
 
     public static Map<String,Object> str2map(String jsonData){
-        Map<String,Object>  dataMap=new HashMap<>();
-        if (jsonData!=null) {
-            dataMap = JSON.parseObject(jsonData,
+
+        return JSON.parseObject(jsonData,
                     new TypeReference<Map<String, Object>>() {
                     });
-        }
-        return dataMap;
 
     }
 

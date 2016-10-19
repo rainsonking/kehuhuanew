@@ -210,7 +210,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 fieldRole == 6 || fieldRole == 7 || fieldRole == 11 ||
                 fieldRole == 12 || fieldRole == 13 || fieldRole == 8 ||
                 fieldRole == 9 || fieldRole == 24 || fieldRole == 29) {
-            add_edit_text.setHint("请填写");
+//            add_edit_text.setHint("请填写");
 
             if (fieldRole == 24) {//密码格式
                 add_edit_text.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -245,7 +245,6 @@ public class Add_EditAdapter extends BaseAdapter {
             }
             if (fieldRole == 12) {//身份证号
                 add_edit_text.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                add_edit_text.setTextSize(18);
             }
             if (fieldRole == 8) {//订单编号
                 Constant.tmpFieldId = String.valueOf(fieldSet.get(position).get("tmpFieldId"));

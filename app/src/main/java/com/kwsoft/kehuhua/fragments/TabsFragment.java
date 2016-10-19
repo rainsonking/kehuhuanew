@@ -105,7 +105,7 @@ public class TabsFragment extends Fragment {
 
                     loadMoreData();
                 } else {
-                    Snackbar.make(mRecyclerView, "没有更多了", Snackbar.LENGTH_SHORT).show();
+//                    Snackbar.make(mRecyclerView, "没有更多了", Snackbar.LENGTH_SHORT).show();
                     mRefreshLayout.finishRefreshLoadMore();
                 }
             }

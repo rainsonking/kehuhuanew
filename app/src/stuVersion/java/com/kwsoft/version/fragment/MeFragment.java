@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,10 +30,6 @@ import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.StuLoginActivity;
 import com.kwsoft.version.StuPra;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +42,7 @@ import static com.kwsoft.kehuhua.config.Constant.tableId;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
+ *
  */
 public class MeFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.tv_clean_cache)
@@ -59,8 +55,6 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     TextView stuSchoolArea;
     @Bind(R.id.stu_version)
     TextView stuVersion;
-    private List<Map<String, String>> stuInfo;
-    private SimpleAdapter adapter;
 
     @Nullable
     @Override
@@ -139,9 +133,15 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     @SuppressWarnings("unchecked")
     private void setStore(String jsonData) {
         String jsonData1 = jsonData.replaceAll("00:00:00", "");
-        Map<String, Object> stuInfoMap = Utils.str2map(jsonData1);
-        List<Map<String, Object>> dataList = new ArrayList<>();
+        Map<String, Object> stuInfoMap = null;
         try {
+            stuInfoMap = Utils.str2map(jsonData1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<Map<String, Object>> dataList;
+        try {
+            assert stuInfoMap != null;
             dataList = (List<Map<String, Object>>) stuInfoMap.get("dataList");
             Map<String, Object> map = dataList.get(0);
             if (map.containsKey("AFM_11")) {

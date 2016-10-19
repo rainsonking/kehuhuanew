@@ -34,12 +34,12 @@ import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.SettingsActivity;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.StuInfoActivity;
-import com.kwsoft.version.StuMainActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
 import com.kwsoft.version.view.StudyGridView;
 
@@ -401,48 +401,55 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     public void getLoginData(String url) {
-        StringRequest mStringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {
-                        mainPage(jsonData);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                sPreferences = getActivity().getSharedPreferences(Constant.proId, MODE_PRIVATE);
-                String nameValue = sPreferences.getString("name", "");
-                String pwdValue = sPreferences.getString("pwd", "");
-                Map<String, String> map = new HashMap<>();
-                map.put(Constant.USER_NAME, nameValue);
-                map.put(Constant.PASSWORD, pwdValue);
-                map.put(Constant.proIdName, Constant.proId);
-                map.put(Constant.timeName, Constant.menuAlterTime);
-                map.put(Constant.sourceName, Constant.sourceInt);
-                return map;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    return headers;
-                } else {
-                    return super.getHeaders();
+        if (((BaseActivity) getActivity()).hasInternetConnected()) {
+            StringRequest mStringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String jsonData) {
+                            mainPage(jsonData);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
+                    pull_refresh_scrollview.onRefreshComplete();
                 }
             }
-        };
-        VolleySingleton.getVolleySingleton(getActivity()).addToRequestQueue(mStringRequest);
-    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    sPreferences = getActivity().getSharedPreferences(Constant.proId, MODE_PRIVATE);
+                    String nameValue = sPreferences.getString("name", "");
+                    String pwdValue = sPreferences.getString("pwd", "");
+                    Map<String, String> map = new HashMap<>();
+                    map.put(Constant.USER_NAME, nameValue);
+                    map.put(Constant.PASSWORD, pwdValue);
+                    map.put(Constant.proIdName, Constant.proId);
+                    map.put(Constant.timeName, Constant.menuAlterTime);
+                    map.put(Constant.sourceName, Constant.sourceInt);
+                    return map;
+                }
 
+                //重写getHeaders 默认的key为cookie，value则为localCookie
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("cookie", Constant.localCookie);
+                        return headers;
+                    } else {
+                        return super.getHeaders();
+                    }
+                }
+            };
+            VolleySingleton.getVolleySingleton(getActivity()).addToRequestQueue(mStringRequest);
+        }else{
+
+            pull_refresh_scrollview.onRefreshComplete();
+            Toast.makeText(getActivity(), "无网络", Toast.LENGTH_SHORT).show();
+
+        }
+    }
     //此方法传递菜单JSON数据
     @SuppressWarnings("unchecked")
     private void mainPage(String menuData) {
@@ -463,6 +470,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 
             //在更新UI后，无需其它Refresh操作，系统会自己加载新的listView
             pull_refresh_scrollview.onRefreshComplete();
+            Toast.makeText(getActivity(), "数据已刷新", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }

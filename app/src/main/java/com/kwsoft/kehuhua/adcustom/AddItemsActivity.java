@@ -1,5 +1,7 @@
 package com.kwsoft.kehuhua.adcustom;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,13 +53,13 @@ public class AddItemsActivity extends BaseActivity {
     RelativeLayout addItemTitle;
     @Bind(R.id.lv_add_item)
     ListView lvAddItem;
-
-    private String tableId, pageId, dataId, buttonName;
+    private String buttonName;
+    private String tableId;
+    private String pageId;
+    private String dataId;
     private Map<String, String> paramsMap;
     private List<Map<String, Object>> fieldSet = new ArrayList<>();
-    private List<Map<String, Object>> hideFieldSet = new ArrayList<>();
 
-    private String alterTime = "100";
     private Add_EditAdapter adapter;
     private String hideFieldParagram = "";
     private String keyRelation = "";
@@ -102,6 +104,7 @@ public class AddItemsActivity extends BaseActivity {
         Map<String, Object> buttonSetItem = JSON.parseObject(buttonSetItemStr);
 
         buttonName = String.valueOf(buttonSetItem.get("buttonName"));
+        tvAddItemTitle.setText(buttonName);
         pageId = String.valueOf(buttonSetItem.get("startTurnPage"));
 
         dataId = String.valueOf(buttonSetItem.get("dataId"));
@@ -165,7 +168,7 @@ public class AddItemsActivity extends BaseActivity {
         Map<String, Object> buttonSet = JSON.parseObject(jsonData);
         try {
 //获取alterTime
-            alterTime = String.valueOf(buttonSet.get("alterTime"));
+//            String alterTime = String.valueOf(buttonSet.get("alterTime"));
 //获取默认值
 //            defaultValArr = (Map<String, Object>) buttonSet.get("defaultValArr");
 //获取fieldSet
@@ -179,7 +182,7 @@ public class AddItemsActivity extends BaseActivity {
             }
 //hideFieldSet
             if (pageSet.get("hideFieldSet") != null) {
-                hideFieldSet = (List<Map<String, Object>>) pageSet.get("hideFieldSet");
+                List<Map<String, Object>> hideFieldSet = (List<Map<String, Object>>) pageSet.get("hideFieldSet");
                 hideFieldParagram = DataProcess.toHidePageSet(hideFieldSet);
             }
         } catch (Exception e) {
@@ -210,59 +213,85 @@ public class AddItemsActivity extends BaseActivity {
                 this.finish();
                 break;
             case R.id.tv_commit_item_tadd:
-                requestAddCommit();
+                toCommit();
                 break;
         }
     }
+    private void toCommit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(tvAddItemTitle.getText()+"？");
+//        builder.setTitle("删除");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                requestAddCommit();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+
+
+
+    }
 
     private void requestAddCommit() {
-        String value = DataProcess.commit(
-                AddItemsActivity.this,
-                fieldSet);
+        String value = DataProcess.commit(AddItemsActivity.this,fieldSet);
         if (!value.equals("no")) {
-            String volleyUrl1 = Constant.sysUrl +Constant.commitAdd +"?" +
-                    Constant.tableId +"=" +tableId +"&" +Constant.pageId +"=" +pageId +"&" +
-                    value + "&" + hideFieldParagram+"&"+
-                    keyRelation;
-            String volleyUrl=volleyUrl1.replaceAll(" ","%20");
-            Log.e("TAG", "添加提交地址：" + volleyUrl);
-            StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String jsonData) {//磁盘存储后转至处理
-                            Log.e("TAG", "获得添加结果" + jsonData);
-                            String isCommitSuccess = String.valueOf(jsonData);
-                            if (!isCommitSuccess.equals("0")) {
-                                toListActivity();
-                            } else {
-                                Toast.makeText(AddItemsActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
+            if (hasInternetConnected()) {
+                dialog.show();
+                String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
+                        Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
+                        value + "&" + hideFieldParagram + "&" +
+                        keyRelation;
+                String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
+                Log.e("TAG", "添加提交地址：" + volleyUrl);
+                StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String jsonData) {//磁盘存储后转至处理
+                                Log.e("TAG", "获得添加结果" + jsonData);
+                                String isCommitSuccess = String.valueOf(jsonData);
+                                if (!isCommitSuccess.equals("0")) {
+                                    toListActivity();
+                                } else {
+                                    Toast.makeText(AddItemsActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    VolleySingleton.onErrorResponseMessege(AddItemsActivity.this, volleyError);
-                }
-            }
-            ) {
-                //重写getHeaders 默认的key为cookie，value则为localCookie
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                        HashMap<String, String> headers = new HashMap<>();
-                        headers.put("cookie", Constant.localCookie);
-                        //Log.d("调试", "headers----------------" + headers);
-                        return headers;
-                    } else {
-                        return super.getHeaders();
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        VolleySingleton.onErrorResponseMessege(AddItemsActivity.this, volleyError);
+                        dialog.dismiss();
                     }
                 }
-            };
-            VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                    loginInterfaceData);
-        }
+                ) {
+                    //重写getHeaders 默认的key为cookie，value则为localCookie
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
+                            HashMap<String, String> headers = new HashMap<>();
+                            headers.put("cookie", Constant.localCookie);
+                            //Log.d("调试", "headers----------------" + headers);
+                            return headers;
+                        } else {
+                            return super.getHeaders();
+                        }
+                    }
+                };
+                VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
+                        loginInterfaceData);
+            }else{
 
+                Toast.makeText(this, "无网络", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**
@@ -270,6 +299,7 @@ public class AddItemsActivity extends BaseActivity {
      */
     public void toListActivity() {
         Toast.makeText(AddItemsActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
         this.finish();
     }
 

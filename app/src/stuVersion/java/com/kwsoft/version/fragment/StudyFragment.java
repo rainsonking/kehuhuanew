@@ -32,6 +32,7 @@ import com.jude.rollviewpager.hintview.ColorPointHintView;
 import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
@@ -382,6 +383,8 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 //    }
 
     public void getLoginData(String url) {
+        if (((BaseActivity)getActivity()).hasInternetConnected()) {
+
         StringRequest mStringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -392,6 +395,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
+                pull_refresh_scrollview.onRefreshComplete();
             }
         }
         ) {
@@ -422,8 +426,12 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             }
         };
         VolleySingleton.getVolleySingleton(getActivity()).addToRequestQueue(mStringRequest);
-    }
+    }else{
 
+            pull_refresh_scrollview.onRefreshComplete();
+            Toast.makeText(getActivity(), "无网络", Toast.LENGTH_SHORT).show();
+        }
+    }
     //此方法传递菜单JSON数据
     @SuppressWarnings("unchecked")
     private void mainPage(String menuData) {
@@ -433,7 +441,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     });
             Map<String, Object> loginfo = (Map<String, Object>) menuMap.get("loginInfo");
             Constant.USERID = String.valueOf(loginfo.get("USERID"));
-
             List<Map<String, Object>> menuListMap1 = (List<Map<String, Object>>) menuMap.get("roleFollowList");
             List<Map<String, Object>> menuListMap2 = (List<Map<String, Object>>) menuMap.get("menuList");
 //看板模块数据

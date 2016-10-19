@@ -23,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.version.Common.DataCleanManager;
@@ -31,9 +30,7 @@ import com.kwsoft.version.FeedbackActivity;
 import com.kwsoft.version.ResetPwdActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.StuLoginActivity;
-import com.kwsoft.version.StuPra;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +43,7 @@ import static com.kwsoft.kehuhua.config.Constant.tableId;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
+ *
  */
 public class MeFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.tv_clean_cache)
@@ -162,16 +160,20 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 loginInterfaceData);
     }
 
-    List<Map<String, Object>> fieldSet = new ArrayList<>();
-
     @SuppressWarnings("unchecked")
     private void setStore(String jsonData) {
         String jsonData1 = jsonData.replaceAll("00:00:00", "");
         Log.e("TAG", "jsonData1 " + jsonData1);
-        Map<String, Object> stuInfoMap = Utils.str2map(jsonData1);
-        List<Map<String, Object>> dataList = new ArrayList<>();
+        Map<String, Object> stuInfoMap = null;
+        try {
+            stuInfoMap = Utils.str2map(jsonData1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<Map<String, Object>> dataList;
 
         try {
+            assert stuInfoMap != null;
             dataList = (List<Map<String, Object>>) stuInfoMap.get("dataList");
             Map<String, Object> map = dataList.get(0);
             if (map.containsKey("AFM_14")) {
