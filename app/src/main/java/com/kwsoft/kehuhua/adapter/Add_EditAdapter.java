@@ -63,13 +63,16 @@ public class Add_EditAdapter extends BaseAdapter {
     private Context context;
     private static final String DATEPICKER_TAG = "datepicker";
     private static final String TIMEPICKER_TAG = "timepicker";
-    private HashMap<Integer, String> hashMap = new HashMap<>();
+    private HashMap<Integer, String> hashMap;
+
+    {
+        hashMap = new HashMap<>();
+    }
+
     private Activity mActivity;
     private Map<String, String> paramsMap = new HashMap<>();
     private String tableId, dataId, pageId;
     private android.support.v4.app.FragmentManager fm;
-    private static final int REQUEST_CODE = 732;
-    private ArrayList<String> mResults = new ArrayList<>();
 
 
     public Add_EditAdapter(Context context, List<Map<String, Object>> fieldSet,
@@ -310,8 +313,8 @@ public class Add_EditAdapter extends BaseAdapter {
             List<Map<String, Object>> dicList = getNewDicList(position);
             //设置默认选中值以及byId的位置
             int byId = -1;//
-            int dicDefaultSelectInt = -1;
-            String dicDefaultSelect = "";
+            int dicDefaultSelectInt;
+            String dicDefaultSelect;
             //有值的情况
             if (!defaultName.equals("")) {
                 byId = getById(dicList, byId, Integer.valueOf(defaultName));
@@ -673,7 +676,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
     }
 
-    public boolean isShow(int position, TextView textView, TextView textViewIfMust) {
+    private boolean isShow(int position, TextView textView, TextView textViewIfMust) {
         boolean isShow = true;
         if (fieldSet.get(position).get("jsWhereStr") != null) {
             String jsWhereStr = String.valueOf(fieldSet.get(position).get("jsWhereStr")).replace(" ", "").replace("==", "");
@@ -705,12 +708,8 @@ public class Add_EditAdapter extends BaseAdapter {
     }
 
     /**
-     * @param dicList             字典列表最小为1
-     * @param byId                默认选择值
-     * @param dicDefaultSelectInt
-     * @return
      */
-    public int getById(List<Map<String, Object>> dicList, int byId, int dicDefaultSelectInt) {
+    private int getById(List<Map<String, Object>> dicList, int byId, int dicDefaultSelectInt) {
         //纠正显示值错误
         if (dicList.size() == 1) {
             byId = 0;
@@ -726,9 +725,9 @@ public class Add_EditAdapter extends BaseAdapter {
         }
         return byId;
     }
-
+    @SuppressWarnings("unchecked")
     @NonNull
-    public List<Map<String, Object>> getNewDicList(int position) {
+    private List<Map<String, Object>> getNewDicList(int position) {
         List<Map<String, Object>> dicList =
                 (List<Map<String, Object>>) fieldSet.get(position).get("dicList");
 
@@ -758,7 +757,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
 
     //获得needFilter
-    public List<Map<String, String>> getNeedFilter(int position) {
+    private List<Map<String, String>> getNeedFilter(int position) {
         List<Map<String, String>> needFilterList = new ArrayList<>();
         try {
             //当前表position位置的needFilter
@@ -869,106 +868,6 @@ public class Add_EditAdapter extends BaseAdapter {
             e.printStackTrace();
         }
     }
-
-
-//    //上传文件
-//    public void upload(int position) {
-//
-//        String url = sysUrl + pictureUrl;
-//        //待上传的两个文件
-//        List<File> files = new ArrayList<>();
-//        if (img_Paths.size() > 0) {
-//            for (int i = 0; i < img_Paths.size(); i++) {
-//
-//                files.add(new File(img_Paths.get(i)));
-//            }
-////                uploadMethod(params, uploadHost);
-//            //请求的URL
-//            //post请求，三个参数分别是请求地址、请求参数、请求的回调接口
-//            Log.e("TAG", "listPath.toString()" + img_Paths.toString());
-//
-//            if (files.size() > 0) {
-//                Log.e("TAG", "files.toString()" + files.toString());
-//                uploadMethod(url, files, position);
-//            }
-//        } else {
-//            Toast.makeText(mActivity, "尚未选择图片", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-//    public void uploadMethod(String url, List<File> files, final int position) {
-//        Log.e("TAG", "uploadMethod1");
-//        MultipartRequest request = new MultipartRequest(url, new Response.Listener<String>() {
-//
-//            @Override
-//            public void onResponse(String response) {
-//
-//                getFileCode(response, position);
-//
-//
-////                TrendCreateHttpManager.toTrendCreateHttpActionSuccess();
-//            }
-//        }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(mActivity, "上传失败", Toast.LENGTH_SHORT).show();
-////                TrendCreateHttpManager.toTrendCreateHttpActionError();
-//            }
-//        }, "myFiles", files, null) {
-//
-//
-//            //重写getHeaders 默认的key为cookie，value则为localCookie
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-//                    HashMap<String, String> headers = new HashMap<>();
-//                    headers.put("cookie", Constant.localCookie);
-//                    //Log.d("调试", "headers----------------" + headers);
-//                    return headers;
-//                } else {
-//                    return super.getHeaders();
-//                }
-//            }
-//        };
-//        VolleySingleton.getVolleySingleton(mActivity).addToRequestQueue(
-//                request);
-//    }
-
-
-//    //解析文件上传成功的code值
-//    private void getFileCode(String response, int position) {
-//        String codeListStr = "";
-//        Log.e("TAG", "uploadMethod2:" + response);
-//        Toast.makeText(mActivity, "上传成功", Toast.LENGTH_SHORT).show();
-//        List<Integer> codeList = new ArrayList<>();
-//        if (response.contains(":")) {
-//            String[] value = response.split(",");
-//            for (String valueTemp : value) {
-//                String[] valueTemp1 = valueTemp.split(":");
-//                int valueCode = Integer.valueOf(valueTemp1[1]);
-//                codeList.add(valueCode);
-//            }
-//            Log.e("TAG", "文件上传codeList:" + codeList.toString());
-//            int leg = codeList.size();
-//            if (leg > 0) {
-//                for (int i = 0; i < leg; i++) {
-//                    if (i == (leg - 1)) {
-//                        codeListStr = codeListStr + codeList.get(i);
-//                    } else {
-//                        codeListStr = codeListStr + codeList.get(i) + ",";
-//                    }
-//                }
-//            }
-//        } else {
-//            Toast.makeText(mActivity, "文件值解析出现问题", Toast.LENGTH_SHORT).show();
-//        }
-//        Log.e("TAG", "文件上传码codeListStr:" + codeListStr);
-//
-//        fieldSet.get(position).put(Constant.itemValue, codeListStr);
-//        fieldSet.get(position).put(Constant.itemName, codeListStr);
-//        notifyDataSetChanged();
-//    }
 }
 
 
