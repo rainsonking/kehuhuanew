@@ -19,7 +19,6 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by Administrator on 2015/11/28 0028.
- *
  */
 public class Constant {
     /**
@@ -29,10 +28,10 @@ public class Constant {
      * <p>
      * 阿里服务器地址  http://182.92.108.162:8124/edus_auto/
      */
-public static String sysUrl = "http://182.92.108.162/edus_auto/";//外网项目
-    //public static String sysUrl = "http://192.168.6.171:8080/edus_auto/";//小庞项目
-    // public static String sysUrl = "http://192.168.6.117:8080/edus_auto/";//红伟项目
-//    public static String sysUrl = "http://192.168.6.150:8081/edus_auto/";//陈蒙项目
+    public static String sysUrl = "http://182.92.108.162/edus_auto/";//外网项目
+    // public static String sysUrl = "http://192.168.6.171:8080/edus_auto/";//小庞项目
+    //public static String sysUrl = "http://192.168.6.117:8080/edus_auto/";//红伟项目
+    // public static String sysUrl = "http://192.168.6.150:8081/edus_auto/";//陈蒙项目
     public final static String sysLoginUrl = "login_interfaceProLogin.do";//项目选择方法
     public final static String projectLoginUrl = "login_interfaceLogin.do";//登陆方法
 

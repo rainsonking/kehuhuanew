@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,10 +14,10 @@
         android:id="@+id/pull_refresh_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:ptrHeaderTextColor="@color/black"
+        android:scrollbars="none"
         app:ptrHeaderSubTextColor="@color/black"
-        app:ptrMode="pullFromStart"
-        android:scrollbars="none">
+        app:ptrHeaderTextColor="@color/black"
+        app:ptrMode="pullFromStart">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,7 +27,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="67dp"
-                android:background="@color/white"
+                android:background="#f5f8fa"
                 android:orientation="vertical">
 
 
@@ -98,10 +99,12 @@
                             android:layout_width="22dp"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical|right"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
                             <ImageView
                                 android:layout_width="6dp"
+
                                 android:layout_height="10dp"
                                 android:src="@mipmap/often_into_small" />
                         </LinearLayout>
@@ -109,6 +112,12 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:background="#e3eaee"
+                android:layout_height="0.5dp">
+
+            </View>
 
             <RelativeLayout
                 android:layout_width="match_parent"
