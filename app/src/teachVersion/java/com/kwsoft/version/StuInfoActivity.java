@@ -21,6 +21,7 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
+import com.kwsoft.version.fragment.StuInfoAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class StuInfoActivity extends AppCompatActivity {
 
     @Bind(R.id.stu_info_lv)
     ListView stuInfoLv;
-    private SimpleAdapter adapter;
+    private StuInfoAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Map<String, String>> stuInfo;
     //下拉刷新handler
@@ -186,9 +187,7 @@ public class StuInfoActivity extends AppCompatActivity {
 //                stuInfo.remove(stuInfo.size()-1);
                 Log.e("TAG", "=================" + stuInfo.toString());
                 //设置适配器
-                adapter = new SimpleAdapter(StuInfoActivity.this, stuInfo, R.layout.activity_info_item,
-                        new String[]{"fieldCnName", "fieldCnName2"}, new int[]{R.id.tv_name,
-                        R.id.tv_entity_name});
+                adapter = new StuInfoAdapter(stuInfo,StuInfoActivity.this);
                 stuInfoLv.setAdapter(adapter);
             }else{
                 stuInfo.removeAll(stuInfo);
