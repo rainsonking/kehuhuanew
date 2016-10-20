@@ -27,7 +27,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ViewHolder> 
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;
 
 
-    public static interface OnRecyclerViewItemClickListener {
+    public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view , String data);
     }
     public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {

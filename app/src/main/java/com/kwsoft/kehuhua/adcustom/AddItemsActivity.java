@@ -10,10 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -28,6 +25,7 @@ import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.widget.CommonToolbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,21 +34,19 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-import static com.kwsoft.kehuhua.adcustom.R.id.add_item_title;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class AddItemsActivity extends BaseActivity {
 
-    @Bind(R.id.IV_back_list_item_tadd)
-    ImageView IVBackListItemTadd;
-    @Bind(R.id.tv_commit_item_tadd)
-    ImageView tvCommitItemTadd;
-    @Bind(R.id.tv_add_item_title)
-    TextView tvAddItemTitle;
-    @Bind(add_item_title)
-    RelativeLayout addItemTitle;
+//    @Bind(R.id.IV_back_list_item_tadd)
+//    ImageView IVBackListItemTadd;
+//    @Bind(R.id.tv_commit_item_tadd)
+//    ImageView tvCommitItemTadd;
+//    @Bind(R.id.tv_add_item_title)
+//    TextView tvAddItemTitle;
+//    @Bind(add_item_title)
+//    RelativeLayout addItemTitle;
     @Bind(R.id.lv_add_item)
     ListView lvAddItem;
     private String buttonName;
@@ -59,7 +55,7 @@ public class AddItemsActivity extends BaseActivity {
     private String dataId;
     private Map<String, String> paramsMap;
     private List<Map<String, Object>> fieldSet = new ArrayList<>();
-
+    private CommonToolbar mToolbar;
     private Add_EditAdapter adapter;
     private String hideFieldParagram = "";
     private String keyRelation = "";
@@ -86,14 +82,29 @@ public class AddItemsActivity extends BaseActivity {
     }
 
     private void init() {
-        addItemTitle.setBackgroundColor(getResources().getColor(topBarColor));
+//        addItemTitle.setBackgroundColor(getResources().getColor(topBarColor));
         paramsMap = new HashMap<>();
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
         //paramsMap.put(Constant.timeName, Constant.dataTime);
         //String paramsStr = paramsMap.toString();
-
-
+        mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
+        mToolbar.setTitle(buttonName);
+        mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
+        //左侧返回按钮
+        mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.often_more));
+        mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toCommit();
+            }
+        });
     }
 
     //获取参数
@@ -104,7 +115,7 @@ public class AddItemsActivity extends BaseActivity {
         Map<String, Object> buttonSetItem = JSON.parseObject(buttonSetItemStr);
 
         buttonName = String.valueOf(buttonSetItem.get("buttonName"));
-        tvAddItemTitle.setText(buttonName);
+//        tvAddItemTitle.setText(buttonName);
         pageId = String.valueOf(buttonSetItem.get("startTurnPage"));
 
         dataId = String.valueOf(buttonSetItem.get("dataId"));
@@ -205,21 +216,9 @@ public class AddItemsActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.IV_back_list_item_tadd, R.id.tv_commit_item_tadd})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.IV_back_list_item_tadd:
-
-                this.finish();
-                break;
-            case R.id.tv_commit_item_tadd:
-                toCommit();
-                break;
-        }
-    }
     private void toCommit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(tvAddItemTitle.getText()+"？");
+        builder.setMessage(buttonName+"？");
 //        builder.setTitle("删除");
         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 

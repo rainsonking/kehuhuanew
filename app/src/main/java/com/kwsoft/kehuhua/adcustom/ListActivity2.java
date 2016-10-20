@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -36,7 +35,6 @@ import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.kehuhua.powerpopwindow.PowerPopMenuModel;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.view.WrapContentLinearLayoutManager;
@@ -66,7 +64,6 @@ public class ListActivity2 extends BaseActivity {
     private String tableId, pageId;
     private Map<String, String> paramsMap;
 
-    private String paramsStr;
     private List<Map<String, Object>> buttonSet;//按钮列表数据
     private String operaButtonSet;
     private List<List<Map<String, String>>> datas;
@@ -154,7 +151,7 @@ public class ListActivity2 extends BaseActivity {
             titleName = childList.get(0).get("menuName") + "";
 //            list_more_menu.setVisibility(View.VISIBLE);
             mToolbar.showChildIv();
-            initData();
+//            initData();
             mToolbar.setTextTitleOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -175,7 +172,6 @@ public class ListActivity2 extends BaseActivity {
         paramsMap.put(Constant.pageId, pageId);
         long dataTime = -1;
         paramsMap.put(Constant.timeName, dataTime + "");
-        paramsStr = JSON.toJSONString(paramsMap);
         Constant.paramsMapSearch = paramsMap;
         Constant.mainTableIdValue = tableId;
         Constant.mainPageIdValue = pageId;
@@ -325,7 +321,7 @@ public class ListActivity2 extends BaseActivity {
                 if (buttonSet.size() > 0) {
                     mToolbar.showRightImageButton();
                     //右侧下拉按钮
-                    initButtonsetData();
+//                    initButtonsetData();
                     mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -429,7 +425,8 @@ public class ListActivity2 extends BaseActivity {
         mAdapter = new ListAdapter2(datas, childTab);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(ListActivity2.this));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 //                mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
         mAdapter.setOnItemClickListener(new ListAdapter2.OnRecyclerViewItemClickListener() {
             @Override
@@ -462,62 +459,6 @@ public class ListActivity2 extends BaseActivity {
             e.printStackTrace();
         }
     }
-
-
-    private void initData() {
-
-        List<PowerPopMenuModel> mChildMenuList = new ArrayList<>();
-        for (int i = 0; i < childList.size(); i++) {
-            PowerPopMenuModel item = new PowerPopMenuModel();
-            item.text = String.valueOf(childList.get(i).get("menuName"));
-            item.resid = R.mipmap.ic_launcher;
-            mChildMenuList.add(item);
-        }
-    }
-
-//    private void popChildMenu(View v) {
-//        PowerPopMenu mPowerPopMenu1 = new PowerPopMenu(mContext, LinearLayoutManager.VERTICAL, PowerPopMenu.POP_UP_TO_DOWN);
-//        mPowerPopMenu1.setIsShowIcon(true);
-//        mPowerPopMenu1.setListResource(mChildMenuList);
-//        mPowerPopMenu1.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                refreshPage(position);
-//            }
-//        });
-//        mPowerPopMenu1.show(v);
-//    }
-
-
-    private void initButtonsetData() {
-
-        List<PowerPopMenuModel> mRightButtonData = new ArrayList<>();
-        for (int i = 0; i < buttonSet.size(); i++) {
-            PowerPopMenuModel item = new PowerPopMenuModel();
-            item.text = String.valueOf(buttonSet.get(i).get("buttonName"));
-            mRightButtonData.add(item);
-        }
-
-    }
-////展示右上角按钮
-//    public void showButtonSet() {
-//        PowerPopMenu mPowerPopMenu2 = new PowerPopMenu(mContext, LinearLayoutManager.HORIZONTAL, PowerPopMenu
-//                .POP_UP_TO_DOWN);
-//        //必须放在setListResource之前
-//        mPowerPopMenu2.setIsShowIcon(false);
-//        mPowerPopMenu2.setListResource(mRightButtonData);
-//        mPowerPopMenu2.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                toPage(position);
-//            }
-//        });
-//        mPowerPopMenu2.addView(mEmptyView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams
-//                .MATCH_PARENT, 50));
-//        mPowerPopMenu2.show();
-//
-//    }
-
     public void toPage(int position) {
         int buttonType = (int) buttonSet.get(position).get("buttonType");
         Map<String, Object> buttonSetItem = buttonSet.get(position);
@@ -550,7 +491,6 @@ public class ListActivity2 extends BaseActivity {
         //重设参数值
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
-        paramsStr = JSON.toJSONString(paramsMap);
         Constant.paramsMapSearch = paramsMap;
         Constant.mainTableIdValue = tableId;
         Constant.mainPageIdValue = pageId;
@@ -766,12 +706,4 @@ public class ListActivity2 extends BaseActivity {
             Toast.makeText(ListActivity2.this, "无按钮数据", Toast.LENGTH_SHORT).show();
         }
     }
-
-//    @Override
-//    protected void onResume() {
-//        //重新请求数据
-//        refreshData();
-//
-//        super.onResume();
-//    }
 }

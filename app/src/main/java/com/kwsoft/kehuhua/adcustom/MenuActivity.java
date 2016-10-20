@@ -165,7 +165,7 @@ public class MenuActivity extends AppCompatActivity {
     public void toItem(Map<String, Object> itemData) {
         String itemDataString= JSONArray.toJSONString(itemData);
         Intent intent = new Intent();
-        intent.setClass(this, ListActivity.class);
+        intent.setClass(this, ListActivity2.class);
         intent.putExtra("itemData",itemDataString);
         startActivity(intent);
     }

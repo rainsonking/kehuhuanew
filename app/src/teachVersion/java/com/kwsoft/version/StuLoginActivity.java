@@ -1,6 +1,5 @@
 package com.kwsoft.version;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -11,7 +10,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -52,7 +50,6 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     private Button login;
     private ImageView iv_phone_clear;
     private ImageView iv_password_clear;
-    private CheckBox cb_rmb_pwd;
 
     static {
         //学员端设置成顶栏红色
@@ -65,7 +62,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stu_login_sec);
         CloseActivityClass.activityList.add(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         initJudgeSave();
         initView();
@@ -95,7 +92,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         login = (Button) findViewById(R.id.btn_login);
         iv_phone_clear = (ImageView) findViewById(R.id.iv_phone_clear);
         iv_password_clear = (ImageView) findViewById(R.id.iv_password_clear);
-        cb_rmb_pwd = (CheckBox) findViewById(R.id.check_box);
+        CheckBox cb_rmb_pwd = (CheckBox) findViewById(R.id.check_box);
 
         login.setOnClickListener(this);
         iv_phone_clear.setOnClickListener(new View.OnClickListener() {
@@ -204,8 +201,6 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         if (!hasInternetConnected()) {
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
         } else {
-            final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
-
             dialog.show();
             nameValue = mUserName.getText().toString();//trim去掉首尾空格
             pwdValue = mPassword.getText().toString();

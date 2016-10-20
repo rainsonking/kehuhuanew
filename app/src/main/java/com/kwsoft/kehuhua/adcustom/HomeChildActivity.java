@@ -1,6 +1,7 @@
 package com.kwsoft.kehuhua.adcustom;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,7 +52,7 @@ public class HomeChildActivity extends Activity implements View.OnClickListener 
         child_menu_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent mIntent = new Intent(HomeChildActivity.this, ListActivity.class);
+                Intent mIntent = new Intent(HomeChildActivity.this, ListActivity2.class);
                 mIntent.putExtra("menu", menuStr);
                 startActivity(mIntent);
             }

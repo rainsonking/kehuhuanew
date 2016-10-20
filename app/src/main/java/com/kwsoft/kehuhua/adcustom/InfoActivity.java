@@ -345,7 +345,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                            String isSuccess=jsonData.substring(0,1);
                         if(isSuccess.equals("1")){
                             Intent intent = new Intent();
-                            intent.setClass(InfoActivity.this,ListActivity.class);
+                            intent.setClass(InfoActivity.this,ListActivity2.class);
                             startActivity(intent);
                         }else{
                             Toast.makeText(InfoActivity.this, jsonData+"请检查表关联", Toast.LENGTH_SHORT).show();

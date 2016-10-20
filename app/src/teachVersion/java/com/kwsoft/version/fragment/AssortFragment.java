@@ -29,7 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.CourseActivity;
-import com.kwsoft.kehuhua.adcustom.ListActivity;
+import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
@@ -181,7 +181,7 @@ public class AssortFragment extends Fragment {
         String childString = JSONArray.toJSONString(childList);
         Intent intent = new Intent();
         if (itemData.get("menuPageUrl") == null) {
-            intent.setClass(getActivity(), ListActivity.class);
+            intent.setClass(getActivity(), ListActivity2.class);
         } else {
             intent.setClass(getActivity(), CourseActivity.class);
         }
