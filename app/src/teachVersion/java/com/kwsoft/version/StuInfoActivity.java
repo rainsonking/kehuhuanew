@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -21,8 +21,8 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
-import com.kwsoft.version.fragment.StuInfoAdapter;
 
+import com.kwsoft.version.fragment.StuInfoAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,8 +139,8 @@ public class StuInfoActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> paramsMap = new HashMap<>();
-                paramsMap.put(tableId, StuPra.stuInfoTableId);
-                paramsMap.put(Constant.pageId, StuPra.stuInfoPageId);
+                paramsMap.put(tableId, Constant.teachPerTABLEID);
+                paramsMap.put(Constant.pageId, Constant.teachPerPAGEID);
                 Log.e("TAG", "学员端请求个人信息参数：" + paramsMap.toString());
                 return paramsMap;
             }
@@ -166,7 +166,12 @@ public class StuInfoActivity extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     private void setStore(String jsonData) {
         String jsonData1=jsonData.replaceAll("00:00:00","");
-        Map<String, Object> stuInfoMap = Utils.str2map(jsonData1);
+        Map<String, Object> stuInfoMap = null;
+        try {
+            stuInfoMap = Utils.str2map(jsonData1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         List<Map<String, Object>> dataList = new ArrayList<>();
         Map<String, Object> pageSet;
         try {

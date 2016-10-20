@@ -67,9 +67,7 @@ public class ListActivity2 extends BaseActivity {
     private Map<String, String> paramsMap;
 
     private String paramsStr;
-    private long dataTime = -1;//请求的时间，设为1，总是请求
     private List<Map<String, Object>> buttonSet;//按钮列表数据
-    private String searchSet = "";
     private String operaButtonSet;
     private List<List<Map<String, String>>> datas;
     private ListAdapter2 mAdapter;
@@ -175,6 +173,7 @@ public class ListActivity2 extends BaseActivity {
         paramsMap = new HashMap<>();
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
+        long dataTime = -1;
         paramsMap.put(Constant.timeName, dataTime + "");
         paramsStr = JSON.toJSONString(paramsMap);
         Constant.paramsMapSearch = paramsMap;
@@ -184,7 +183,7 @@ public class ListActivity2 extends BaseActivity {
 
     //初始化顶栏
     public void initView() {
-        mContext = this;
+        Context mContext = this;
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
         mToolbar.setBackgroundColor(getResources().getColor(Constant.topBarColor));
         mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.often_more)); //右侧pop
@@ -195,7 +194,7 @@ public class ListActivity2 extends BaseActivity {
             }
         });
 
-        mEmptyView = (LinearLayout) View.inflate(mContext, R.layout.view_empty, null);
+        LinearLayout mEmptyView = (LinearLayout) View.inflate(mContext, R.layout.view_empty, null);
     }
 
     /**
@@ -286,7 +285,7 @@ public class ListActivity2 extends BaseActivity {
 //获取搜索数据，如果有搜索数据但是仅仅是方括号没内容则隐藏搜索框
             if (pageSet.get("serachSet") != null) {
                 List<Map<String, Object>> searchSetList = (List<Map<String, Object>>) pageSet.get("serachSet");
-                searchSet = JSONArray.toJSONString(searchSetList);
+                String searchSet = JSONArray.toJSONString(searchSetList);
                 //暂时设置搜索按钮为隐藏，以后做好了再展现
 //                    if (searchSetList.size()==0) {
                 searchButton.setVisibility(View.GONE);
@@ -350,6 +349,7 @@ public class ListActivity2 extends BaseActivity {
 //将dataList与fieldSet合并准备适配数据
 //        if (dataList != null && dataList.size() > 0) {
         datas = DataProcess.combineSetData(tableId, fieldSet, dataList);
+        Log.e(TAG, "setStore: 将datalist转换为datas");
         if (datas == null) {
             Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
 
@@ -391,6 +391,7 @@ public class ListActivity2 extends BaseActivity {
      * 分动作展示数据
      */
     private void showData() {
+        Log.e(TAG, "showData: "+state);
         switch (state) {
             case STATE_NORMAL:
                 normalRequest();
@@ -422,7 +423,9 @@ public class ListActivity2 extends BaseActivity {
         }
     }
 
+    private static final String TAG = "ListActivity2";
     public void normalRequest() {
+        Log.e(TAG, "normalRequest: ");
         mAdapter = new ListAdapter2(datas, childTab);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(ListActivity2.this));
@@ -461,13 +464,9 @@ public class ListActivity2 extends BaseActivity {
     }
 
 
-    private Context mContext;
-    private List<PowerPopMenuModel> mChildMenuList, mRightButtonData;
-    private LinearLayout mEmptyView;
-
     private void initData() {
 
-        mChildMenuList = new ArrayList<>();
+        List<PowerPopMenuModel> mChildMenuList = new ArrayList<>();
         for (int i = 0; i < childList.size(); i++) {
             PowerPopMenuModel item = new PowerPopMenuModel();
             item.text = String.valueOf(childList.get(i).get("menuName"));
@@ -492,7 +491,7 @@ public class ListActivity2 extends BaseActivity {
 
     private void initButtonsetData() {
 
-        mRightButtonData = new ArrayList<>();
+        List<PowerPopMenuModel> mRightButtonData = new ArrayList<>();
         for (int i = 0; i < buttonSet.size(); i++) {
             PowerPopMenuModel item = new PowerPopMenuModel();
             item.text = String.valueOf(buttonSet.get(i).get("buttonName"));
@@ -768,11 +767,11 @@ public class ListActivity2 extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        //重新请求数据
-        refreshData();
-
-        super.onResume();
-    }
+//    @Override
+//    protected void onResume() {
+//        //重新请求数据
+//        refreshData();
+//
+//        super.onResume();
+//    }
 }

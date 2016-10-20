@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="7dp"
         android:layout_toEndOf="@+id/checkbox_operate_data"
+        android:background="@color/white"
         >
         <RelativeLayout
             android:id="@+id/title_name"
@@ -54,7 +55,7 @@
                 android:layout_marginTop="8dp"
                 android:text="赵小雪"
                 android:textSize="20sp"
-                android:textColor="@color/black"
+                android:textColor="@color/list_item_right"
                 android:visibility="gone"/>
             <ImageView
                 android:id="@+id/iv_nextpage"

@@ -31,6 +31,7 @@ import com.kwsoft.version.ResetPwdActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.StuLoginActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    private static final String TAG = "MeFragment";
     public void initData() {
 
         tvCleanCache.setText(getCache());
@@ -82,11 +84,18 @@ public class MeFragment extends Fragment implements View.OnClickListener {
 
         Bundle meBundle = getArguments();
         String meStr = meBundle.getString("hideMenuList");
+
+        List<Map<String, Object>> meListMap=new ArrayList<>();
+        Log.e(TAG, "initData: "+meStr );
         if (meStr != null) {
-            List<Map<String, Object>> meListMap = JSON.parseObject(meStr,
-                    new TypeReference<List<Map<String, Object>>>() {
-                    });
-            if (meListMap.size() > 0) {
+            try {
+                meListMap = JSON.parseObject(meStr,
+                        new TypeReference<List<Map<String, Object>>>() {
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (meListMap!=null&&meListMap.size() > 0) {
                 for (int i = 0; i < meListMap.size(); i++) {
                     Map<String, Object> map = meListMap.get(i);
                     String menuName = map.get("menuName").toString();
@@ -99,13 +108,14 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                     }
                 }
 
-                Log.e("pagetable",Constant.teachPerPAGEID+"**"+Constant.teachPerTABLEID+"**"+Constant.teachBackPAGEID+"*"+Constant.teachBackTABLEID);
+                requestSet();
             } else {
                 Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
             }
             Log.e("TAG", "获得学员端菜单数据：" + meStr);
+
         }
-        requestSet();
+
     }
 
     /**
@@ -210,8 +220,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.stu_info_data:
-                Intent intentStuInfo = new Intent(getActivity(), StuInfoActivity.class);
-                startActivity(intentStuInfo);
+                if (!Constant.teachPerTABLEID.equals("")&&!Constant.teachPerPAGEID.equals("")) {
+                    Intent intentStuInfo = new Intent(getActivity(), StuInfoActivity.class);
+                    startActivity(intentStuInfo);
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(), "无个人资料信息", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.ll_stu_clear_cache:
                 dialog1();
