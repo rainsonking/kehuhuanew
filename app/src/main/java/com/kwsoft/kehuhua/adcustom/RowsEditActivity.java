@@ -250,7 +250,7 @@ public class RowsEditActivity extends BaseActivity {
                 String volleyUrl1 = Constant.sysUrl + Constant.commitEdit + "?" +
                         Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
                         value + "&" + hideFieldParagram + "&t0_au_" + tableId + "_" + pageId + "=" + dataId;
-                String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
+                String volleyUrl = volleyUrl1.replaceAll(" ", "%20").replaceAll("&&","&");
                 Log.e("TAG", "修改页面提交地址：" + volleyUrl);
                 StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
                         new Response.Listener<String>() {
@@ -366,8 +366,8 @@ public class RowsEditActivity extends BaseActivity {
                 String positionStr = bundle.getString("position");
                 String codeListStr = bundle.getString("codeListStr");
                 int position=Integer.valueOf(positionStr);
-                fieldSet.get(position).put(Constant.itemValue, codeListStr);
-                fieldSet.get(position).put(Constant.itemName, codeListStr);
+                fieldSet.get(position).put(Constant.itemValue+"_file_many", codeListStr);
+                fieldSet.get(position).put(Constant.itemName+"_file_many", codeListStr);
                 Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(position).toString());
                 adapter.notifyDataSetChanged();
             }

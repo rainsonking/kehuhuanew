@@ -1,6 +1,5 @@
 package com.kwsoft.kehuhua.adcustom;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
@@ -181,7 +179,6 @@ public class ListActivity2 extends BaseActivity {
 
     //初始化顶栏
     public void initView() {
-        Context mContext = this;
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
         mToolbar.setBackgroundColor(getResources().getColor(Constant.topBarColor));
         mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.often_more)); //右侧pop
@@ -192,7 +189,6 @@ public class ListActivity2 extends BaseActivity {
             }
         });
 
-        LinearLayout mEmptyView = (LinearLayout) View.inflate(mContext, R.layout.view_empty, null);
     }
 
     /**
@@ -348,10 +344,6 @@ public class ListActivity2 extends BaseActivity {
 //        if (dataList != null && dataList.size() > 0) {
         datas = DataProcess.combineSetData(tableId, fieldSet, dataList);
         Log.e(TAG, "setStore: 将datalist转换为datas");
-        if (datas == null) {
-            Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
-
-        }
 
 
 //        } else {

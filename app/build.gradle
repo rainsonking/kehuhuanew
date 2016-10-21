@@ -131,5 +131,5 @@ dependencies {
     compile 'com.github.chrisbanes:PhotoView:1.3.0'//照片选择和预览3
     compile 'com.lovedise:permissiongen:0.0.6'//解决6.0相机和存储卡权限问题
 
-
+    compile 'com.sangbo.autoupdate:autoUpdate:1.0.1'
 }
