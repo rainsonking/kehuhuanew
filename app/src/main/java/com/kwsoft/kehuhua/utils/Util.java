@@ -16,18 +16,12 @@
 
 package com.kwsoft.kehuhua.utils;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Junk drawer of utility methods.

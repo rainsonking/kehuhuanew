@@ -63,11 +63,12 @@
                 android:layout_marginStart="25dp"
                 android:background="@null"
                 android:hint="请填写"
+                android:textColorHint="@color/gray"
                 android:inputType="textMultiLine"
                 android:maxLines="10"
                 android:minLines="1"
                 android:textColor="@color/list_item_right"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:visibility="gone" />
 
             <TextView
@@ -76,6 +77,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="25dp"
                 android:gravity="center_vertical"
+                android:hint="请选择"
+                android:textColorHint="@color/gray"
                 android:textColor="@color/list_item_right"
                 android:textSize="15sp"
                 android:visibility="gone" />

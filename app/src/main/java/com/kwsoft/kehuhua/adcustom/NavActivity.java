@@ -1,6 +1,5 @@
 package com.kwsoft.kehuhua.adcustom;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +35,6 @@ import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
-import com.kwsoft.kehuhua.utils.PermissionsChecker;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 
 import java.util.ArrayList;
@@ -66,10 +64,6 @@ public class NavActivity extends BaseActivity
     public String menuData;
 
 
-    static final String[] PERMISSIONS = new String[]{
-            Manifest.permission.CAMERA
-    };
-    private PermissionsChecker mPermissionsChecker; // 权限检测器
 
     BadgeView badgeView;//提示消息条数的view
 
@@ -93,7 +87,6 @@ public class NavActivity extends BaseActivity
 //                        .setAction("Action", null).show();
 //            }
 //        });
-        mPermissionsChecker = new PermissionsChecker(this);
 
         initView();
         packMenuList();

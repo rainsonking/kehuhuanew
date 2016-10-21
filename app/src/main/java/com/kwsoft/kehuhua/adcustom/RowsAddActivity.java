@@ -1,5 +1,7 @@
 package com.kwsoft.kehuhua.adcustom;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -7,11 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -27,6 +25,7 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.widget.CommonToolbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,20 +34,13 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class RowsAddActivity extends BaseActivity {
 
-    @Bind(R.id.rows_tv_add_item_title)
-    TextView rowsTvAddItemTitle;
-    @Bind(R.id.rows_lv_add_item)
-    ListView rowsLvAddItem;
-    @Bind(R.id.rows_add_item_title)
-    RelativeLayout rowsAddItemTitle;
-
-
+    @Bind(R.id.lv_operate_item)
+    ListView lvAddItem;
     private String keyRelation = "";
     private String tableId;
     private String pageId;
@@ -60,36 +52,44 @@ public class RowsAddActivity extends BaseActivity {
     private Add_EditAdapter adapter;
     private String hideFieldParagram = "";
 
+    private CommonToolbar mToolbar;
+    private String buttonName;
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_rows_add);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_add_items);
         CloseActivityClass.activityList.add(this);
         ButterKnife.bind(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         dialog.show();
         getIntentData();
-        init();
+        initView();
         requestAdd();
     }
 
     @Override
     public void initView() {
-
-    }
-
-    private void init() {
-        rowsAddItemTitle.setBackgroundColor(getResources().getColor(topBarColor));
-        paramsMap = new HashMap<>();
-        paramsMap.put(Constant.tableId, tableId);
-        paramsMap.put(Constant.pageId, pageId);
-        paramsMap.put(Constant.mainTableId, mainTableId);
-        paramsMap.put(Constant.mainPageId, mainPageId);
-        paramsMap.put(Constant.mainId, mainId);
-
+        mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
+        mToolbar.setTitle(buttonName);
+        mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
+        //左侧返回按钮
+        mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.edit_commit1));
+        mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toCommit();
+            }
+        });
     }
 
     private void getIntentData() {
@@ -97,8 +97,8 @@ public class RowsAddActivity extends BaseActivity {
         String buttonSetItemStr = intent.getStringExtra("addSet");
         Map<String, Object> buttonSetItem = JSON.parseObject(buttonSetItemStr);
 
-        String buttonName = String.valueOf(buttonSetItem.get("buttonName"));
-        rowsTvAddItemTitle.setText(buttonName);
+        buttonName = String.valueOf(buttonSetItem.get("buttonName"));
+//        rowsTvAddItemTitle.setText(buttonName);
         pageId = String.valueOf(buttonSetItem.get("startTurnPage"));
         mainTableId = String.valueOf(buttonSetItem.get("tableIdList"));
 
@@ -107,21 +107,38 @@ public class RowsAddActivity extends BaseActivity {
         mainId = String.valueOf(buttonSetItem.get("dataId"));
         Constant.tempTableId = tableId;
         Constant.tempPageId = pageId;
+
+        paramsMap = new HashMap<>();
+        paramsMap.put(Constant.tableId, tableId);
+        paramsMap.put(Constant.pageId, pageId);
+        paramsMap.put(Constant.mainTableId, mainTableId);
+        paramsMap.put(Constant.mainPageId, mainPageId);
+        paramsMap.put(Constant.mainId, mainId);
     }
 
-    @OnClick({R.id.rows_IV_back_list_item_tadd, R.id.rows_tv_commit_item_tadd})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.rows_IV_back_list_item_tadd:
-                this.finish();
-                break;
-            case R.id.rows_tv_commit_item_tadd:
+    private void toCommit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(buttonName+"？");
+//        builder.setTitle("删除");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 requestAddCommit();
-                break;
-        }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+
+
+
     }
-
-
     private void requestAddCommit() {
         String value = DataProcess.commit(RowsAddActivity.this, fieldSet);
         if (!value.equals("no")) {
@@ -259,12 +276,12 @@ public class RowsAddActivity extends BaseActivity {
 //展示数据
         if (fieldSet != null && fieldSet.size() > 0) {
             adapter = new Add_EditAdapter(RowsAddActivity.this, fieldSet, paramsMap);
-            rowsLvAddItem.setAdapter(adapter);
+            lvAddItem.setAdapter(adapter);
             dialog.dismiss();
         }else{
             dialog.dismiss();
 
-            Snackbar.make(rowsLvAddItem,"本页无数据",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(lvAddItem,"本页无数据",Snackbar.LENGTH_SHORT).show();
         }
 
     }

@@ -51,7 +51,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.kwsoft.kehuhua.adcustom.R.id.add_edit_text;
 import static com.kwsoft.kehuhua.config.Constant.itemValue;
 
 /**
@@ -546,7 +545,7 @@ public class Add_EditAdapter extends BaseAdapter {
         } else if (fieldRole == 20 || fieldRole == 22) {
             if (isShow) {
                 addGeneral.setVisibility(View.VISIBLE);
-                addGeneral.setHint("请选择");
+//                addGeneral.setHint("请选择");
             } else {
                 addGeneral.setVisibility(View.GONE);
             }
@@ -593,7 +592,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
                 if (isShow) {
                     addGeneral.setVisibility(View.VISIBLE);
-                    addGeneral.setHint("请选择");
+//                    addGeneral.setHint("请选择");
                 }
                 String itemName;
                 if (fieldSet.get(position).get(Constant.itemName) != null) {

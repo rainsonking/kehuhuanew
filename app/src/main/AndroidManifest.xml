@@ -59,13 +59,12 @@
             android:name="com.kwsoft.kehuhua.login.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".HomeChildActivity" />
-        <activity
-            android:name=".ListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".InfoActivity" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name">
+
+        </activity>
         <activity
             android:name="com.kwsoft.kehuhua.login.ProjectSelectActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -83,12 +82,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ExpandableActivity" />
         <activity android:name=".BlankActivity" />
-        <activity
-            android:name=".AddItemsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RowsEditActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddItemsActivity" />
+        <activity android:name=".RowsEditActivity" />
         <activity
             android:name=".MultiValueActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -97,9 +92,7 @@
             android:name=".SearchResultActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".RowsReadActivity" />
-        <activity
-            android:name=".RowsAddActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".RowsAddActivity" />
         <activity
             android:name=".TreeViewActivity"
             android:theme="@style/AppTheme.NoActionBar" />

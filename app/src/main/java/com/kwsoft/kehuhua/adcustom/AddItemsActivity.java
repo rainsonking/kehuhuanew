@@ -9,7 +9,6 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,15 +38,7 @@ import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class AddItemsActivity extends BaseActivity {
 
-//    @Bind(R.id.IV_back_list_item_tadd)
-//    ImageView IVBackListItemTadd;
-//    @Bind(R.id.tv_commit_item_tadd)
-//    ImageView tvCommitItemTadd;
-//    @Bind(R.id.tv_add_item_title)
-//    TextView tvAddItemTitle;
-//    @Bind(add_item_title)
-//    RelativeLayout addItemTitle;
-    @Bind(R.id.lv_add_item)
+    @Bind(R.id.lv_operate_item)
     ListView lvAddItem;
     private String buttonName;
     private String tableId;
@@ -68,26 +59,15 @@ public class AddItemsActivity extends BaseActivity {
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_add_items);
         ButterKnife.bind(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         dialog.show();
-
         getIntentData();
-        init();
+        initView();
         requestAdd();
     }
 
     @Override
     public void initView() {
-
-    }
-
-    private void init() {
-//        addItemTitle.setBackgroundColor(getResources().getColor(topBarColor));
-        paramsMap = new HashMap<>();
-        paramsMap.put(Constant.tableId, tableId);
-        paramsMap.put(Constant.pageId, pageId);
-        //paramsMap.put(Constant.timeName, Constant.dataTime);
-        //String paramsStr = paramsMap.toString();
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
         mToolbar.setTitle(buttonName);
         mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
@@ -122,6 +102,10 @@ public class AddItemsActivity extends BaseActivity {
         tableId = String.valueOf(buttonSetItem.get("tableId"));
         Constant.tempTableId = tableId;
         Constant.tempPageId = pageId;
+
+        paramsMap = new HashMap<>();
+        paramsMap.put(Constant.tableId, tableId);
+        paramsMap.put(Constant.pageId, pageId);
     }
 
     //请求

@@ -9,12 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -30,6 +25,7 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.widget.CommonToolbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,31 +34,15 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-import static com.kwsoft.kehuhua.adcustom.R.id.edit_title;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
 public class RowsEditActivity extends BaseActivity {
 
-
-    @Bind(R.id.tv_cancel_edit)
-    ImageView tvCancelEdit;
-    @Bind(R.id.button_name)
-    TextView buttonName;
-    @Bind(R.id.tv_commit_edit)
-    ImageView tvCommitEdit;
-
-    @Bind(R.id.lv_edit_item)
-    ListView lvEditItem;
-
-
-    @Bind(R.id.edit_cover_layout)
-    RelativeLayout editCoverLayout;
-    @Bind(edit_title)
-    RelativeLayout editTitle;
-
-
+    @Bind(R.id.lv_operate_item)
+    ListView lvAddItem;
+    private String buttonName;
+    private CommonToolbar mToolbar;
     private String hideFieldParagram = "";
     private String tableId;
     private String dataId;
@@ -75,14 +55,15 @@ public class RowsEditActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_rows_edit);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_add_items);
         ButterKnife.bind(this);
         CloseActivityClass.activityList.add(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         dialog.show();
         Log.e("TAG", "跳转到修改页面 ");
         getIntentData();
+        initView();
         Log.e("TAG", "修改页面获取信息完毕 ");
         requestEdit();
     }
@@ -90,10 +71,28 @@ public class RowsEditActivity extends BaseActivity {
     @Override
     public void initView() {
 
+        mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
+        mToolbar.setTitle(buttonName);
+        mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
+        //左侧返回按钮
+        mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.edit_commit1));
+        mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toCommit();
+            }
+        });
+
+
     }
 
     private void getIntentData() {
-        editTitle.setBackgroundColor(getResources().getColor(topBarColor));
         Intent mIntent = this.getIntent();
         String infoData = mIntent.getStringExtra("itemSet");
         Map<String, Object> editData = JSON.parseObject(infoData,
@@ -103,14 +102,8 @@ public class RowsEditActivity extends BaseActivity {
         tableId = String.valueOf(editData.get("tableId"));
         pageId = String.valueOf(editData.get("startTurnPage"));
         dataId = String.valueOf(editData.get("dataId"));
-        String buttonNameStr = String.valueOf(editData.get("buttonName"));
-        buttonName.setText(buttonNameStr);
-        String isReadOnly = mIntent.getStringExtra("isReadOnly");
-
-        if (isReadOnly.equals("15")) {
-            editCoverLayout.setVisibility(View.VISIBLE);
-            tvCommitEdit.setVisibility(View.GONE);
-        }
+        buttonName = String.valueOf(editData.get("buttonName"));
+        Log.e("TAG", "buttonName: "+buttonName);
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
         paramsMap.put(Constant.mainId, dataId);
@@ -194,31 +187,18 @@ public class RowsEditActivity extends BaseActivity {
 //展示数据
         if (fieldSet != null && fieldSet.size() > 0) {
             adapter = new Add_EditAdapter(RowsEditActivity.this, fieldSet, paramsMap);
-            lvEditItem.setAdapter(adapter);
+            lvAddItem.setAdapter(adapter);
             dialog.dismiss();
         } else {
             dialog.dismiss();
 
-            Snackbar.make(lvEditItem,"本页无数据",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(lvAddItem,"本页无数据",Snackbar.LENGTH_SHORT).show();
         }
 
-    }
-
-    @OnClick({R.id.tv_cancel_edit, R.id.tv_commit_edit})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_cancel_edit:
-
-                this.finish();
-                break;
-            case R.id.tv_commit_edit:
-                toCommit();
-                break;
-        }
     }
     private void toCommit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(buttonName.getText()+"？");
+        builder.setMessage(buttonName+"？");
 //        builder.setTitle("删除");
         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
