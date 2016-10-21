@@ -51,6 +51,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.kwsoft.kehuhua.adcustom.R.id.add_edit_text;
 import static com.kwsoft.kehuhua.config.Constant.itemValue;
 
 /**
@@ -157,9 +158,14 @@ public class Add_EditAdapter extends BaseAdapter {
             textViewIfMust.setVisibility(View.VISIBLE);
         }
         RelativeLayout list_item_cover = (RelativeLayout) convertView.findViewById(R.id.list_item_cover);
+        RelativeLayout list_item_cover2 = (RelativeLayout) convertView.findViewById(R.id.list_item_cover2);
 //设置控件不可点击
         if (ifUpdate == 0) {
             list_item_cover.setVisibility(View.VISIBLE);
+            list_item_cover2.setVisibility(View.VISIBLE);
+//            list_item_cover.setBackgroundColor(context.getResources().getColor(R.color.no_edit_tv));
+//            list_item_cover.setClickable(true);
+
 
         }
 //初始化上传图片框

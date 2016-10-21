@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.kwsoft.kehuhua.adcustom.RowsEditActivity">
     <RelativeLayout
         android:id="@+id/edit_title"
@@ -49,19 +50,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
+
         android:layout_below="@+id/edit_title">
 
         <ListView
             android:id="@+id/lv_edit_item"
-            android:dividerHeight="8dp"
-            android:divider="#f4f4f4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:smoothScrollbar="true"
             />
     </RelativeLayout>
-
+    <!--android:dividerHeight="1dp"-->
+    <!--android:divider="#e2e2e2"-->
 
     <RelativeLayout
         android:id="@+id/edit_cover_layout"
