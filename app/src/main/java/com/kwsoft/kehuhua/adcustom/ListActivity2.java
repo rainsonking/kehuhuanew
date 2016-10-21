@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -37,6 +38,7 @@ import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.kwsoft.kehuhua.view.RecycleViewDivider;
 import com.kwsoft.kehuhua.view.WrapContentLinearLayoutManager;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 
@@ -425,7 +427,7 @@ public class ListActivity2 extends BaseActivity {
         mAdapter = new ListAdapter2(datas, childTab);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(ListActivity2.this));
-
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
 //        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 //                mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
         mAdapter.setOnItemClickListener(new ListAdapter2.OnRecyclerViewItemClickListener() {
