@@ -23,20 +23,12 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private List<Map<String, Object>> childTab;
     private Context mContext;
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;
-
     private static final int VIEW_TYPE = 1;
 
-    private static final String TAG = "ListAdapter2";
-
-
-
-
     /**
-     *  获取条目 View填充的类型
-     *  默认返回0
-     *  将lists为空返回1
-     * @param position
-     * @return
+     * 获取条目 View填充的类型
+     * 默认返回0
+     * 将lists为空返回 1
      */
     public int getItemViewType(int position) {
         if (mDatas.size() <= 0) {
@@ -44,8 +36,6 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
         return super.getItemViewType(position);
     }
-
-
 
 
     public interface OnRecyclerViewItemClickListener {
@@ -66,7 +56,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         View view;
         mContext = parent.getContext();
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
-        Log.e("TAG", "viewType:"+viewType );
+        Log.e("TAG", "viewType:" + viewType);
         if (VIEW_TYPE == viewType) {
             view = mInflater.inflate(R.layout.empty_view, parent, false);
 
@@ -83,7 +73,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         Log.e("TAG", "recyclerView " + position);
         if (thisHolder instanceof ListViewHolder) {
-            ListViewHolder holder = (ListViewHolder)thisHolder;
+            ListViewHolder holder = (ListViewHolder) thisHolder;
             List<Map<String, String>> item = getData(position);
             try {
                 final String title = item.get(0).get("fieldCnName2");
