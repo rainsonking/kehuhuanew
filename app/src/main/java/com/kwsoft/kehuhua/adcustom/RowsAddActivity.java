@@ -132,7 +132,7 @@ public class RowsAddActivity extends BaseActivity {
                         value + "&" + hideFieldParagram + "&" + keyRelation;
 
 
-                String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
+                String volleyUrl = volleyUrl1.replaceAll(" ", "%20").replaceAll("&&","&");
                 Log.e("TAG", "关联添加提交地址：" + volleyUrl);
                 StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
                         new Response.Listener<String>() {

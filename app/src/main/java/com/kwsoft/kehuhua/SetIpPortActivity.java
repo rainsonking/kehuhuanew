@@ -56,9 +56,13 @@ public class SetIpPortActivity extends AppCompatActivity {
                 String project= String.valueOf(sysProjectEt.getText()).replace(" ", "");
 
 
-                if (!ip.equals("")&&!port.equals("")&&!project.equals("")) {
+                if (!ip.equals("")&&!project.equals("")) {
+                    if (port.equals("")) {
+                        sysUrl="http://"+ip+"/"+project+"/";
+                    }else{
+                        sysUrl="http://"+ip+":"+port+"/"+project+"/";
+                    }
 
-                    sysUrl="http://"+ip+":"+port+"/"+project+"/";
                     AlertDialog.Builder builder = new AlertDialog.Builder(SetIpPortActivity.this);
                     builder.setMessage("确定修改项目地址为："+sysUrl+"？");
                     builder.setTitle("");

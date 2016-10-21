@@ -54,7 +54,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
 
     static {
         //学员端设置成顶栏红色
-        Constant.topBarColor = R.color.stu_topBarColor;
+        Constant.topBarColor = R.color.prim_topBarColor;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

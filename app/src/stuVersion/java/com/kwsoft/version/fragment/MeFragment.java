@@ -163,7 +163,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.stu_head_image, R.id.stu_log_out, R.id.stu_resetPwd, R.id.stu_info_data, R.id.ll_stu_clear_cache, R.id.ll_stu_feedback})
+    @OnClick({R.id.stu_head_image,R.id.stu_version_layout, R.id.stu_log_out, R.id.stu_resetPwd, R.id.stu_info_data, R.id.ll_stu_clear_cache, R.id.ll_stu_feedback})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.stu_head_image:
@@ -187,6 +187,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             case R.id.ll_stu_feedback:
                 Intent intent1 = new Intent(getActivity(), FeedbackActivity.class);
                 startActivity(intent1);
+                break;
+            case R.id.stu_version_layout:
+                //检测更新
+//                CheckVersion.update(this,true);
+
+                break;
+
             default:
                 break;
         }

@@ -21,6 +21,7 @@ import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.sangbo.autoupdate.CheckVersion;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,8 @@ public class StuProLoginActivity extends BaseActivity {
 
     static {
         //学员端设置成顶栏红色
-        Constant.topBarColor = R.color.stu_topBarColor;
+        Constant.topBarColor = R.color.prim_topBarColor;
+        CheckVersion.checkUrl = "http://www.xxx.com/api/versiontest.txt";     //定义服务器版本信息
     }
 
 

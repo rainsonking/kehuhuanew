@@ -33,6 +33,7 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.sangbo.autoupdate.CheckVersion;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +55,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     static {
         //学员端设置成顶栏红色
         Constant.topBarColor = R.color.prim_topBarColor;
+        CheckVersion.checkUrl = "http://www.xxx.com/api/versiontest.txt";
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
