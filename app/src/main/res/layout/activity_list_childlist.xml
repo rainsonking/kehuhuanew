@@ -13,7 +13,7 @@
         <!--android:listSelector="@color/light_gray"-->
     <ListView
         android:id="@+id/child_menu_List"
-        android:layout_width="180dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="#e3e3e3"
         android:dividerHeight="1px"
