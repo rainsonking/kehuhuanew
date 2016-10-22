@@ -240,7 +240,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 map.put("penetratePageId", listMap.get(i).get("phonePageId"));
                 map.put("tableId", listMap.get(i).get("tableId"));
                 List<Map<String, Object>> listMap1 = (List<Map<String, Object>>) listMap.get(i).get("valueMap");
-                Log.e("TAG", "value " + listMap1.get(0) + "");
                 String name = "";
                 if (listMap1.size() > 0) {
                     if (listMap1.get(0) != null && listMap1.get(0).size() > 0) {

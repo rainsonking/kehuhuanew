@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
@@ -12,17 +13,20 @@ import com.zhy.http.okhttp.log.LoggerInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.OkHttpClient;
+
+import static com.kwsoft.kehuhua.config.Constant.sysUrl;
 
 public class MyApplication extends Application {
     Context mContext;
     public static List<Activity> mActivityList = new ArrayList<Activity>();
     private static MyApplication instance;
     private static final String TAG = "JPush";
-
+    private SharedPreferences sPreferences;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,6 +35,27 @@ public class MyApplication extends Application {
         JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);            // 初始化 JPush
         initOkHttp();
+        initIpPort();
+
+    }
+    @SuppressWarnings("unchecked")
+    private void initIpPort() {
+        try {
+            sPreferences = getSharedPreferences("edusIpPortProjectName", MODE_PRIVATE);
+            Map<String, String> map = (Map<String, String>) sPreferences.getAll();
+            if (map.size() > 0) {//如果存在储存值
+               String ip=sPreferences.getString("edus_ip", "");
+               String port=sPreferences.getString("edus_port", "");
+               String project=sPreferences.getString("edus_project", "");
+                if (port.equals("")) {
+                    sysUrl=ip+"/"+project+"/";
+                }else{
+                    sysUrl=ip+":"+port+"/"+project+"/";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }

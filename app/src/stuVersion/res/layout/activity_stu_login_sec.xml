@@ -7,12 +7,11 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginStart="10dp"
-        android:src="@drawable/edit"
-        android:background="@color/lightblue"
+        android:src="@drawable/ic_notifications_black_24dp"
         android:onClick="toSetIpPortProject"/>
 
     <LinearLayout

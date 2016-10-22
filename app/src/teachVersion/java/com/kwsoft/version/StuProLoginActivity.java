@@ -105,11 +105,12 @@ public class StuProLoginActivity extends BaseActivity {
                             public void onError(Call call, Exception e, int id) {
                                 dialog.dismiss();
                                 Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                                toLoginPage();
                             }
 
                             @Override
                             public void onResponse(String response, int id) {
-                                Log.e(TAG, "onResponse: "+"  id  "+id);
+                                Log.e(TAG, "onResponse: "+response+"  id  "+id);
                                 check(response);
                             }
                         });

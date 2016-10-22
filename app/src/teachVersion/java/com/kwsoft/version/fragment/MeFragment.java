@@ -193,7 +193,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             case R.id.stu_log_out:
                 Intent intentLogout = new Intent(getActivity(), StuLoginActivity.class);
                 startActivity(intentLogout);
-                getActivity().finish();
+//                getActivity().finish();
                 break;
             case R.id.stu_resetPwd:
                 Intent intent = new Intent(getActivity(), ResetPwdActivity.class);
