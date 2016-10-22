@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_set_ip_port"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,28 +14,30 @@
         android:background="?attr/colorPrimary"
         app:isShowRightButton="true"
         app:isShowTitle="true">
+
     </com.kwsoft.kehuhua.widget.CommonToolbar>
-<TextView
-    android:layout_marginTop="15dp"
-    android:id="@+id/must_text"
-    android:layout_below="@+id/common_toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textColor="@color/red"
-    android:text="以下每个选项均为必填"
-    android:textSize="22sp"
-    android:gravity="center"
-    android:padding="3dp"
-    />
-    <LinearLayout
-        android:layout_below="@+id/must_text"
+
+    <TextView
+        android:id="@+id/must_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="vertical"
-        android:layout_marginStart="10dp"
+        android:layout_below="@+id/common_toolbar"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:layout_marginBottom="15dp"
+        android:text="IP地址和项目名称为必填"
+        android:textColor="@color/red"
+        android:textSize="22sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/must_text"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/textview_bg">
+        android:layout_marginStart="10dp"
+        android:background="@drawable/textview_bg"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,71 +47,70 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:text="IP地址:  "
-                android:textSize="18sp"
                 android:gravity="center"
-                android:textColor="@color/black"/>
+                android:text="IP  地  址:  "
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/sys_ip_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/lightblue"
+                android:inputType="number"
                 android:text="http://192.168.6.117"
-                android:textColorHint="@color/gray"
                 android:textColor="@color/black"
-                android:background="@color/lightblue"/>
+                android:textColorHint="@color/gray" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:text="端   口:  "
-                android:textSize="18sp"
                 android:gravity="center"
-                android:textColor="@color/black"/>
+                android:text="端  口  号:  "
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
             <EditText
                 android:id="@+id/sys_port_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/lightblue"
+                android:inputType="number"
                 android:text="8080"
-                android:textColorHint="@color/gray"
                 android:textColor="@color/black"
-                android:background="@color/lightblue"/>
+                android:textColorHint="@color/gray" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:text="项   目:  "
-                android:textSize="18sp"
                 android:gravity="center"
-                android:textColor="@color/black"/>
+                android:text="项目名称:  "
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
             <EditText
                 android:id="@+id/sys_project_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/lightblue"
                 android:text="edus_auto"
-                android:textColorHint="@color/gray"
                 android:textColor="@color/black"
-                android:background="@color/lightblue"/>
+                android:textColorHint="@color/gray" />
         </LinearLayout>
 
     </LinearLayout>
-
-
-
-
-
-
-
-
-
 
 
 </RelativeLayout>

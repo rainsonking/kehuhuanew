@@ -2,6 +2,7 @@ package com.kwsoft.kehuhua;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import android.widget.EditText;
 
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
+
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,20 +29,22 @@ public class SetIpPortActivity extends AppCompatActivity {
     @Bind(R.id.sys_project_et)
     EditText sysProjectEt;
     private CommonToolbar mToolbar;
-
-
+    private SharedPreferences sPreferences;
+    private static final String TAG = "SetIpPortActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_ip_port);
         ButterKnife.bind(this);
+
         initView();
 
     }
-
+    @SuppressWarnings("unchecked")
     private void initView() {
+
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
-        mToolbar.setTitle("重设IP");
+        mToolbar.setTitle("地址设置");
         mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
         mToolbar.setRightButtonIcon(getResources().getDrawable(R.drawable.edit_commit1));
         mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
@@ -48,29 +53,40 @@ public class SetIpPortActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        sPreferences = getSharedPreferences("edusIpPortProjectName", MODE_PRIVATE);
+        Map<String, String> map = (Map<String, String>) sPreferences.getAll();
+
+        if (map.size() > 0) {//如果存在储存值
+            sysIpEt.setText(sPreferences.getString("edus_ip", ""));
+            sysPortEt.setText(sPreferences.getString("edus_port", ""));
+            sysProjectEt.setText(sPreferences.getString("edus_project", ""));
+        }
+
         mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String ip= String.valueOf(sysIpEt.getText()).replace(" ", "");
-                String port= String.valueOf(sysPortEt.getText()).replace(" ", "");
-                String project= String.valueOf(sysProjectEt.getText()).replace(" ", "");
+                final String ip= String.valueOf(sysIpEt.getText()).replace(" ", "");
+                final String port= String.valueOf(sysPortEt.getText()).replace(" ", "");
+                final String project= String.valueOf(sysProjectEt.getText()).replace(" ", "");
 
 
                 if (!ip.equals("")&&!project.equals("")) {
+                    String url;
                     if (port.equals("")) {
-                        sysUrl="http://"+ip+"/"+project+"/";
+                        url=ip+"/"+project+"/";
                     }else{
-                        sysUrl="http://"+ip+":"+port+"/"+project+"/";
+                        url=ip+":"+port+"/"+project+"/";
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(SetIpPortActivity.this);
-                    builder.setMessage("确定修改项目地址为："+sysUrl+"？");
+                    builder.setMessage("确定修改项目地址为："+url+"？");
                     builder.setTitle("");
                     builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                            initIpData(ip,port,project);
                             finish();
                         }
                     });
@@ -85,13 +101,23 @@ public class SetIpPortActivity extends AppCompatActivity {
 
                 }else{
 
-                    Snackbar.make(view, "请将这三项填写完整（空格将自动过滤）", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, "请至少将第1、3填写完整（空格将自动过滤）", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
+    private void initIpData(String ip,String port,String project) {
+        if (port.equals("")) {
+            sysUrl=ip+"/"+project+"/";
+        }else{
+            sysUrl=ip+":"+port+"/"+project+"/";
+        }
+        sPreferences.edit().putString("edus_project", project).apply();
+        sPreferences.edit().putString("edus_ip", ip).apply();
+        sPreferences.edit().putString("edus_port", port).apply();
 
+    }
 
 
 }
