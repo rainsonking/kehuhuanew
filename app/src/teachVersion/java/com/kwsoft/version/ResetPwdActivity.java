@@ -19,23 +19,21 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.application.MyApplication;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/5/18 0018.
@@ -202,99 +200,93 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void requestData(String url) {
+    private static final String TAG = "ResetPwdActivity";
+    private void requestData(String volleyUrl) {
         if (!hasInternetConnected()) {
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_LONG).show();
             return;
         }
         getProgressDialog().show();
-        Log.i("123", "test====>" + url);
-        StringRequest mStringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {
-                        getProgressDialog().dismiss();
-                        Log.i("123", "jsonData====>" + jsonData);
-                        try {
-                            JSONObject object = new JSONObject(jsonData);
-                            String message = object.getString("message");
-                            Log.e("mesa=", message);
-                            if (message.equals("密码修改成功")) {
-                                edOldpwd.setText("");
-                                edNewpwd.setText("");
-                                edConfirmpwd.setText("");
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ResetPwdActivity.this);
-                                builder.setMessage("修改成功！");
-                                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+        Log.i("123", "test====>" + volleyUrl);
 
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
+
+        //参数
+        Map<String, String> paramsMap = new HashMap<String, String>();
+        //String stuId = getLoginUserSharedPre().getString("USERID", "");
+        String stuId =  sPreferences.getString("userid", "");
+        Log.e("stuid",stuId);
+        paramsMap.put("stuId", stuId);
+        paramsMap.put("oldPassword", edOldpwd.getText().toString());
+        paramsMap.put("newPassword", edConfirmpwd.getText().toString());
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        dialog.dismiss();
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        setStore(response);
+                    }
+                });
+    }
+
+    private void setStore(String jsonData) {
+        getProgressDialog().dismiss();
+        Log.i("123", "jsonData====>" + jsonData);
+        try {
+            JSONObject object = new JSONObject(jsonData);
+            String message = object.getString("message");
+            Log.e("mesa=", message);
+            if (message.equals("密码修改成功")) {
+                edOldpwd.setText("");
+                edNewpwd.setText("");
+                edConfirmpwd.setText("");
+                AlertDialog.Builder builder = new AlertDialog.Builder(ResetPwdActivity.this);
+                builder.setMessage("修改成功！");
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
 //                                        SharedPreferences.Editor editor = getLoginUserSharedPre().edit();
 //                                        editor.putString("stuPassword", "");
 //                                        editor.commit();
-                                        //关闭所有的activity
-                                        myApplication = (MyApplication) getApplication();
-                                        myApplication.exitLogin(ResetPwdActivity.this);
-                                        ResetPwdActivity.this.finish();
-                                        //退到登陆界面
-                                        Intent intent = new Intent();
-                                        intent.setClass(ResetPwdActivity.this, StuLoginActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
-
-                                builder.create().show();
-                            } else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ResetPwdActivity.this);
-                                builder.setMessage("修改失败！");
-                                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                                builder.create().show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        //关闭所有的activity
+                        myApplication = (MyApplication) getApplication();
+                        myApplication.exitLogin(ResetPwdActivity.this);
+                        ResetPwdActivity.this.finish();
+                        //退到登陆界面
+                        Intent intent = new Intent();
+                        intent.setClass(ResetPwdActivity.this, StuLoginActivity.class);
+                        startActivity(intent);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                getProgressDialog().dismiss();
-                Log.i("123", "jsonDataERROR" + volleyError.toString());
-                VolleySingleton.onErrorResponseMessege(ResetPwdActivity.this, volleyError);
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<String, String>();
-                //String stuId = getLoginUserSharedPre().getString("USERID", "");
-                String stuId =  sPreferences.getString("userid", "");
-                Log.e("stuid",stuId);
-                map.put("stuId", stuId);
-                map.put("oldPassword", edOldpwd.getText().toString());
-                map.put("newPassword", edConfirmpwd.getText().toString());
-                return map;
-            }
+                });
 
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
+                builder.create().show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ResetPwdActivity.this);
+                builder.setMessage("修改失败！");
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
             }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(mStringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,15 +11,12 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adapter.Add_EditAdapter;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +26,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
 
-public class AddTemplateDataActivity extends AppCompatActivity {
+public class AddTemplateDataActivity extends BaseActivity {
     @Bind(R.id.unlimited_add_item_to_add)
     ImageView unlimitedAddItemToAdd;
     @Bind(R.id.unlimited_add_commit_item_tadd)
@@ -53,6 +50,11 @@ public class AddTemplateDataActivity extends AppCompatActivity {
         CloseActivityClass.activityList.add(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getInfoData();
+
+    }
+
+    @Override
+    public void initView() {
 
     }
 
@@ -167,48 +169,32 @@ commitValue();
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private static final String TAG = "AddTemplateDataActivity";
 
     private void requestRule(final Map<String, String> parMap) {
         String volleyUrl = Constant.sysUrl + Constant.requestMaxRule;
         Log.e("TAG", "网络获取规则dataUrl " + volleyUrl);
         Log.e("TAG", "网络获取规则table " + parMap.toString());
 
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
+        //请求
+        OkHttpUtils
+                .post()
+                .params(parMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-
-                        putValue(jsonData);
+                    public void onError(Call call, Exception e, int id) {
+                        dialog.dismiss();
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(AddTemplateDataActivity.this, volleyError);
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return parMap;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                loginInterfaceData);
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        putValue(response);
+                    }
+                });
     }
 
     private void putValue(String jsonData) {

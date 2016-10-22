@@ -17,19 +17,15 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.model.OnRefreshListener;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DiskLruCacheHelper;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.view.DepthPageTransformer;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
+import okhttp3.Call;
 
 public class ProjectSelectActivity extends BaseActivity implements OnRefreshListener, View.OnClickListener {
 
@@ -147,41 +144,38 @@ public class ProjectSelectActivity extends BaseActivity implements OnRefreshList
 
     }
 
+    private static final String TAG = "ProjectSelectActivity";
     /**
      * 第一步，获取项目列表
      */
     public void requestProjectList() {
         //startAnim();
-        final String volleyUrl = Constant.sysUrl + Constant.sysLoginUrl;
+        String volleyUrl = Constant.sysUrl + Constant.sysLoginUrl;
         Log.e("TAG", "项目列表请求地址" + volleyUrl);
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
+
+        //参数
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put("source", "1");
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String sysData) {
-                        DLCH.put(volleyUrl, sysData);
-                        analysisData(sysData);
-                        Log.e("TAG", "项目列表请求数据：" + sysData);
-
+                    public void onError(Call call, Exception e, int id) {
+                        stopAnim();
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(ProjectSelectActivity.this, volleyError);
-                stopAnim();
 
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<>();
-                map.put("source", "1");
-                return map;
-            }
-
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
-
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        analysisData(response);
+                        Log.e(TAG, "项目列表请求数据：" + response);
+                    }
+                });
     }
 
     @Override

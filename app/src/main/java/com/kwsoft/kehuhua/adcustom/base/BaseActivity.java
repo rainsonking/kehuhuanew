@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseAct
     protected MyApplication myApplication;
     protected ProgressDialog pg = null;
     protected NotificationManager notificationManager;
-    protected LoadingDialog  dialog =null;
+    public LoadingDialog  dialog =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

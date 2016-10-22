@@ -21,19 +21,15 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DiskLruCacheHelper;
 import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -43,6 +39,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
@@ -136,43 +133,28 @@ public class SearchActivity extends FragmentActivity {
 
     }
 
+    private static final String TAG = "SearchActivity";
     private void requestSearch() {
         String volleyUrl = Constant.sysUrl + Constant.requestListSet;
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
+
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMapNew)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "搜索请求返回结果打印" + jsonData);
-                        toResult(jsonData);
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(SearchActivity.this, volleyError);
-            }
-        }
-        ) {
 
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return paramsMapNew;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                loginInterfaceData);
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        setStore(response);
+                    }
+                });
     }
 
 
@@ -708,7 +690,7 @@ public class SearchActivity extends FragmentActivity {
             return convertView;
         }
     }
-    public void toResult(String result_search) {
+    public void setStore(String result_search) {
         String paramsNext= JSON.toJSONString(paramsMapNew);
         Intent intent = new Intent(this, SearchResultActivity.class);
         intent.putExtra("result_search", result_search);

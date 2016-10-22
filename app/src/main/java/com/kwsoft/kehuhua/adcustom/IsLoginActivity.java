@@ -9,22 +9,21 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.kwsoft.kehuhua.login.LoginActivity;
 import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.login.LoginActivity;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DiskLruCacheHelper;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.Call;
+
+import static android.content.ContentValues.TAG;
 
 public class IsLoginActivity extends Activity {
     private DiskLruCacheHelper DLCH;
@@ -74,47 +73,32 @@ public class IsLoginActivity extends Activity {
     public void postLogin() {
         loginUrl=Constant.sysUrl+Constant.projectLoginUrl;
         Log.e("TAG","loginUrl"+loginUrl);
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST,loginUrl,
-                new Response.Listener<String>() {
+        //参数
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put(Constant.USER_NAME, Constant.USERNAME_ALL);
+        paramsMap.put(Constant.PASSWORD,  Constant.PASSWORD_ALL);
+        paramsMap.put(Constant.proIdName, Constant.proId);
+        paramsMap.put(Constant.timeName, Constant.menuTime);
+        paramsMap.put(Constant.sourceName, Constant.sourceInt);
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(loginUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String menuData) {
-
-                        check(menuData);//除非用户名密码输错，否则不会到这里
+                    public void onError(Call call, Exception e, int id) {
+//                        mainPage(diskData);
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(IsLoginActivity.this, volleyError);
-                  String diskData=DLCH.getAsString(Constant.sysUrl+Constant.projectLoginUrl+ Constant.USERNAME_ALL + Constant.proId);
-                  mainPage(diskData);
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<>();
-                map.put(Constant.USER_NAME, Constant.USERNAME_ALL);
-                map.put(Constant.PASSWORD,  Constant.PASSWORD_ALL);
-                map.put(Constant.proIdName, Constant.proId);
-                map.put(Constant.timeName, Constant.menuTime);
-                map.put(Constant.sourceName, Constant.sourceInt);
-                return map;
-            }
 
-            @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                Response<String> superResponse = super.parseNetworkResponse(response);
-                Map<String, String> responseHeaders = response.headers;
-                String rawCookies = responseHeaders.get("Set-Cookie");
-                //Constant是一个自建的类，存储常用的全局变量
-                Constant.localCookie = rawCookies.substring(0, rawCookies.indexOf(";"));
-                Log.e("TAG", "sessionid----------------" + Constant.localCookie);
-                return superResponse;
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
-
-
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        check(response);//除非用户名密码输错，否则不会到这里
+                    }
+                });
     }
 
     private void check(String menuData) {

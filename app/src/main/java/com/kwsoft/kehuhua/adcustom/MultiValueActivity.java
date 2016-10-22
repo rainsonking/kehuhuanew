@@ -15,17 +15,13 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.kwsoft.kehuhua.adapter.MultiValueAdapter;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.Utils;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +32,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
 
 public class MultiValueActivity extends BaseActivity {
 
@@ -156,55 +153,37 @@ public class MultiValueActivity extends BaseActivity {
 
     }
 
+    private static final String TAG = "MultiValueActivity";
+    
     public void requestData() {
         final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
 
         Log.e("TAG", "网络获取内多dataUrl " + volleyUrl);
         Log.e("TAG", "网络获取内多table " + paramsMap.toString());
-        //Log.e("TAG", "获取" + Constant.timeName + " " +dataTime);
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
+
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "网络获取内部对象多值的数据" + jsonData);
-                        dataStore(jsonData);
+                    public void onError(Call call, Exception e, int id) {
+                        dialog.dismiss();
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                //refreshListView.hideFooterView();
-                VolleySingleton.onErrorResponseMessege(MultiValueActivity.this, volleyError);
-                dialog.dismiss();
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return paramsMap;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                loginInterfaceData);
-
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        setStore(response);
+                    }
+                });
     }
 
     @SuppressWarnings("unchecked")
-    private void dataStore(String jsonData) {
+    private void setStore(String jsonData) {
         try {
             Map<String, Object> setMap = JSON.parseObject(jsonData,
                     new TypeReference<Map<String, Object>>() {

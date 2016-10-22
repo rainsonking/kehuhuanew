@@ -20,12 +20,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.SetIpPortActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
@@ -33,11 +27,14 @@ import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
 
 /**
  * A login screen that offers login via email/password.
@@ -183,7 +180,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                postLogin();
+                postLogin1();
                 break;
             default:
                 break;
@@ -196,7 +193,8 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
      * 通过网络地址获取JSON数据，
      * 返回后直接传递给主页面
      **/
-    public void postLogin() {
+    private static final String TAG = "StuLoginActivity";
+    public void postLogin1() {
         if (!hasInternetConnected()) {
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
         } else {
@@ -207,57 +205,42 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             nameValue = mUserName.getText().toString();//trim去掉首尾空格
             pwdValue = mPassword.getText().toString();
             if (!nameValue.equals("") && !pwdValue.equals("")) {//判断用户名密码非空
-                final String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
+                //地址
+                String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
                 Log.e("TAG", "学员端登陆地址 " + Constant.sysUrl + Constant.projectLoginUrl);
-                StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String menuData) {
-                                //      stopAnim();
-                                check(menuData);
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        dialog.dismiss();
-                        VolleySingleton.onErrorResponseMessege(StuLoginActivity.this, volleyError);
-                    }
-                }
-                ) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<>();
+                //参数
+                 Map<String, String> map = new HashMap<>();
                         map.put(Constant.USER_NAME, nameValue);
                         map.put(Constant.PASSWORD, pwdValue);
                         map.put(Constant.proIdName, Constant.proId);
                         map.put(Constant.timeName, Constant.menuAlterTime);
                         map.put(Constant.sourceName, Constant.sourceInt);
-                        Log.e("TAG", "学员端登陆参数 " + map.toString());
-                        return map;
-                    }
+                //请求
+                OkHttpUtils
+                        .post()
+                        .params(map)
+                        .url(volleyUrl)
+                        .build()
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+                                dialog.dismiss();
+                                Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                            }
 
-                    @Override
-                    protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                        Response<String> superResponse = super.parseNetworkResponse(response);
-                        Map<String, String> responseHeaders = response.headers;
-                        String rawCookies = responseHeaders.get("Set-Cookie");
-                        //xiebubiao修改
-                        SharedPreferences.Editor editor = getLoginUserSharedPre().edit();
-                        editor.putString("Cookie", rawCookies);
-                        editor.apply();
-                        //Constant是一个自建的类，存储常用的全局变量
-//                    Constant.localCookie = rawCookies.substring(0, rawCookies.indexOf(";"));
-                        Constant.localCookie = rawCookies;
-                        return superResponse;
-                    }
-                };
-                VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
+                            @Override
+                            public void onResponse(String response, int id) {
+                                Log.e(TAG, "onResponse: "+"  id  "+id);
+                                check(response);
+                            }
+                        });
             } else {
                 dialog.dismiss();
                 Toast.makeText(StuLoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 
 
     //解析获得的data数据中的error值，如果它为1
@@ -358,3 +341,65 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
 
 }
 
+//    public void postLogin() {
+//        if (!hasInternetConnected()) {
+//            Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
+//        } else {
+////            final ProgressDialog proDia = new ProgressDialog(StuLoginActivity.this);
+////            proDia.setTitle("正在登陆。。。");
+////            proDia.show();
+//            dialog.show();
+//            nameValue = mUserName.getText().toString();//trim去掉首尾空格
+//            pwdValue = mPassword.getText().toString();
+//            if (!nameValue.equals("") && !pwdValue.equals("")) {//判断用户名密码非空
+//                final String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
+//                Log.e("TAG", "学员端登陆地址 " + Constant.sysUrl + Constant.projectLoginUrl);
+//                StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
+//                        new Response.Listener<String>() {
+//                            @Override
+//                            public void onResponse(String menuData) {
+//                                //      stopAnim();
+//                                check(menuData);
+//                            }
+//                        }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError volleyError) {
+//                        dialog.dismiss();
+//                        VolleySingleton.onErrorResponseMessege(StuLoginActivity.this, volleyError);
+//                    }
+//                }
+//                ) {
+//                    @Override
+//                    protected Map<String, String> getParams() throws AuthFailureError {
+//                        Map<String, String> map = new HashMap<>();
+//                        map.put(Constant.USER_NAME, nameValue);
+//                        map.put(Constant.PASSWORD, pwdValue);
+//                        map.put(Constant.proIdName, Constant.proId);
+//                        map.put(Constant.timeName, Constant.menuAlterTime);
+//                        map.put(Constant.sourceName, Constant.sourceInt);
+//                        Log.e("TAG", "学员端登陆参数 " + map.toString());
+//                        return map;
+//                    }
+//
+//                    @Override
+//                    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+//                        Response<String> superResponse = super.parseNetworkResponse(response);
+//                        Map<String, String> responseHeaders = response.headers;
+//                        String rawCookies = responseHeaders.get("Set-Cookie");
+//                        //xiebubiao修改
+//                        SharedPreferences.Editor editor = getLoginUserSharedPre().edit();
+//                        editor.putString("Cookie", rawCookies);
+//                        editor.apply();
+//                        //Constant是一个自建的类，存储常用的全局变量
+////                    Constant.localCookie = rawCookies.substring(0, rawCookies.indexOf(";"));
+//                        Constant.localCookie = rawCookies;
+//                        return superResponse;
+//                    }
+//                };
+//                VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(loginInterfaceData);
+//            } else {
+//                dialog.dismiss();
+//                Toast.makeText(StuLoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }

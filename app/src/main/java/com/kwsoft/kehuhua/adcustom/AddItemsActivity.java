@@ -14,17 +14,13 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adapter.Add_EditAdapter;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +29,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
@@ -108,50 +105,34 @@ public class AddItemsActivity extends BaseActivity {
         paramsMap.put(Constant.pageId, pageId);
     }
 
+    private static final String TAG = "AddItemsActivity";
     //请求
     public void requestAdd() {
         String volleyUrl = Constant.sysUrl + Constant.requestAdd;
         Log.e("TAG", "网络获取添加Url " + volleyUrl);
         Log.e("TAG", "网络获取添加参数：" + paramsMap.toString());
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
+
+        //参数
+        paramsMap.put("tNumber", "0");
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "网络获取添加数据" + jsonData);
-                        //DLCH.put(volleyUrl + paramsStr, jsonData);
-                        setStore(jsonData);
+                    public void onError(Call call, Exception e, int id) {
+                        dialog.dismiss();
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(AddItemsActivity.this, volleyError);
-                dialog.dismiss();
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                paramsMap.put("tNumber", "0");
-                return paramsMap;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                loginInterfaceData);
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        setStore(response);
+                    }
+                });
     }
 
 
@@ -235,41 +216,31 @@ public class AddItemsActivity extends BaseActivity {
                         keyRelation;
                 String volleyUrl = volleyUrl1.replaceAll(" ", "%20");
                 Log.e("TAG", "添加提交地址：" + volleyUrl);
-                StringRequest loginInterfaceData = new StringRequest(Request.Method.GET, volleyUrl,
-                        new Response.Listener<String>() {
+                 //get请求
+                OkHttpUtils
+                        .get()
+                        .url(volleyUrl)
+                        .build()
+                        .execute(new StringCallback() {
                             @Override
-                            public void onResponse(String jsonData) {//磁盘存储后转至处理
-                                Log.e("TAG", "获得添加结果" + jsonData);
-                                String isCommitSuccess = String.valueOf(jsonData);
+                            public void onError(Call call, Exception e, int id) {
+                                dialog.dismiss();
+                                Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                                Toast.makeText(AddItemsActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onResponse(String response, int id) {
+                                Log.e(TAG, "onResponse: "+"  id  "+id);
+                                Log.e("TAG", "获得添加结果" + response);
+                                String isCommitSuccess = String.valueOf(response);
                                 if (!isCommitSuccess.equals("0")) {
                                     toListActivity();
                                 } else {
                                     Toast.makeText(AddItemsActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        VolleySingleton.onErrorResponseMessege(AddItemsActivity.this, volleyError);
-                        dialog.dismiss();
-                    }
-                }
-                ) {
-                    //重写getHeaders 默认的key为cookie，value则为localCookie
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                            HashMap<String, String> headers = new HashMap<>();
-                            headers.put("cookie", Constant.localCookie);
-                            //Log.d("调试", "headers----------------" + headers);
-                            return headers;
-                        } else {
-                            return super.getHeaders();
-                        }
-                    }
-                };
-                VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                        loginInterfaceData);
+                        });
             }else{
 
                 Toast.makeText(this, "无网络", Toast.LENGTH_SHORT).show();
@@ -403,47 +374,31 @@ public class AddItemsActivity extends BaseActivity {
     }
 
 
-    private void requestRule(final Map<String, String> parMap) {
+    private void requestRule(Map<String, String> parMap) {
         String volleyUrl = Constant.sysUrl + Constant.requestMaxRule;
         Log.e("TAG", "网络获取规则dataUrl " + volleyUrl);
         Log.e("TAG", "网络获取规则table " + parMap.toString());
 
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
+        //请求
+        OkHttpUtils
+                .post()
+                .params(parMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-
-                        putValue(jsonData);
+                    public void onError(Call call, Exception e, int id) {
+                        dialog.dismiss();
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        putValue(response);
+                    }
+                });
 
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(AddItemsActivity.this, volleyError);
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return parMap;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                loginInterfaceData);
     }
 
     private void putValue(String jsonData) {

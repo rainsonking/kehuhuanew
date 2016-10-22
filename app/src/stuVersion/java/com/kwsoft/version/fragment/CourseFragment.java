@@ -19,17 +19,13 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.CourseDetailActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.model.OnDataListener;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.view.CourseView;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -46,6 +42,9 @@ import java.util.Map;
 import noman.weekcalendar.WeekCalendar;
 import noman.weekcalendar.WeekDateChaListener;
 import noman.weekcalendar.listener.OnDateClickListener;
+import okhttp3.Call;
+
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
@@ -343,49 +342,28 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
     }
 
     //请求课程表数据
-    private void requestCourseData(String url) {
+    private void requestCourseData(String volleyUrl) {
         //startAnim();
         Log.e("TAG", "请求课表数据");
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "网络获取课程表数据" + jsonData);
-                        setStore(jsonData);
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
-                // stopAnim();
-            }
-        }
-        ) {
 
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Log.e("hashmap",paramsMap.toString());
-                return paramsMap;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Cookie", Constant.localCookie);
-                    Log.e("TAG", "Constant.localCookie" + Constant.localCookie);
-                    Log.e("TAG", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-//        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-//                loginInterfaceData);
-        VolleySingleton.getVolleySingleton(getContext()).addToRequestQueue(
-                loginInterfaceData);
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        setStore(response);
+                    }
+                });
     }
 
     @SuppressWarnings("unchecked")

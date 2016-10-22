@@ -14,21 +14,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.Utils;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.version.Common.DataCleanManager;
 import com.kwsoft.version.FeedbackActivity;
 import com.kwsoft.version.ResetPwdActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.StuLoginActivity;
 import com.kwsoft.version.StuPra;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +33,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
 
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 import static com.kwsoft.kehuhua.config.Constant.tableId;
 
 /**
@@ -87,46 +85,28 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
         Log.e("TAG", "学员端请求个人信息地址：" + volleyUrl);
 
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
+        //参数
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put(tableId, StuPra.stuInfoTableId);
+        paramsMap.put(Constant.pageId, StuPra.stuInfoPageId);
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "获取学生资料信息" + jsonData);
-
-                        setStore(jsonData);
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
 
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> paramsMap = new HashMap<>();
-                paramsMap.put(tableId, StuPra.stuInfoTableId);
-                paramsMap.put(Constant.pageId, StuPra.stuInfoPageId);
-                //  Log.e("TAG", "学员端请求个人信息参数：" + paramsMap.toString());
-                return paramsMap;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(getActivity()).addToRequestQueue(
-                loginInterfaceData);
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        setStore(response);
+                    }
+                });
     }
 
 

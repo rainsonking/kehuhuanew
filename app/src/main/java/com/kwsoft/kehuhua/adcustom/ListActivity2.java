@@ -24,21 +24,17 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.view.RecycleViewDivider;
 import com.kwsoft.kehuhua.view.WrapContentLinearLayoutManager;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +44,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
 
 public class ListActivity2 extends BaseActivity {
 
@@ -198,53 +195,39 @@ public class ListActivity2 extends BaseActivity {
     public void getData() {
         if (hasInternetConnected()) {
 
-        final String volleyUrl = Constant.sysUrl + Constant.requestListSet;
-        Log.e("TAG", "列表请求地址：" + volleyUrl);
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "获取set" + jsonData);
-                        setStore(jsonData);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                VolleySingleton.onErrorResponseMessege(ListActivity2.this, volleyError);
-                mRefreshLayout.finishRefresh();
-                dialog.dismiss();
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                paramsMap.put("start", start + "");
-                if (!Constant.stu_index.equals("")) {
-                    paramsMap.put("ctType", Constant.stu_index);
-                    paramsMap.put("SourceDataId", Constant.stu_homeSetId);
-                    paramsMap.put("pageType", "1");
-                    Log.e("TAG", "去看板的列表请求");
-                }
-                paramsMap.put("limit", limit + "");
-                Log.e("TAG", "列表请求参数：" + paramsMap.toString());
-                return paramsMap;
-            }
+            //地址
+            String volleyUrl = Constant.sysUrl + Constant.requestListSet;
+            Log.e("TAG", "列表请求地址：" + volleyUrl);
 
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
+            //参数
+            paramsMap.put("start", start + "");
+            if (!Constant.stu_index.equals("")) {
+                paramsMap.put("ctType", Constant.stu_index);
+                paramsMap.put("SourceDataId", Constant.stu_homeSetId);
+                paramsMap.put("pageType", "1");
+                Log.e("TAG", "去看板的列表请求");
             }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                loginInterfaceData);
+            paramsMap.put("limit", limit + "");
+            //请求
+            OkHttpUtils
+                    .post()
+                    .params(paramsMap)
+                    .url(volleyUrl)
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            mRefreshLayout.finishRefresh();
+                            dialog.dismiss();
+                            Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            Log.e(TAG, "onResponse: "+"  id  "+id);
+                            setStore(response);
+                        }
+                    });
     }else{
             Log.e("TAG", "无网络");
             mRefreshLayout.finishRefresh();

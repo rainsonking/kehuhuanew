@@ -21,11 +21,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.kwsoft.kehuhua.adcustom.BlankActivity;
@@ -37,11 +32,12 @@ import com.kwsoft.kehuhua.adcustom.SettingsActivity;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
 import com.kwsoft.version.view.StudyGridView;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,8 +49,9 @@ import butterknife.OnClick;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
+import okhttp3.Call;
 
-import static android.content.Context.MODE_PRIVATE;
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
@@ -400,49 +397,34 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         startActivity(intent);
     }
 
-    public void getLoginData(String url) {
+    public void getLoginData(String volleyUrl) {
         if (((BaseActivity) getActivity()).hasInternetConnected()) {
-            StringRequest mStringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String jsonData) {
-                            mainPage(jsonData);
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
-                    pull_refresh_scrollview.onRefreshComplete();
-                }
-            }
-            ) {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    sPreferences = getActivity().getSharedPreferences(Constant.proId, MODE_PRIVATE);
-                    String nameValue = sPreferences.getString("name", "");
-                    String pwdValue = sPreferences.getString("pwd", "");
-                    Map<String, String> map = new HashMap<>();
-                    map.put(Constant.USER_NAME, nameValue);
-                    map.put(Constant.PASSWORD, pwdValue);
-                    map.put(Constant.proIdName, Constant.proId);
-                    map.put(Constant.timeName, Constant.menuAlterTime);
-                    map.put(Constant.sourceName, Constant.sourceInt);
-                    return map;
-                }
 
-                //重写getHeaders 默认的key为cookie，value则为localCookie
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                        HashMap<String, String> headers = new HashMap<>();
-                        headers.put("cookie", Constant.localCookie);
-                        return headers;
-                    } else {
-                        return super.getHeaders();
-                    }
-                }
-            };
-            VolleySingleton.getVolleySingleton(getActivity()).addToRequestQueue(mStringRequest);
+            //参数
+            Map<String, String> paramsMap = new HashMap<>();
+            paramsMap.put(Constant.USER_NAME, Constant.USERNAME_ALL);
+            paramsMap.put(Constant.PASSWORD, Constant.PASSWORD_ALL);
+            paramsMap.put(Constant.proIdName, Constant.proId);
+            paramsMap.put(Constant.timeName, Constant.menuAlterTime);
+            paramsMap.put(Constant.sourceName, Constant.sourceInt);
+            //请求
+            OkHttpUtils
+                    .post()
+                    .params(paramsMap)
+                    .url(volleyUrl)
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            pull_refresh_scrollview.onRefreshComplete();
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            Log.e(TAG, "onResponse: "+"  id  "+id);
+                            mainPage(response);
+                        }
+                    });
         }else{
 
             pull_refresh_scrollview.onRefreshComplete();

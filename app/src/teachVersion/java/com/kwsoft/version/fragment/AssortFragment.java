@@ -1,7 +1,6 @@
 package com.kwsoft.version.fragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,12 +21,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.CourseActivity;
 import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.R;
@@ -35,7 +28,8 @@ import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.Utils;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/9/19 0019.
@@ -196,7 +191,7 @@ public class AssortFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-
+    private static final String TAG = "AssortFragment";
     /**
      *
      * 刷新菜单方法，单独获取菜单
@@ -212,51 +207,35 @@ public class AssortFragment extends Fragment {
         }else {
             final String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
             Log.e("TAG", "学员端登陆地址 " + Constant.sysUrl + Constant.projectLoginUrl);
-            StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                    new Response.Listener<String>() {
+
+            //参数
+            Map<String, String> map = new HashMap<>();
+            map.put(Constant.USER_NAME, Constant.USERNAME_ALL);
+            map.put(Constant.PASSWORD, Constant.PASSWORD_ALL);
+            map.put(Constant.proIdName, Constant.proId);
+            map.put(Constant.timeName, Constant.menuAlterTime);
+            map.put(Constant.sourceName, Constant.sourceInt);
+            //请求
+            OkHttpUtils
+                    .post()
+                    .params(map)
+                    .url(volleyUrl)
+                    .build()
+                    .execute(new StringCallback() {
                         @Override
-                        public void onResponse(String menuData) {
-                            Log.e("TAG", "刷新学员端菜单数据   " + menuData);
-                            check(menuData);
+                        public void onError(Call call, Exception e, int id) {
+
+
+                            ((BaseActivity)getActivity()).dialog.dismiss();
+                            Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                         }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
 
-                    VolleySingleton.onErrorResponseMessege(getActivity(), volleyError);
-
-                }
-            }
-            ) {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> map = new HashMap<>();
-                    map.put(Constant.USER_NAME, Constant.USERNAME_ALL);
-                    map.put(Constant.PASSWORD, Constant.PASSWORD_ALL);
-                    map.put(Constant.proIdName, Constant.proId);
-                    map.put(Constant.timeName, Constant.menuAlterTime);
-                    map.put(Constant.sourceName, Constant.sourceInt);
-                    Log.e("TAG", "学员端登陆参数 " + map.toString());
-                    return map;
-                }
-
-                @Override
-                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                    Response<String> superResponse = super.parseNetworkResponse(response);
-                    Map<String, String> responseHeaders = response.headers;
-                    String rawCookies = responseHeaders.get("Set-Cookie");
-                    //xiebubiao修改
-                    SharedPreferences.Editor editor = ((BaseActivity) getActivity()).getLoginUserSharedPre().edit();
-                    editor.putString("Cookie", rawCookies);
-                    editor.apply();
-                    //Constant是一个自建的类，存储常用的全局变量
-//                      Constant.localCookie = rawCookies.substring(0, rawCookies.indexOf(";"));
-                    Constant.localCookie = rawCookies;
-                    Log.e("TAG", "sessionId=" + Constant.localCookie);
-                    return superResponse;
-                }
-            };
-            VolleySingleton.getVolleySingleton(getActivity().getApplicationContext()).addToRequestQueue(loginInterfaceData);
+                        @Override
+                        public void onResponse(String response, int id) {
+                            Log.e(TAG, "onResponse: "+"  id  "+id);
+                            check(response);
+                        }
+                    });
         }
 
     }

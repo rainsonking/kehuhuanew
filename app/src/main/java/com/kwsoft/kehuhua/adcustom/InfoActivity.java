@@ -22,21 +22,19 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
 
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
@@ -329,175 +327,39 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    private static final String TAG = "InfoActivity";
+
     private void deleteItems() {
         final String volleyUrl = Constant.sysUrl + Constant.requestDelete;
         Log.e("TAG", "获取dataUrl " + volleyUrl);
-        Log.e("TAG", "获取tableId " + tableId);
-        Log.e("TAG", "获取pageId " + pageId);
-        Log.e("TAG", "获取delIds " + mainId);
-        Log.e("TAG", "获取buttonType " + 13);
-
-        StringRequest loginInterfaceData = new StringRequest(Request.Method.POST, volleyUrl,
-                new Response.Listener<String>() {
+        Log.e(TAG, "删除参数  "+delMapParams.toString());
+        //请求
+        OkHttpUtils
+                .post()
+                .params(delMapParams)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        Log.e("TAG", "删除返回数据" + jsonData);
-                           String isSuccess=jsonData.substring(0,1);
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        Log.e("TAG", "删除返回数据" + response);
+                        String isSuccess=response.substring(0,1);
                         if(isSuccess.equals("1")){
                             Intent intent = new Intent();
                             intent.setClass(InfoActivity.this,ListActivity2.class);
                             startActivity(intent);
                         }else{
-                            Toast.makeText(InfoActivity.this, jsonData+"请检查表关联", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InfoActivity.this, response+"请检查表关联", Toast.LENGTH_SHORT).show();
                         }
-
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                //refreshListView.hideFooterView();
-                VolleySingleton.onErrorResponseMessege(InfoActivity.this, volleyError);
-
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = delMapParams;
-                return map;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                loginInterfaceData);
+                });
 
     }
 
 }
-
-
-
-
-//
-//            String str = "(a >= 0 && a <= 5)";
-//            ScriptEngineManager manager = new ScriptEngineManager();
-//            ScriptEngine engine = manager.getEngineByName("js");
-//            engine.put("a", 4);
-//            Object result = engine.eval(str);
-//            System.out.println("结果类型:" + result.getClass().getName() + ",计算结果:" + result);
-//
-////
-
-////逐个遍历按钮的存在
-//                    for (int i=0;i<operaButtonSet0.size();i++) {
-//
-//                        String isLive0=String.valueOf(operaButtonSet0.get(i).get("butWhereJs"));
-//                        String noLive0=String.valueOf(operaButtonSet0.get(i).get("butJyWhereJs"));
-////判断启用条件
-//
-//
-////                        if (!isLive0.equals("null")&&!isLive0.equals("")) {
-////                            //先将空格和rowData.全部去掉
-////                            String isLive=isLive0.replaceAll(" ","").replaceAll("rowData.","");
-////
-////                            //两个的情况，包含&&
-////                            if(isLive.contains("&&")){
-////                               String[] isLiveSplit= isLive.split("&&");
-////                                String afm1,value1;
-////                                boolean isTrue=false;
-////
-////                                if (isLiveSplit[0].contains("!=")) {
-////                                    String[] newIsLiveSplit=isLiveSplit[0].split("!=");
-////                                    //取出afm值
-////                                    afm1= newIsLiveSplit[0];
-////                                    value1= newIsLiveSplit[1];
-////
-////                                    //查找afm1
-////                                    if(!allItemData.get(afm1).equals(value1)){
-////                                        isTrue=true;
-////
-////                                    }
-////
-////                                }else if(isLiveSplit[0].contains("==")){
-////                                    String[] newIsLiveSplit=isLiveSplit[0].split("==");
-////                                    //取出afm值
-////                                    afm1= newIsLiveSplit[0];
-////                                    value1= newIsLiveSplit[1];
-////                                    if(allItemData.get(afm1).equals(value1)){
-////                                        isTrue=true;
-////                                    }
-////                                }else if(isLiveSplit[0].contains(">")){
-////                                    String[] newIsLiveSplit=isLiveSplit[0].split("==");
-////                                    //取出afm值
-////                                    afm1= newIsLiveSplit[0];
-////                                    value1= newIsLiveSplit[1];
-////                                    if(allItemData.get(afm1).equals(value1)){
-////                                        isTrue=true;
-////                                    }
-////                                }
-////
-////
-////
-////                            //两个的情况，包含||
-////                            }else if(isLive.contains("||")){
-////
-////
-////
-////
-////                            //一个的情况
-////                            }else{
-////
-////
-////
-////                            }
-////
-////
-////
-////                        }
-////
-////
-////
-////
-////
-////
-////
-////
-////
-////
-////
-////
-//
-//
-//
-//                        if (!isLive0.equals("null")&&!isLive0.equals("")) {
-//
-//                            String isLive=isLive0.replaceAll(" ","").replaceAll("==","=");
-//                            Log.e("TAG", "isLive " +isLive);
-//                            String isLive1=isLive.substring(isLive.indexOf(".")+1,isLive.length());
-//                            Log.e("TAG", "isLive1 " +isLive1);
-//                            String[] isLiveArray=isLive1.split("=");
-//                            if (allItemData.get(isLiveArray[0])!=null&&!String.valueOf(allItemData.get(isLiveArray[0])).equals(isLiveArray[1])) {
-//                                operaButtonSet0.remove(i);
-//                            }
-//                        }
-//                        if (noLive0!=null&&!noLive0.equals("")) {
-//                            String noLive=noLive0.replaceAll(" ","").replaceAll("==","=");
-//                            String noLive1=noLive.substring(noLive.indexOf(".")+1,noLive.length());
-//                            String[] noLiveArray=noLive1.split("=");
-//                            if (allItemData.get(noLiveArray[0])!=null&&String.valueOf(allItemData.get(noLiveArray[0])).equals(noLiveArray[1])) {
-//                                operaButtonSet0.remove(i);
-//                            }
-//                        }
-//                    }
-

@@ -19,25 +19,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
-import com.kwsoft.kehuhua.login.LoginActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.config.Url;
 import com.kwsoft.kehuhua.fragments.FragmentTabAdapter;
 import com.kwsoft.kehuhua.fragments.GetFragment;
 import com.kwsoft.kehuhua.fragments.UnGetFragment;
+import com.kwsoft.kehuhua.login.LoginActivity;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
 
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
@@ -211,7 +209,7 @@ public class MessagAlertActivity extends BaseActivity {
         builder.create().show();
     }
 
-    private void deleteMsgData(String url, final String ids) {
+    private void deleteMsgData(String volleyUrl, final String ids) {
         if (!hasInternetConnected()) {
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
             return;
@@ -219,70 +217,57 @@ public class MessagAlertActivity extends BaseActivity {
 
         getProgressDialog().show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+        //参数
+        Map<String,String> paramsMap=new HashMap<>();
+        paramsMap.put("delIds",ids);
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
+                    public void onError(Call call, Exception e, int id) {
                         getProgressDialog().dismiss();
-                        Log.i("123","jsonData===>"+jsonData);
-                        if (!TextUtils.isEmpty(jsonData)) {
-                            layout_buttom.setVisibility(View.GONE);
-                            radioGroup.setVisibility(View.VISIBLE);
-                            layout_select_bar.setVisibility(View.VISIBLE);
-                            if (radioGroup.getCheckedRadioButtonId() == R.id.rb_un_get) {
-                                ((UnGetFragment) ungetFragment).setShowAndHide(false);
-                                ((UnGetFragment) ungetFragment).refreshData();
-                                int count=getLoginUserSharedPre().getInt("count",0);
-                                if (count >= Constant.deleteNum) {
-                                    int countNew=count-Constant.deleteNum;
-                                    getLoginUserSharedPre().edit().putInt("count",countNew).commit();
-                                    BadgeUtil.sendBadgeNumber(MessagAlertActivity.this, countNew);
-                                }
-                            } else {
-                                ((GetFragment) getFragment).setShowAndHide(false);
-                                ((GetFragment) getFragment).refreshData();
-                            }
-                            tv_delete.setText("删除");
-                            Toast.makeText(MessagAlertActivity.this,"删除成功！",Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MessagAlertActivity.this,"删除失败！",Toast.LENGTH_SHORT).show();
-                        }
+                        Log.i("123", "请求失败！");
+                        Toast.makeText(MessagAlertActivity.this, "系统正在维护中,请稍后再试...", Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                getProgressDialog().dismiss();
-                Log.i("123", "请求失败！");
-                Toast.makeText(MessagAlertActivity.this, "系统正在维护中,请稍后再试...", Toast.LENGTH_LONG).show();
-                VolleySingleton.onErrorResponseMessege(MessagAlertActivity.this, volleyError);
 
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> map=new HashMap<>();
-                map.put("delIds",ids);
-                return map;
-            }
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        setStore(response);
+                    }
+                });
+    }
 
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-//                String localCookie=getLoginUserSharedPre().getString("Cookie",null);
-                String localCookie= Constant.localCookie;
-                if (localCookie != null && localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Cookie", localCookie);
-                    Log.i("123", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
+    private void setStore(String jsonData) {
+        getProgressDialog().dismiss();
+        Log.i("123","jsonData===>"+jsonData);
+        if (!TextUtils.isEmpty(jsonData)) {
+            layout_buttom.setVisibility(View.GONE);
+            radioGroup.setVisibility(View.VISIBLE);
+            layout_select_bar.setVisibility(View.VISIBLE);
+            if (radioGroup.getCheckedRadioButtonId() == R.id.rb_un_get) {
+                ((UnGetFragment) ungetFragment).setShowAndHide(false);
+                ((UnGetFragment) ungetFragment).refreshData();
+                int count=getLoginUserSharedPre().getInt("count",0);
+                if (count >= Constant.deleteNum) {
+                    int countNew=count-Constant.deleteNum;
+                    getLoginUserSharedPre().edit().putInt("count",countNew).commit();
+                    BadgeUtil.sendBadgeNumber(MessagAlertActivity.this, countNew);
                 }
+            } else {
+                ((GetFragment) getFragment).setShowAndHide(false);
+                ((GetFragment) getFragment).refreshData();
             }
-        };
-        VolleySingleton.getVolleySingleton(getApplicationContext()).addToRequestQueue(
-                stringRequest);
+            tv_delete.setText("删除");
+            Toast.makeText(MessagAlertActivity.this,"删除成功！",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MessagAlertActivity.this,"删除失败！",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

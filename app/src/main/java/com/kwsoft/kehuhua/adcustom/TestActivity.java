@@ -9,19 +9,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
-import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.config.Url;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
+import okhttp3.Call;
 
 public class TestActivity extends BaseActivity {
     private TextView tv_title,tv_content,tv_date,tv_persion;
@@ -88,7 +85,8 @@ public class TestActivity extends BaseActivity {
 //        }
     }
 
-    private void changeReadState(String url) {
+    private static final String TAG = "TestActivity";
+    private void changeReadState(String volleyUrl) {
         if (!hasInternetConnected()) {
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
             return;
@@ -113,52 +111,29 @@ public class TestActivity extends BaseActivity {
 //                Log.i("123",response.toString());
 //            }
 //        });
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new com.android.volley.Response.Listener<String>() {
+//参数
+        Map<String,String> paramsMap=new HashMap<>();
+        paramsMap.put("msgMainId",mainId);
+        paramsMap.put("msgTabName","SYSTEM_MESSAGE");
+        //请求
+        OkHttpUtils
+                .post()
+                .params(paramsMap)
+                .url(volleyUrl)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onResponse(String jsonData) {//磁盘存储后转至处理
-                        getProgressDialog().dismiss();
-
-                        Log.e("123", "单独获取的获取列表数据" + jsonData);
+                    public void onError(Call call, Exception e, int id) {
+                        dialog.dismiss();
+                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
-                }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                //refreshListView.hideFooterView();
-                getProgressDialog().dismiss();
-                Log.i("123", "请求失败！");
-//                Toast.makeText(TestActivity.this, "系统正在维护中,请稍后再试...", Toast.LENGTH_LONG).show();
-                VolleySingleton.onErrorResponseMessege(TestActivity.this, volleyError);
 
-            }
-        }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> map=new HashMap<>();
-                map.put("msgMainId",mainId);
-                map.put("msgTabName","SYSTEM_MESSAGE");
-                return map;
-            }
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-//                String localCookie=getLoginUserSharedPre().getString("Cookie",null);
-                String localCookie= Constant.localCookie;
-                if (localCookie != null && localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Cookie", localCookie);
-                    Log.i("123", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(this.getApplicationContext()).addToRequestQueue(
-                stringRequest);
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        getProgressDialog().dismiss();
+                    }
+                });
     }
 
     @Override
