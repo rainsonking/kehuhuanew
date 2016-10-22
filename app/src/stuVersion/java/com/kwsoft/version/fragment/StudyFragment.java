@@ -91,9 +91,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         RollPagerView mRollViewPager = (RollPagerView) view.findViewById(R.id.roll_view_pager);
 
         //设置播放时间间隔
-        mRollViewPager.setPlayDelay(1000);
+        mRollViewPager.setPlayDelay(2000);
         //设置透明度
-        mRollViewPager.setAnimationDurtion(500);
+        mRollViewPager.setAnimationDurtion(1500);
         //设置适配器
         mRollViewPager.setAdapter(new TestNormalAdapter());
 
@@ -327,9 +327,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     private class TestNormalAdapter extends StaticPagerAdapter {
         private int[] imgs = {
                 R.drawable.stu_see_banner,
-                R.drawable.img2,
-                R.drawable.img3,
-                R.drawable.img4,
+                R.drawable.stu_see_banner,
+                R.drawable.stu_see_banner,
+                R.drawable.stu_see_banner,
         };
 
 
@@ -349,35 +349,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-//    public void toItem(FragmentActivity menuId, Map<String, Object> itemData) {
-//
-//        //获取子列表
-//        List<Map<String, Object>> childList = new ArrayList<>();
-//        for (int i = 0; i < menuListAll.size(); i++) {
-//            if (Integer.valueOf(String.valueOf(menuListAll.get(i).get("parent_menuId"))) == menuId) {
-//                childList.add(menuListAll.get(i));
-//            }
-//        }
-//
-//        if (childList.size() > 0) {
-//            childList = DataProcess.toImgList(childList);
-//
-//        }
-//        //转换整项为字符串准备发送
-//        String itemDataString = JSONArray.toJSONString(itemData);
-//
-//        //转换子列表对象为字符串准备发送
-//        String childString = JSONArray.toJSONString(childList);
-//        Intent intent = new Intent();
-//        if (itemData.get("menuPageUrl") == null) {
-//            intent.setClass(getActivity(), ListActivity.class);
-//        } else {
-//            intent.setClass(getActivity(), CourseActivity.class);
-//        }
-//        intent.putExtra("itemData", itemDataString);
-//        intent.putExtra("childData", childString);
-//        startActivity(intent);
-//    }
 private static final String TAG = "StudyFragment";
     public void getLoginData(String volleyUrl) {
         if (((BaseActivity)getActivity()).hasInternetConnected()) {
@@ -464,50 +435,6 @@ private static final String TAG = "StudyFragment";
         }
     }
 }
-// mRollViewPager.setHintView(new TextHintView(this));
-//mRollViewPager.setHintView(null);
-//设置指示器（顺序依次）
-//自定义指示器图片
-//设置圆点指示器颜色
-
-//设置文字指示器
-//        tvTitle = (TextView) view.findViewById(R.id.textView);
-//        LinearLayout layoutFrist = (LinearLayout) view.findViewById(R.id.layout_1);
-//        ImageView img_back = (ImageView) view.findViewById(R.id.img_back);
-//        LinearLayout iv_back = (LinearLayout) view.findViewById(R.id.iv_back);
-
-//        iv_back.setVisibility(View.VISIBLE);
-//        img_back.setImageResource(R.drawable.nav_scan_code);
-//        layoutFrist.setVisibility(View.VISIBLE);
-//        layoutFrist.setOnClickListener(this);
-//        iv_back.setOnClickListener(this);
-//    int[] imgs = {R.drawable.stu_see_order, R.drawable.stu_see_task,
-//            R.drawable.stu_see_journal, R.drawable.stu_see_attendance,
-//            R.drawable.stu_see_leave, R.drawable.stu_see_visit, R.drawable.stu_see_achievement, R.drawable.stu_see_all};
-// layoutSec.setVisibility(View.GONE);
-//            //去掉手机端三个字
-//            for (int m = 0; m < childList.size(); m++) {
-//                String menuNameNew=String.valueOf(childList.get(m).get("menuName")).replace("手机端","");
-//                childList.get(m).put("menuName",menuNameNew);
-//            }
-
-//子view不能大于7个
-//        int legth = menuListAlls.size();
-//        if (legth > 7) {
-//            legth = 7;
-//        }
-
-
-//        for (int k = 0; k < legth; k++) {
-//            menuListAlls.get(k).put("image", imgs[k]);
-//            menuListMaps.add(menuListAlls.get(k));
-//        }
-//        //去掉手机端三个字
-//        for (int m = 0; m < menuListMaps.size(); m++) {
-//            String menuNameNew = String.valueOf(menuListMaps.get(m).get("menuName")).replace("手机端", "");
-//            menuListMaps.get(m).put("menuName", menuNameNew);
-//        }
-
 
 
 
