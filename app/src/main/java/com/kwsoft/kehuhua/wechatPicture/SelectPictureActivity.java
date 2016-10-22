@@ -11,18 +11,15 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.kwsoft.kehuhua.adcustom.AddItemsActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.RowsAddActivity;
 import com.kwsoft.kehuhua.adcustom.RowsEditActivity;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.kehuhua.utils.MultipartRequest;
-import com.kwsoft.kehuhua.utils.VolleySingleton;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,6 +33,7 @@ import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 import me.iwf.photopicker.PhotoPicker;
+import okhttp3.Call;
 
 import static com.kwsoft.kehuhua.config.Constant.img_Paths;
 import static com.kwsoft.kehuhua.config.Constant.pictureUrl;
@@ -57,7 +55,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
     private PhotoPickerAdapter adapter;
 
     String codeListStr;
-
+    private static final String TAG = "SelectPictureActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,64 +183,45 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
 
         String url = sysUrl + pictureUrl;
         //待上传的两个文件
-        List<File> files = new ArrayList<>();
+
+        Map<String, File> myFile = new HashMap<>();
         if (img_Paths.size() > 0) {
             for (int i = 0; i < img_Paths.size(); i++) {
+                File file = new File(img_Paths.get(i));
 
-                files.add(new File(img_Paths.get(i)));
+                if (!myFile.containsKey(file.getName())) {
+                    myFile.put(file.getName(), file);
+                } else {
+                    myFile.put(file.getName() + i, file);
+                }
             }
-//                uploadMethod(params, uploadHost);
-            //请求的URL
-            //post请求，三个参数分别是请求地址、请求参数、请求的回调接口
-            Log.e("TAG", "listPath.toString()" + img_Paths.toString());
-
-            if (files.size() > 0) {
-                Log.e("TAG", "files.toString()" + files.toString());
-                uploadMethod(url, files);
-            }
+            Log.e(TAG, "uploadMethod: 开始上传文件 "+myFile.toString());
+            //上传文件
+            uploadMethod(url, myFile);
         } else {
-            Toast.makeText(SelectPictureActivity.this, "尚未选择图片", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SelectPictureActivity.this, "您尚未选择图片", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void uploadMethod(String url, List<File> files) {
-        Log.e("TAG", "uploadMethod1");
-        MultipartRequest request = new MultipartRequest(url, new Response.Listener<String>() {
+    public void uploadMethod(String url, Map<String, File> files) {
+        Log.e(TAG, "uploadMethod: 开始上传文件");
+        OkHttpUtils.post()//
+                .files("myFiles", files)
+                .url(url)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        dialog.dismiss();
+                        Toast.makeText(SelectPictureActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                    }
 
-            @Override
-            public void onResponse(String response) {
-                dialog.dismiss();
-                getFileCode(response);
-
-
-//                TrendCreateHttpManager.toTrendCreateHttpActionSuccess();
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                dialog.dismiss();
-                Toast.makeText(SelectPictureActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
-//                TrendCreateHttpManager.toTrendCreateHttpActionError();
-            }
-        }, "myFiles", files, null) {
-
-
-            //重写getHeaders 默认的key为cookie，value则为localCookie
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                if (Constant.localCookie != null && Constant.localCookie.length() > 0) {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("cookie", Constant.localCookie);
-                    //Log.d("调试", "headers----------------" + headers);
-                    return headers;
-                } else {
-                    return super.getHeaders();
-                }
-            }
-        };
-        VolleySingleton.getVolleySingleton(SelectPictureActivity.this).addToRequestQueue(
-                request);
+                    @Override
+                    public void onResponse(String response, int id) {
+                        dialog.dismiss();
+                        getFileCode(response);
+                    }
+                });
     }
 
 
