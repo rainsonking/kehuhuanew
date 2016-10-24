@@ -85,7 +85,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             mainId=infoDataList.get(0).get("mainId");
             tableId=infoDataList.get(0).get("tableId");
             titleName=infoDataList.get(0).get("fieldCnName2");
-
+            pageId=infoDataList.get(0).get("pageId");
             Constant.mainIdValue=mainId;
             Log.e("TAG","Info  getIntent+mainId: "+mainId);
 
@@ -209,7 +209,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                                     operaButtonSetMap.put("pageIdList", pageId);
 
                                     String operaButtonSetMapStr = JSON.toJSONString(operaButtonSetMap);
-
+                                    Log.e(TAG, "onItemClick: operaButtonSetMapStr"+operaButtonSetMapStr);
                                     switch (buttonType) {
                                         case 12://修改页面
                                             Intent mIntentEdit = new Intent(InfoActivity.this, RowsEditActivity.class);

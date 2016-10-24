@@ -38,7 +38,7 @@ public class AddItemsActivity extends BaseActivity {
     @Bind(R.id.lv_operate_item)
     ListView lvAddItem;
     private String buttonName;
-    private String tableId;
+    private String tableId,mainTableId,mainPageId;
     private String pageId;
     private String dataId;
     private Map<String, String> paramsMap;
@@ -93,16 +93,27 @@ public class AddItemsActivity extends BaseActivity {
 
         buttonName = String.valueOf(buttonSetItem.get("buttonName"));
 //        tvAddItemTitle.setText(buttonName);
-        pageId = String.valueOf(buttonSetItem.get("startTurnPage"));
 
-        dataId = String.valueOf(buttonSetItem.get("dataId"));
+
+
+        mainTableId = intent.getStringExtra("tableIdList");
+        mainPageId = intent.getStringExtra("pageIdList");
+
         tableId = String.valueOf(buttonSetItem.get("tableId"));
+        pageId = String.valueOf(buttonSetItem.get("startTurnPage"));
+        dataId = String.valueOf(buttonSetItem.get("dataId"));
+
+
+
         Constant.tempTableId = tableId;
         Constant.tempPageId = pageId;
 
         paramsMap = new HashMap<>();
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
+        paramsMap.put(Constant.mainTableId, mainTableId);
+        paramsMap.put(Constant.mainPageId, mainPageId);
+
     }
 
     private static final String TAG = "AddItemsActivity";

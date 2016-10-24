@@ -248,7 +248,7 @@ public class TabsFragment extends Fragment {
 //            dialog.dismiss();
         }
 //将dataList与fieldSet合并准备适配数据
-        datas = DataProcess.combineSetData(tableId, fieldSet, dataList);
+        datas = DataProcess.combineSetData(tableId,pageId, fieldSet, dataList);
         if (datas == null) {
             Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
 

@@ -208,6 +208,8 @@ public class ListActivity2 extends BaseActivity {
                 Log.e("TAG", "去看板的列表请求");
             }
             paramsMap.put("limit", limit + "");
+
+            Log.e(TAG, "getData: paramsMap "+paramsMap.toString());
             //请求
             OkHttpUtils
                     .post()
@@ -325,7 +327,7 @@ public class ListActivity2 extends BaseActivity {
         }
 //将dataList与fieldSet合并准备适配数据
 //        if (dataList != null && dataList.size() > 0) {
-        datas = DataProcess.combineSetData(tableId, fieldSet, dataList);
+        datas = DataProcess.combineSetData(tableId,pageId, fieldSet, dataList);
         Log.e(TAG, "setStore: 将datalist转换为datas");
 
 
@@ -440,11 +442,13 @@ public class ListActivity2 extends BaseActivity {
         int buttonType = (int) buttonSet.get(position).get("buttonType");
         Map<String, Object> buttonSetItem = buttonSet.get(position);
         String buttonSetItemStr = JSON.toJSONString(buttonSetItem);
-
+        Log.e(TAG, "toPage: buttonSetItemStr"+buttonSetItemStr);
         switch (buttonType) {
             case 0://添加页面
                 Intent intent = new Intent(ListActivity2.this, AddItemsActivity.class);
                 intent.putExtra("buttonSetItemStr", buttonSetItemStr);
+                intent.putExtra("tableIdList", tableId);
+                intent.putExtra("pageIdList", pageId);
                 startActivityForResult(intent, 5);
                 break;
             case 3://批量删除操作

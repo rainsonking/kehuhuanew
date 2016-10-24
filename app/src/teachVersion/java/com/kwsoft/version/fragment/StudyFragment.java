@@ -28,7 +28,6 @@ import com.kwsoft.kehuhua.adcustom.CourseActivity;
 import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
-import com.kwsoft.kehuhua.adcustom.SettingsActivity;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.DataProcess;
@@ -50,8 +49,6 @@ import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 import okhttp3.Call;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
@@ -163,7 +160,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         setMenuAdapter(menuListAll);
     }
 
-    public void setMenuAdapter(List<Map<String, Object>> menuListMaps) {
+    public void setMenuAdapter(final List<Map<String, Object>> menuListMaps) {
         SimpleAdapter simpleAdapter = new SimpleAdapter(getActivity(), menuListMaps,
                 R.layout.fragment_study_gridview_item, new String[]{"image", "menuName"},
                 new int[]{R.id.itemImage, R.id.itemName});
@@ -180,18 +177,21 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     );
                 } else if (i == 1) {
                     Intent intent = new Intent(getActivity(), BlankActivity.class);
+                    intent.putExtra("titleName", String.valueOf(menuListMaps.get(i).get("menuName")));
                     startActivity(intent);
                 } else if (i == 2) {
                     Intent intent = new Intent(getActivity(), MessagAlertActivity.class);
                     startActivity(intent);
                 } else if (i == 3) {
-                    Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                    Intent intent = new Intent(getActivity(), BlankActivity.class);
+                    intent.putExtra("titleName", String.valueOf(menuListMaps.get(i).get("menuName")));
                     startActivity(intent);
                 }
             }
         });
     }
 
+    private static final String TAG = "StudyFragment";
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);

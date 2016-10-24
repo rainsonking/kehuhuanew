@@ -323,7 +323,7 @@ public class DataProcess {
     /**
      * 列表页合并配置和数据，并添加参数
      */
-    public static List<List<Map<String, String>>> combineSetData(String tableId,List<Map<String, Object>> set, List<Map<String, Object>> data) {
+    public static List<List<Map<String, String>>> combineSetData(String tableId,String pageId,List<Map<String, Object>> set, List<Map<String, Object>> data) {
         List<List<Map<String, String>>> newData = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             List<Map<String, String>> itemNum = new ArrayList<>();
@@ -338,6 +338,7 @@ public class DataProcess {
                         property.put("mainId", "");
                     }
                     property.put("tableId", tableId);
+                    property.put("pageId", pageId);
                     property.put("allItemData", data.get(i).toString());
                 }
                 property.put("fieldCnName", String.valueOf(set.get(j).get("fieldCnName")));
