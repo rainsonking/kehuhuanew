@@ -65,6 +65,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
 
         initJudgeSave();
         initView();
+
     }
 
     /**

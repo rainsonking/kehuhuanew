@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/normal_bg2"
+    android:background="@color/white"
     android:orientation="vertical"
     android:weightSum="1">
 
@@ -19,12 +19,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
         android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1sp"
+            android:layout_height="10dp"
+            android:background="@color/me_bg3" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
             android:background="@color/light_gray" />
 
 
@@ -89,8 +93,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/stu_phone_line"
                     android:layout_marginLeft="12dp"
-                    android:gravity="bottom"
                     android:layout_marginTop="6dp"
+                    android:gravity="bottom"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -117,33 +121,38 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1sp"
+            android:layout_height="0.5dp"
             android:background="@color/light_gray" />
     </LinearLayout>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:scrollbars="none">
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10sp"
-        android:orientation="vertical"
-        >
+        android:background="@color/white"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1sp"
-                android:background="@color/light_gray" />
+                android:layout_height="10dp"
+                android:background="@color/me_bg3" />
 
-               <!--个人资料-->
+            <LinearLayout
+                android:id="@+id/layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/light_gray" />
+
+                <!--个人资料-->
                 <LinearLayout
                     android:id="@+id/stu_info_data"
                     android:layout_width="match_parent"
@@ -182,10 +191,10 @@
 
                     </RelativeLayout>
 
-                    <TextView
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1sp"
-                        android:background="@color/normal_bg2" />
+                        android:layout_height="0.5dp"
+                        android:background="@color/me_divider_line" />
 
 
                 </LinearLayout>
@@ -229,10 +238,10 @@
 
                     </RelativeLayout>
 
-                    <TextView
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1sp"
-                        android:background="@color/normal_bg2" />
+                        android:layout_height="0.5dp"
+                        android:background="@color/me_divider_line" />
 
 
                 </LinearLayout>
@@ -277,10 +286,10 @@
 
                     </RelativeLayout>
 
-                    <TextView
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1sp"
-                        android:background="@color/normal_bg2" />
+                        android:layout_height="0.5dp"
+                        android:background="@color/me_divider_line" />
 
 
                 </LinearLayout>
@@ -326,10 +335,10 @@
 
                     </RelativeLayout>
 
-                    <TextView
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1sp"
-                        android:background="@color/normal_bg2" />
+                        android:layout_height="0.5dp"
+                        android:background="@color/me_divider_line" />
 
 
                 </LinearLayout>
@@ -376,35 +385,36 @@
 
                     </RelativeLayout>
 
-                    <TextView
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1sp"
-                        android:background="@color/normal_bg2" />
+                        android:layout_height="0.5dp"
+                        android:background="@color/me_divider_line" />
 
                 </LinearLayout>
 
-        </LinearLayout>
-        <TextView
-            android:id="@+id/stu_log_out"
-            android:layout_width="match_parent"
-            android:layout_height="41sp"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/shape_stu_logout"
-            android:gravity="center"
-            android:layout_marginLeft="15sp"
-            android:layout_marginRight="15sp"
-            android:text="退出登陆"
-            android:layout_marginBottom="10sp"
-            android:textColor="@color/title_bg"
-            android:textSize="18sp" />
+            </LinearLayout>
 
-    </LinearLayout>
-</ScrollView>
+            <TextView
+                android:id="@+id/stu_log_out"
+                android:layout_width="match_parent"
+                android:layout_height="41sp"
+                android:layout_marginBottom="10sp"
+                android:layout_marginLeft="15sp"
+                android:layout_marginRight="15sp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/shape_stu_logout"
+                android:gravity="center"
+                android:text="退出登陆"
+                android:textColor="@color/title_bg"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 
     <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1sp"-->
-        <!--android:layout_marginTop="10sp"-->
-        <!--android:background="@color/light_gray" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1sp"-->
+    <!--android:layout_marginTop="10sp"-->
+    <!--android:background="@color/light_gray" />-->
 </LinearLayout>
