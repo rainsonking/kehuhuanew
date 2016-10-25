@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
+            android:paddingLeft="10dp"
             android:text="姓名："
             android:textColor="@color/list_item_left"
             android:textSize="15sp" />
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="3dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="3dp"
             android:layout_toEndOf="@+id/add_item_name"
             android:gravity="center"
@@ -60,7 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="10dp"
+                android:paddingRight="10dp"
                 android:background="@null"
                 android:hint="请填写"
                 android:textColorHint="@color/gray"
@@ -75,7 +76,7 @@
                 android:id="@+id/add_general"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:hint="请选择"
                 android:textColorHint="@color/gray"
@@ -114,7 +115,7 @@
                     android:background="?attr/colorPrimary"
                     android:text="点击拍照"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="17sp" />
 
                 <TextView
                     android:id="@+id/pic_number"
@@ -149,11 +150,11 @@
 
         <!--android:background="@color/no_edit_tv"-->
     </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#e2e2e2"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@+id/relave"
-        />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#e2e2e2"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_below="@+id/relave"-->
+        <!--/>-->
 </RelativeLayout>

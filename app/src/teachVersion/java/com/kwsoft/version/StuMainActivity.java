@@ -1,5 +1,6 @@
 package com.kwsoft.version;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -46,6 +47,29 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         CloseActivityClass.activityList.add(this);
         initView();
         initFragment();
+         initDialog();
+    }
+
+    public void initDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(StuMainActivity.this);
+//                builder.setMessage("这个就是自定义的提示框");
+        builder.setTitle("入园须知");
+        builder.setPositiveButton("我知道了！", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //设置你的操作事项
+            }
+        });
+
+        builder.setNegativeButton("",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
     }
 
     @Override
@@ -65,7 +89,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         hideMenuList = intent.getStringExtra("hideMenuList");
 
 
-        mToolbar=(CommonToolbar) findViewById(R.id.common_toolbar);
+        mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
 //        Resources resources = mContext.getResources().getDrawable(R.drawable.nav_news);
 //        Drawable drawable = resources.getDrawable(R.drawable.nav_news);
 //        mToolbar.setRightButtonIcon(mContext.getResources().getDrawable(R.drawable.nav_news));
@@ -123,7 +147,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
                 switch (checkedId) {
                     case R.id.radio0:
 
-                       break;
+                        break;
                     case R.id.radio2:
 
                         break;
@@ -141,10 +165,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
     }
 
 
-
-
-
-    public void toCamera(){
+    public void toCamera() {
 
         boolean emui = AndtoidRomUtil.isEMUI();
         boolean miui = AndtoidRomUtil.isMIUI();
@@ -172,7 +193,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
             //魅族rom
             Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
             startActivityForResult(intent, 1);
-        }else {
+        } else {
             Intent intent = new Intent(StuMainActivity.this, CaptureActivity.class);
             startActivityForResult(intent, 1);
         }
@@ -205,7 +226,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
         switch (item.getItemId()) {
             case android.R.id.home:
-             toCamera();
+                toCamera();
 
                 break;
         }

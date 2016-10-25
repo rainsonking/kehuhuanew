@@ -272,7 +272,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 
                 if (emui) {
                     //华为
-//                    PackageManager pm = getActivity().getPackageManager();
+//                    PackageManager pm =  getActivity().getPackageManager();
 //                    //MediaStore.ACTION_IMAGE_CAPTURE android.permission.RECORD_AUDIO
 //                    boolean permission = (PackageManager.PERMISSION_GRANTED ==
 //                            pm.checkPermission("MediaStore.ACTION_IMAGE_CAPTURE", "packageName"));

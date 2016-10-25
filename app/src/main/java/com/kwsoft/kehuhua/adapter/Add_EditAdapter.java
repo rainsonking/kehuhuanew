@@ -55,7 +55,6 @@ import static com.kwsoft.kehuhua.config.Constant.itemValue;
 
 /**
  * Created by Administrator on 2016/6/7 0007.
- *
  */
 public class Add_EditAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;
@@ -164,8 +163,6 @@ public class Add_EditAdapter extends BaseAdapter {
             list_item_cover2.setVisibility(View.VISIBLE);
 //            list_item_cover.setBackgroundColor(context.getResources().getColor(R.color.no_edit_tv));
 //            list_item_cover.setClickable(true);
-
-
         }
 //初始化上传图片框
         RelativeLayout image_upload_layout = (RelativeLayout) convertView.findViewById(R.id.image_upload_layout);
@@ -210,7 +207,7 @@ public class Add_EditAdapter extends BaseAdapter {
         boolean isShow = isShow(position, textView, textViewIfMust);
 //1、普通编辑框
 
-        if (fieldRole == -1 ||fieldRole == 1 || fieldRole == 2 || fieldRole == 10 ||
+        if (fieldRole == -1 || fieldRole == 1 || fieldRole == 2 || fieldRole == 10 ||
                 fieldRole == 3 || fieldRole == 4 || fieldRole == 5 ||
                 fieldRole == 6 || fieldRole == 7 || fieldRole == 11 ||
                 fieldRole == 12 || fieldRole == 13 || fieldRole == 8 ||
@@ -341,6 +338,7 @@ public class Add_EditAdapter extends BaseAdapter {
             add_spinner.attachDataSource(dataset);
             add_spinner.setSelectedIndex(byId);
             add_spinner.setTextColor(Color.BLACK);
+           // add_spinner.invalidateDrawable(context.getResources().getDrawable(R.mipmap.ic_launcher));
             fieldSet.get(position).put(itemValue, String.valueOf(dicList.get(byId).get("DIC_ID")));
             fieldSet.get(position).put(Constant.itemName, String.valueOf(dicList.get(byId).get("DIC_ID")));
 
@@ -354,6 +352,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
                     fieldSet.get(position).put(itemValue, DIC_ID);
                     fieldSet.get(position).put(Constant.itemName, DIC_ID);
+
                     if (!oldDicId.equals(DIC_ID)) {
                         notifyDataSetChanged();
                     }
@@ -402,8 +401,8 @@ public class Add_EditAdapter extends BaseAdapter {
                                 @Override
                                 public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
                                     //获得年月日
-                                    int monthNew=month+1;
-                                    final String dateTime2 = year + "-" + monthNew+ "-" + day;
+                                    int monthNew = month + 1;
+                                    final String dateTime2 = year + "-" + monthNew + "-" + day;
                                     TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
                                             (new TimePickerDialog.OnTimeSetListener() {
                                                 @Override
@@ -508,7 +507,7 @@ public class Add_EditAdapter extends BaseAdapter {
  *
  *
  */
-            if (isShow&&ifUpdate==1) {
+            if (isShow && ifUpdate == 1) {
                 image_upload_layout.setVisibility(View.VISIBLE);
                 image_upload.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -521,23 +520,20 @@ public class Add_EditAdapter extends BaseAdapter {
 
                 //判断选择了x张图片
 
-                String numPic=String.valueOf(fieldSet.get(position).get(itemValue));
+                String numPic = String.valueOf(fieldSet.get(position).get(itemValue));
 
-                if (!numPic.equals("null")&&!numPic.equals("")) {
+                if (!numPic.equals("null") && !numPic.equals("")) {
 
-                   String[] numPicArray= numPic.split(",");
-                   int picLength=numPicArray.length;
-                    String picContent="已选"+picLength+"张图片";
+                    String[] numPicArray = numPic.split(",");
+                    int picLength = numPicArray.length;
+                    String picContent = "已选" + picLength + "张图片";
                     picNumber.setText(picContent);
-                }else{
+                } else {
                     picNumber.setText("尚无附件");
                 }
 
 
-
-
-
-            }else{
+            } else {
                 addGeneral.setVisibility(View.VISIBLE);
                 addGeneral.setText(defaultName);
             }
@@ -729,6 +725,7 @@ public class Add_EditAdapter extends BaseAdapter {
         }
         return byId;
     }
+
     @SuppressWarnings("unchecked")
     @NonNull
     private List<Map<String, Object>> getNewDicList(int position) {
