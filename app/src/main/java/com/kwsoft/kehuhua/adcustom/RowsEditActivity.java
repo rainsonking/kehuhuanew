@@ -319,8 +319,8 @@ public class RowsEditActivity extends BaseActivity {
                 String positionStr = bundle.getString("position");
                 String codeListStr = bundle.getString("codeListStr");
                 int position=Integer.valueOf(positionStr);
-                fieldSet.get(position).put(Constant.itemValue+"_file_many", codeListStr);
-                fieldSet.get(position).put(Constant.itemName+"_file_many", codeListStr);
+                fieldSet.get(position).put(Constant.itemValue, codeListStr);
+                fieldSet.get(position).put(Constant.itemName, codeListStr);
                 Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(position).toString());
                 adapter.notifyDataSetChanged();
             }
