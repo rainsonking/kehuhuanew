@@ -13,9 +13,9 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.HashMap;
 import java.util.List;
@@ -100,11 +100,13 @@ public class StuProLoginActivity extends BaseActivity {
                         .params(map)
                         .url(volleyUrl)
                         .build()
-                        .execute(new StringCallback() {
+                        .execute(new EdusStringCallback(StuProLoginActivity.this) {
+
+
                             @Override
                             public void onError(Call call, Exception e, int id) {
                                 dialog.dismiss();
-                                Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+
                                 toLoginPage();
                             }
 

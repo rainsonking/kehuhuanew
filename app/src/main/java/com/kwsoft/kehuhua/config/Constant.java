@@ -156,10 +156,31 @@ public class Constant {
 
     public static int topBarColor;
 
+
+    public static int statusCode=0;// commitValue
+
+
+
 //学员端参数：
 
     public static String stu_index = "";// 副key
     public static String stu_homeSetId = "";// 副key
+
+
+
+
+    public static void netToast(Activity activity) {
+        if (statusCode>500) {
+        }
+        Toast.makeText(activity, "服务器错误",
+                Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
+
+
 
     public static void threadToast(Activity activity, String str) {
         Looper.prepare();

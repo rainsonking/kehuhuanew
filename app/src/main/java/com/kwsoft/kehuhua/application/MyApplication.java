@@ -6,10 +6,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.kwsoft.kehuhua.urlCnn.EdusLoggerInterceptor;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
 import com.zhy.http.okhttp.cookie.store.PersistentCookieStore;
-import com.zhy.http.okhttp.log.LoggerInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        mContext=getApplicationContext();
 //        Fresco.initialize(getApplicationContext());//拍照上传初始化
         JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);            // 初始化 JPush
@@ -65,7 +65,7 @@ public class MyApplication extends Application {
         CookieJarImpl cookieJar = new CookieJarImpl(new PersistentCookieStore(getApplicationContext()));
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new LoggerInterceptor("TAG"))
+                .addInterceptor(new EdusLoggerInterceptor(mContext,"TAG",false))
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 .cookieJar(cookieJar)//增加cookieJar

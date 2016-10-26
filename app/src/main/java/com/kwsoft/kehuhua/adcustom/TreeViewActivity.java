@@ -282,9 +282,7 @@ public class TreeViewActivity extends AppCompatActivity {
         }else if (Constant.jumpNum==1) {
             intentTree.setClass(TreeViewActivity.this, AddItemsActivity.class);
         }else if(Constant.jumpNum==2){
-            intentTree.setClass(TreeViewActivity.this, RowsEditActivity.class);
-        }else if(Constant.jumpNum==3){
-            intentTree.setClass(TreeViewActivity.this, RowsAddActivity.class);
+            intentTree.setClass(TreeViewActivity.this, OperateDataActivity.class);
         }
 
         Bundle bundle = new Bundle();

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="81dp">
+    <!--公共控件，左侧显示名-->
+    <RelativeLayout
+        android:id="@+id/relave"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <RelativeLayout
+            android:id="@+id/list_item_cover"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/no_edit_tv"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/edit_cover_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/add_item_name"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="姓名："
+            android:textColor="@color/list_item_left"
+            android:textSize="15sp" />
+
+
+        <!--添加属性需要的控件-->
+        <TextView
+            android:id="@+id/tv_if_must"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
+            android:layout_toEndOf="@+id/add_item_name"
+            android:gravity="center"
+            android:text="*"
+            android:textColor="@color/red"
+            android:textSize="15sp"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:id="@+id/list_item_right_layout"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_toEndOf="@+id/tv_if_must">
+
+            <EditText
+                android:id="@+id/add_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="25dp"
+                android:background="@null"
+                android:hint="请填写"
+                android:textColorHint="@color/gray"
+                android:inputType="textMultiLine"
+                android:maxLines="10"
+                android:minLines="1"
+                android:textColor="@color/list_item_right"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/add_general"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="25dp"
+                android:gravity="center_vertical"
+                android:hint="请选择"
+                android:textColorHint="@color/gray"
+                android:textColor="@color/list_item_right"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/add_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone">
+
+            </org.angmarch.views.NiceSpinner>
+
+            <Button
+                android:id="@+id/add_unlimited"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="进行操作"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/image_upload_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/image_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/colorPrimary"
+                    android:text="点击拍照"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/pic_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/image_upload"
+                    android:textColor="@color/list_item_right"
+                    android:textSize="17sp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/list_item_cover2"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#00000000"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/edit_cover_view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <!--android:background="#40323232"-->
+
+
+        <!--android:background="@color/no_edit_tv"-->
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e2e2e2"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/relave"
+        />
+</RelativeLayout>

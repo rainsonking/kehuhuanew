@@ -24,11 +24,11 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.sangbo.autoupdate.CheckVersion;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.HashMap;
 import java.util.List;
@@ -221,7 +221,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                         .params(map)
                         .url(volleyUrl)
                         .build()
-                        .execute(new StringCallback() {
+                        .execute(new EdusStringCallback(StuLoginActivity.this) {
                             @Override
                             public void onError(Call call, Exception e, int id) {
                                 dialog.dismiss();

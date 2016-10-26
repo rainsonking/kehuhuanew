@@ -307,9 +307,7 @@ public class MultiValueActivity extends BaseActivity {
         } else if (Constant.jumpNum == 1) {
             intent.setClass(MultiValueActivity.this, AddItemsActivity.class);
         } else if (Constant.jumpNum == 2) {
-            intent.setClass(MultiValueActivity.this, RowsEditActivity.class);
-        } else if (Constant.jumpNum == 3) {
-            intent.setClass(MultiValueActivity.this, RowsAddActivity.class);
+            intent.setClass(MultiValueActivity.this, OperateDataActivity.class);
         }
 
         Bundle bundle = new Bundle();

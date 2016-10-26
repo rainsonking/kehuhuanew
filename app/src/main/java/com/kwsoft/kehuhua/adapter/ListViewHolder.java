@@ -10,6 +10,7 @@ import com.kwsoft.kehuhua.adcustom.R;
 
 /**
  * Created by Administrator on 2016/10/21 0021.
+ *
  */
 
 public class ListViewHolder extends RecyclerView.ViewHolder {
