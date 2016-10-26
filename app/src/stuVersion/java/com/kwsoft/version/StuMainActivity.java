@@ -3,6 +3,7 @@ package com.kwsoft.version;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
+import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity;
 import com.kwsoft.kehuhua.widget.CnToolbar;
@@ -48,6 +50,8 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
     private RadioButton radio3;
     private String arrStr, menuList, menuDataMap;//看板数据、课程表数据、主菜单数据
     private CnToolbar mToolbar;
+    SharedPreferences sPreferences;
+    private String useridOld;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +59,16 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_stu_main);
 //        getSupportActionBar().hide();
         CloseActivityClass.activityList.add(this);
+        sPreferences = getSharedPreferences(Constant.proId, MODE_PRIVATE);
+        useridOld = sPreferences.getString("useridOld", "");
+
         initView();
         initFragment();
-        initDialog();
+        if (!Constant.USERID.equals(useridOld)){
+            initDialog();
+            sPreferences.edit().putString("useridOld", Constant.USERID).apply();
+        }
+
     }
 
     public void initDialog() {
