@@ -230,7 +230,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
 
                             @Override
                             public void onResponse(String response, int id) {
-                                Log.e(TAG, "onResponse: "+"  id  "+id);
+                                Log.e(TAG, "onResponse: "+response+"  id  "+id);
                                 check(response);
                             }
                         });

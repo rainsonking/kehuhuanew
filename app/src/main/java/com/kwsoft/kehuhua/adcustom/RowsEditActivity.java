@@ -41,7 +41,7 @@ public class RowsEditActivity extends BaseActivity {
     private String buttonName;
     private CommonToolbar mToolbar;
     private String hideFieldParagram = "";
-    private String tableId;
+    private String tableId,mainTableId,mainPageId;
     private String dataId;
     private String pageId;
     private Map<String, String> paramsMap = new HashMap<>();
@@ -95,14 +95,20 @@ public class RowsEditActivity extends BaseActivity {
         Map<String, Object> editData = JSON.parseObject(infoData,
                 new TypeReference<Map<String, Object>>() {
                 });
+        mainTableId = String.valueOf(editData.get("tableIdList"));
+        mainPageId = String.valueOf(editData.get("pageIdList"));
+
 
         tableId = String.valueOf(editData.get("tableId"));
         pageId = String.valueOf(editData.get("startTurnPage"));
+
         dataId = String.valueOf(editData.get("dataId"));
         buttonName = String.valueOf(editData.get("buttonName"));
         Log.e("TAG", "buttonName: "+buttonName);
         paramsMap.put(Constant.tableId, tableId);
         paramsMap.put(Constant.pageId, pageId);
+        paramsMap.put(Constant.mainTableId, mainTableId);
+        paramsMap.put(Constant.mainPageId, mainPageId);
         paramsMap.put(Constant.mainId, dataId);
         paramsMap.put(Constant.timeName, "100");
     }

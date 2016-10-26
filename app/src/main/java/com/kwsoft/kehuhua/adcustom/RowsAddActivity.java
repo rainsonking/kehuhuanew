@@ -100,7 +100,7 @@ public class RowsAddActivity extends BaseActivity {
         mainTableId = String.valueOf(buttonSetItem.get("tableIdList"));
 
         tableId = String.valueOf(buttonSetItem.get("tableId"));
-        mainPageId = String.valueOf(buttonSetItem.get("startTurnPage"));
+        mainPageId = String.valueOf(buttonSetItem.get("pageIdList"));
         mainId = String.valueOf(buttonSetItem.get("dataId"));
         Constant.tempTableId = tableId;
         Constant.tempPageId = pageId;
