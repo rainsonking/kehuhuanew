@@ -108,23 +108,29 @@
                 android:textColor="@color/black"
                 android:textColorHint="@color/gray" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="当前地址:  "
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/now_sys_url"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="http://192.168.6.117:8080/edus_auto/"
+                android:textColor="@color/red"
+                android:textSize="18sp"
+                android:hint="地址为空"
+                android:textColorHint="@color/gray" />
+        </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/now_sys_url"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_ip_ll"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:layout_marginBottom="15dp"
-        android:text=""
-        android:textColor="@color/red"
-        android:textSize="18sp" />
-
-
-
-
-
 </RelativeLayout>

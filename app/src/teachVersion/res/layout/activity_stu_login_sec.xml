@@ -6,13 +6,7 @@
     android:background="@color/white"
     >
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/ic_notifications_black_24dp"
-        android:onClick="toSetIpPortProject"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -203,6 +197,18 @@
                 android:text="©版权所有:可为时代"
                 android:textColor="#858585"
                 android:textSize="@dimen/text_size_9" />
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/ic_notifications_black_24dp"
+                android:onClick="toSetIpPortProject"/>
+
         </RelativeLayout>
 
 

@@ -55,6 +55,7 @@ import static com.kwsoft.kehuhua.config.Constant.itemValue;
 
 /**
  * Created by Administrator on 2016/6/7 0007.
+ *
  */
 public class Add_EditAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;
@@ -137,7 +138,7 @@ public class Add_EditAdapter extends BaseAdapter {
         }
 //初始化是否可修改标志
         int ifUpdate = 0;
-        if (fieldSet.get(position).get("ifMust") != null) {
+        if (fieldSet.get(position).get("ifUpdate") != null) {
             ifUpdate = Integer.valueOf(String.valueOf(fieldSet.get(position).get("ifUpdate")));
         }
 
