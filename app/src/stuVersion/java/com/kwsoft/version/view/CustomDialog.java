@@ -3,17 +3,25 @@ package com.kwsoft.version;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.kwsoft.kehuhua.adcustom.R;
 
 /**
  * Created by Administrator on 2016/10/25 0025.
+ * <p>
+ * 登陆后的悬浮提示框
  */
+
 
 public class CustomDialog extends Dialog {
 
@@ -123,10 +131,26 @@ public class CustomDialog extends Dialog {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // instantiate the dialog with the custom Theme
-            final CustomDialog dialog = new CustomDialog(context,R.style.prompt_dialog);
+            final CustomDialog dialog = new CustomDialog(context, R.style.prompt_dialog);
             View layout = inflater.inflate(R.layout.activity_bl_dialog, null);
+//            dialog.addContentView(layout, new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT, (LinearLayout.LayoutParams.WRAP_CONTENT)*1/5));
             dialog.addContentView(layout, new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            Window dialogWindow = dialog.getWindow();
+            // WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            dialogWindow.setGravity(Gravity.CENTER);
+
+
+            WindowManager m = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+            WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+            p.height = (int) (d.getHeight() * 0.6); // 高度设置为屏幕的0.6
+            p.width = (int) (d.getWidth() * 0.9); // 宽度设置为屏幕的0.65
+            dialogWindow.setAttributes(p);
+
+
             // set the dialog title
             ((TextView) layout.findViewById(R.id.tv_title)).setText(title);
             // set the confirm button
@@ -167,13 +191,14 @@ public class CustomDialog extends Dialog {
             }
             // set the content message
             if (message != null) {
-                ((TextView) layout.findViewById(R.id.tv_title)).setText(message);
+                ((TextView) layout.findViewById(R.id.tv_msg)).setText(message);
             } else if (contentView != null) {
                 // if no message set
                 // add the contentView to the dialog body
-                ((LinearLayout) layout.findViewById(R.id.ll_content))
+                ((ScrollView) layout.findViewById(R.id.ll_content))
                         .removeAllViews();
-                ((LinearLayout) layout.findViewById(R.id.ll_content))
+
+                ((ScrollView) layout.findViewById(R.id.ll_content))
                         .addView(contentView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
             }
             dialog.setContentView(layout);

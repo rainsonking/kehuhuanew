@@ -167,6 +167,7 @@ public class StuProLoginActivity extends BaseActivity {
             intent.setClass(StuProLoginActivity.this, StuMainActivity.class);
             intent.putExtra("jsonArray", JSON.toJSONString(menuListMap1));
             intent.putExtra("menuDataMap", JSON.toJSONString(menuListMap2));
+
             startActivity(intent);
             finish();
 
