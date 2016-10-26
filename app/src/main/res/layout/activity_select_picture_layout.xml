@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
+
 
     <com.kwsoft.kehuhua.widget.CommonToolbar
         android:id="@+id/common_toolbar"
@@ -12,27 +14,68 @@
         android:background="?attr/colorPrimary"
         app:isShowRightButton="false"
         app:isShowTitle="true">
+
     </com.kwsoft.kehuhua.widget.CommonToolbar>
 
-<TextView
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="22dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="图片附件列表"
-    android:textSize="22sp"
-    android:textColor="#858585"/>
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:layout_margin="18dp"
-        android:background="@android:color/white"
-        android:columnWidth="90dp"
-        android:gravity="center"
-        android:horizontalSpacing="5dp"
-        android:numColumns="4"
-        android:scrollbars="none"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="22dp"
+                android:text="图片附件列表"
+                android:textColor="#858585"
+                android:textSize="22sp" />
+
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_margin="18dp"
+                android:background="@android:color/white"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="5dp"
+                android:numColumns="4"
+                android:scrollbars="none"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="5dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.kwsoft.kehuhua.wechatPicture.NumberCircleProgressBar
+                android:id="@+id/numbercircleprogress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="10dp"
+                android:visibility="gone"
+                custom:max="100"
+                custom:progress="60"
+                custom:progress_bar_fill_mode="rising_water"
+                custom:progress_bar_text_visibility="visible"
+                custom:progress_circle_radius="50dp"
+                custom:progress_reached_color="#3498DB"
+                custom:progress_text_color="@android:color/black"
+                custom:progress_text_size="15sp"
+                custom:progress_unreached_color="#CCCCCC" />
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

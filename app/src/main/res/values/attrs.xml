@@ -3,19 +3,42 @@
 
     <declare-styleable name="CnToolbar">
 
-        <attr name="rightButtonIcon" format="reference"/>
-        <attr name="leftButtonIcon" format="reference"/>
-        <attr name="isShowSearchView" format="boolean"/>
+        <attr name="rightButtonIcon" format="reference" />
+        <attr name="leftButtonIcon" format="reference" />
+        <attr name="isShowSearchView" format="boolean" />
 
     </declare-styleable>
 
 
     <declare-styleable name="CommonToolbar">
 
-        <attr name="common_rightButtonIcon" format="reference"/>
-        <attr name="common_leftButtonIcon" format="reference"/>
-        <attr name="isShowRightButton" format="boolean"/>
-        <attr name="isHideLeftButton" format="boolean"/>
-        <attr name="isShowTitle" format="boolean"/>
+        <attr name="common_rightButtonIcon" format="reference" />
+        <attr name="common_leftButtonIcon" format="reference" />
+        <attr name="isShowRightButton" format="boolean" />
+        <attr name="isHideLeftButton" format="boolean" />
+        <attr name="isShowTitle" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="NumberCircleProgressBar">
+        <attr name="progress" format="integer" />
+        <attr name="max" format="integer" />
+        <attr name="progress_unreached_color" format="color" />
+        <attr name="progress_reached_color" format="color" />
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="progress_text_color" format="color" />
+        <attr name="progress_circle_radius" format="dimension" />
+        <attr name="progress_bar_text_visibility">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="1" />
+        </attr>
+        <attr name="progress_bar_fill_mode">
+            <enum name="rotate" value="0" />
+            <enum name="rising_water" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="Themes">
+        <attr name="numberProgressBarStyle" format="reference" />
+    </declare-styleable>
+
 </resources>

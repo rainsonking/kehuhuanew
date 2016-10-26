@@ -1,8 +1,10 @@
 package com.kwsoft.kehuhua.wechatPicture;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,6 +60,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
 
     String codeListStr;
     private static final String TAG = "SelectPictureActivity";
+    NumberCircleProgressBar ncp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +88,16 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
                 finish();
             }
         });
+        ncp = (NumberCircleProgressBar) findViewById(R.id.numbercircleprogress_bar);
 
         mToolbar.showRightImageButton();
+
         //右侧下拉按钮
         mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.show();
+                ncp.setVisibility(View.VISIBLE);
+                ncp.setProgress(0);
                 upload();
             }
         });
@@ -195,7 +203,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
                     myFile.put(file.getName() + i, file);
                 }
             }
-            Log.e(TAG, "uploadMethod: 开始上传文件 "+myFile.toString());
+            Log.e(TAG, "uploadMethod: 开始上传文件 " + myFile.toString());
             //上传文件
             uploadMethod(url, myFile);
         } else {
@@ -205,6 +213,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
 
     public void uploadMethod(String url, Map<String, File> files) {
         Log.e(TAG, "uploadMethod: 开始上传文件");
+
         OkHttpUtils.post()//
                 .files("myFiles", files)
                 .url(url)
@@ -212,15 +221,28 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        dialog.dismiss();
+
                         Toast.makeText(SelectPictureActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        dialog.dismiss();
+
                         getFileCode(response);
                     }
+
+                    @Override
+                    public void inProgress(float progress, long total, int id) {
+                        if ((int) (100 * progress) == 100) {
+                            ncp.setVisibility(View.GONE);
+                            Log.e("total", total + "");
+                        } else {
+
+                            ncp.setProgress((int) (100 * progress));
+                            Log.e("progress", progress + "");
+                        }
+                    }
+
                 });
     }
 
@@ -279,5 +301,27 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
 
+    }
+
+    public void setTheNumberProgressBar() {
+
+
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (!isFinish) {
+//                            bnp.incrementProgressBy(2);
+//                            if (bnp.isFinished()) {
+//                                isFinish = false;
+//                            }
+//                        }
+//                    }
+//                });
+//            }
+//        }, 1000, 100);
     }
 }
