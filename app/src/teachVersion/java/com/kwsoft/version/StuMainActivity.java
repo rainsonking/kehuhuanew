@@ -22,6 +22,7 @@ import com.kwsoft.version.fragment.MeFragment;
 import com.kwsoft.version.fragment.MenuFragment;
 import com.kwsoft.version.fragment.StuFragmentTabAdapter;
 import com.kwsoft.version.fragment.StudyFragment;
+import com.kwsoft.version.view.CustomDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         CloseActivityClass.activityList.add(this);
         initView();
         initFragment();
-         initDialog();
+        // initDialog();
     }
 
     public void initDialog() {

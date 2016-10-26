@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/ll_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="34dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:paddingBottom="17dp"
+        android:background="@drawable/ll_login_dialog_xuanfu"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/text2"
+            android:text="入园须知"
+            android:textSize="18sp" />
+
+        <ScrollView
+            android:id="@+id/ll_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="23dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginBottom="23dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键PS画壁中的工具变大的快捷键"
+                android:textColor="@color/list_item_left"
+                android:textSize="15sp" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btn_yes"
+            android:layout_width="105dp"
+            android:layout_height="33dp"
+            android:gravity="center"
+            android:background="@mipmap/edus_popup_bg"
+            android:text="我知道了"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="71dp"
+        android:layout_height="71dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/edus_popup_icon" />
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="14dp"
+        android:background="@mipmap/edus_popup_close" />
+</RelativeLayout>
