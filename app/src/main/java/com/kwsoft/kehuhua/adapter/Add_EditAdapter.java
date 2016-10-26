@@ -51,6 +51,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static android.content.ContentValues.TAG;
 import static com.kwsoft.kehuhua.config.Constant.itemValue;
 
 /**
@@ -736,9 +737,10 @@ public class Add_EditAdapter extends BaseAdapter {
 
         String dicChildShow = String.valueOf(fieldSet.get(position).get("dicChildShow"));
         List<Integer> dicChildShowList = new ArrayList<>();
-        if (dicChildShow != null && !dicChildShow.equals("")) {
+        if (dicChildShow != null && !dicChildShow.equals("")&& !dicChildShow.equals("null")) {
             //将字符串类型数组转换为int型集合
             String[] dicChildShowStrArr = dicChildShow.split(",");
+            Log.e(TAG, "getNewDicList: dicChildShowStrArr "+dicChildShow );
             for (String aDicChildShowStrArr : dicChildShowStrArr) {
                 dicChildShowList.add(Integer.parseInt(aDicChildShowStrArr));
             }
