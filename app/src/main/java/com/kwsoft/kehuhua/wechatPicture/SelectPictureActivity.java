@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kwsoft.kehuhua.adcustom.AddItemsActivity;
@@ -60,8 +62,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
 
     String codeListStr;
     private static final String TAG = "SelectPictureActivity";
-    NumberCircleProgressBar ncp;
-
+private WaterWaveProgress waveProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,22 +89,30 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
                 finish();
             }
         });
-        ncp = (NumberCircleProgressBar) findViewById(R.id.numbercircleprogress_bar);
-
-        mToolbar.showRightImageButton();
+         mToolbar.showRightImageButton();
 
         //右侧下拉按钮
         mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ncp.setVisibility(View.VISIBLE);
-                ncp.setProgress(0);
+                waveProgress.setVisibility(View.VISIBLE);
+                waveProgress.setProgress(0);
                 upload();
             }
         });
 
+        waveProgress = (WaterWaveProgress) findViewById(R.id.waterWaveProgress1);
 
+        WindowManager wm = (WindowManager) this
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+      //  int height = wm.getDefaultDisplay().getHeight();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)waveProgress.getLayoutParams();
+        //layoutParams.setMargins(width/4,12,10,5);//4个参数按顺序分别是左上右下
+        layoutParams.setMarginStart(width/3);
+        waveProgress.setLayoutParams(layoutParams); //mView是控件
         adapter = new PhotoPickerAdapter(imgPaths);
+
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -208,6 +217,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
             uploadMethod(url, myFile);
         } else {
             Toast.makeText(SelectPictureActivity.this, "您尚未选择图片", Toast.LENGTH_SHORT).show();
+            waveProgress.setVisibility(View.GONE);
         }
     }
 
@@ -223,6 +233,7 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
                     public void onError(Call call, Exception e, int id) {
 
                         Toast.makeText(SelectPictureActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        waveProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -234,11 +245,11 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void inProgress(float progress, long total, int id) {
                         if ((int) (100 * progress) == 100) {
-                            ncp.setVisibility(View.GONE);
+                            waveProgress.setVisibility(View.GONE);
                             Log.e("total", total + "");
                         } else {
 
-                            ncp.setProgress((int) (100 * progress));
+                            waveProgress.setProgress((int) (100 * progress));
                             Log.e("progress", progress + "");
                         }
                     }

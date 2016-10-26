@@ -73,7 +73,6 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
     public void initDialog() {
 
-
         com.kwsoft.version.CustomDialog.Builder builder = new com.kwsoft.version.CustomDialog.Builder(StuMainActivity.this);
 //                builder.setMessage("这个就是自定义的提示框");
         builder.setTitle("入园须知");

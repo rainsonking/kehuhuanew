@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity">
 
 
     <com.kwsoft.kehuhua.widget.CommonToolbar
@@ -17,30 +19,11 @@
 
     </com.kwsoft.kehuhua.widget.CommonToolbar>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
 
-        <com.kwsoft.kehuhua.wechatPicture.NumberCircleProgressBar
-            android:id="@+id/numbercircleprogress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="10dp"
-            android:visibility="gone"
-            custom:max="100"
-            custom:progress="60"
-            custom:progress_bar_fill_mode="rising_water"
-            custom:progress_bar_text_visibility="visible"
-            custom:progress_circle_radius="50dp"
-            custom:progress_reached_color="#3498DB"
-            custom:progress_text_color="@android:color/black"
-            custom:progress_text_size="15sp"
-            custom:progress_unreached_color="#CCCCCC" />
-    </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_layout"
             android:layout_width="match_parent"
@@ -71,5 +54,26 @@
                 android:verticalSpacing="5dp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:paddingTop="40dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <com.kwsoft.kehuhua.wechatPicture.WaterWaveProgress
+                android:id="@+id/waterWaveProgress1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:visibility="gone"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                tools:maxProgress="100"
+                tools:progress="0" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
