@@ -4,4 +4,5 @@
     <color name="colorPrimary">#393f4d</color><!--toolbar颜色 -->
     <color name="colorPrimaryDark">#393f4d</color><!--导航栏颜色 -->
     <color name="prim_topBarColor">#393f4d</color>
+
 </resources>
