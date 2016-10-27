@@ -226,7 +226,6 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                             public void onError(Call call, Exception e, int id) {
                                 dialog.dismiss();
                                 Log.e(TAG, "onError: Call  "+call+"  id  "+id);
-                                Constant.netToast(StuLoginActivity.this);
                             }
 
                             @Override

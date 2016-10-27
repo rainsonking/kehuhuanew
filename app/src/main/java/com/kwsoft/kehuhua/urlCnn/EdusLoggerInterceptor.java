@@ -3,8 +3,6 @@ package com.kwsoft.kehuhua.urlCnn;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.kwsoft.kehuhua.config.Constant;
-
 import java.io.IOException;
 
 import okhttp3.Headers;
@@ -62,7 +60,7 @@ public class EdusLoggerInterceptor implements Interceptor {
             Log.e(tag, "url : " + clone.request().url());
             Log.e(tag, "code : " + clone.code());
 
-            Constant.statusCode=clone.code();
+            SwitchStatueCode.statusCode=clone.code();
 
             Log.e(tag, "protocol : " + clone.protocol());
             if (!TextUtils.isEmpty(clone.message()))
