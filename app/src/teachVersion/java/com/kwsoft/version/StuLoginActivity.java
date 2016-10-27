@@ -25,6 +25,7 @@ import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.SwitchStatueCode;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.sangbo.autoupdate.CheckVersion;
@@ -226,6 +227,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                             public void onError(Call call, Exception e, int id) {
                                 dialog.dismiss();
                                 Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                                SwitchStatueCode.netToast(StuLoginActivity.this);
                             }
 
                             @Override
