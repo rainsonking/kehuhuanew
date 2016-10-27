@@ -1,6 +1,5 @@
 package com.kwsoft.kehuhua.urlCnn;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -26,11 +25,10 @@ public class EdusLoggerInterceptor implements Interceptor {
     public static final String TAG = "OkHttpUtils";
     private String tag;
     private boolean showResponse;
-    Context mContext;
 
-    public EdusLoggerInterceptor(Context mContext,String tag, boolean showResponse)
+    public EdusLoggerInterceptor(String tag, boolean showResponse)
     {
-        this.mContext=mContext;
+
         if (TextUtils.isEmpty(tag))
         {
             tag = TAG;
@@ -39,10 +37,10 @@ public class EdusLoggerInterceptor implements Interceptor {
         this.tag = tag;
     }
 
-//    public EdusLoggerInterceptor(String tag)
-//    {
-//        this(tag, false);
-//    }
+    public EdusLoggerInterceptor(String tag)
+    {
+        this(tag, false);
+    }
 
     @Override
     public Response intercept(Chain chain) throws IOException
@@ -65,6 +63,7 @@ public class EdusLoggerInterceptor implements Interceptor {
             Log.e(tag, "code : " + clone.code());
 
             Constant.statusCode=clone.code();
+
             Log.e(tag, "protocol : " + clone.protocol());
             if (!TextUtils.isEmpty(clone.message()))
                 Log.e(tag, "message : " + clone.message());

@@ -157,7 +157,7 @@ public class Constant {
     public static int topBarColor;
 
 
-    public static int statusCode=0;// commitValue
+    public static int statusCode=0;//
 
 
 
@@ -170,10 +170,14 @@ public class Constant {
 
 
     public static void netToast(Activity activity) {
-        if (statusCode>500) {
+        if (statusCode>=500) {
+            Toast.makeText(activity, "服务器错误",
+                    Toast.LENGTH_SHORT).show();
+        }else if(statusCode<500&&statusCode>=400){
+            Toast.makeText(activity, "请求出错",
+                    Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(activity, "服务器错误",
-                Toast.LENGTH_SHORT).show();
+
 
     }
 

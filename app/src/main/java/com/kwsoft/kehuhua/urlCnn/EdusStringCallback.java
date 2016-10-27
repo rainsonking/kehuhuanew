@@ -1,10 +1,7 @@
 package com.kwsoft.kehuhua.urlCnn;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 
-import com.kwsoft.kehuhua.config.Constant;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
@@ -34,8 +31,8 @@ public class EdusStringCallback extends StringCallback {
 
     @Override
     public void onError(Call call, Exception e, int id) {
-        Log.e("TAG", "onError: Call  "+call+"  id  "+id);
-        onErrorStatus(call, e, id);
+//        Log.e("TAG", "onError: Call  "+call+"  id  "+id);
+//        onErrorStatus(call, e, id);
 
     }
 
@@ -43,9 +40,9 @@ public class EdusStringCallback extends StringCallback {
     public void onResponse(String response, int id) {
 
     }
-    public void onErrorStatus(Call call, Exception e, int id) {
-        Log.e("TAG", "onError: Call  "+call+"  id  "+id);
-        Constant.netToast((Activity) mContext);
-
-    }
+//    public void onErrorStatus(Call call, Exception e, int id) {
+//        Log.e("TAG", "onError: Call  "+call+"  id  "+id);
+//        Constant.netToast((Activity) mContext);
+//
+//    }
 }

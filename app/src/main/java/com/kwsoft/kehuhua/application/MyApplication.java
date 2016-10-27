@@ -65,7 +65,7 @@ public class MyApplication extends Application {
         CookieJarImpl cookieJar = new CookieJarImpl(new PersistentCookieStore(getApplicationContext()));
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new EdusLoggerInterceptor(mContext,"TAG",false))
+                .addInterceptor(new EdusLoggerInterceptor("TAG"))
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 .cookieJar(cookieJar)//增加cookieJar
