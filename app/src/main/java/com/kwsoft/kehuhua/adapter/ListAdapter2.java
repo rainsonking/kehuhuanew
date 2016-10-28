@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.alibaba.fastjson.JSON;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.TabActivity;
+import com.kwsoft.version.StuPra;
 
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,13 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             return new EmptyViewHolder(view);
         }
-        view = mInflater.inflate(R.layout.activity_list_item, null);
+
+        if (!StuPra.studentProId.equals("5704e45c7cf6c0b2d9873da6")) {
+            view = mInflater.inflate(R.layout.activity_list_item, null);
+        }else{
+            view = mInflater.inflate(R.layout.activity_list_item_teach, null);
+        }
+
         //将创建的View注册点击事件
         view.setOnClickListener(this);
         return new ListViewHolder(view);
