@@ -217,9 +217,24 @@ public class AssortFragment extends Fragment {
         Map<String, Object> stuMenuMap = Utils.str2map(menuData);
         menuListAll = (List<Map<String, Object>>) stuMenuMap.get("menuList");
         Log.e("TAG", "sessionId=" + menuListAll.toString());
+
         menuListMap.removeAll(menuListMap);
         menuListMap.addAll(DataProcess.toStuParentList(menuListAll));
         Log.e("TAG", "刷新后的父类菜单数据=" + menuListMap.toString());
+
+        int leg = menuListMap.size() % 3;
+        if (leg == 1) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("image", "");
+            map.put("menuName", "");
+            menuListMap.add(map);
+            menuListMap.add(map);
+        } else if (leg == 2) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("image", "");
+            map.put("menuName", "");
+            menuListMap.add(map);
+        }
     }
 
 
