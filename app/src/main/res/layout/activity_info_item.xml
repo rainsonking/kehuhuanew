@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="25dp"
         android:paddingRight="20dp"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:text="fgfg"
         android:textColor="@color/list_item_right"
         />
