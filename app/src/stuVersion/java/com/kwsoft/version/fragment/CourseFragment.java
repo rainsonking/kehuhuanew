@@ -178,6 +178,7 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
                                 }
 
                                 tv_date.setText(monthNew);
+                                tv_year.setText(year+"");
 //                                addGeneral.setText(year + "-" + monthNew + "-" + dayNew);
                                 Log.i("123", "date===>" + year + "-" + monthNew + "-" + dayNew);
                                 String dateStr = year + "-" + monthNew + "-" + dayNew;
@@ -298,6 +299,7 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
         currentDateTime = dateTime;
 //        tv_date.setText(currentDateTime.getMonthOfYear()+"月");
         tv_date.setText(currentDateTime.getMonthOfYear() + "");
+        tv_year.setText(currentDateTime.getYear()+"");
         DateTime midDate = dateTime.withDayOfWeek(DateTimeConstants.THURSDAY);
         DateTime startDate = midDate.plusDays(-3);
         DateTime endDate = midDate.plusDays(3);
