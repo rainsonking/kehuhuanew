@@ -356,11 +356,10 @@ public class Add_EditAdapter extends BaseAdapter {
             textView1.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new AlertDialog.Builder(context).setTitle("选择区域").setItems(arrs, new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(context).setTitle("").setItems(arrs, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
                             String DIC_ID = String.valueOf(finalDicList.get(which).get("DIC_ID"));
-//
                             fieldSet.get(position).put(itemValue, DIC_ID);
                             fieldSet.get(position).put(Constant.itemName, DIC_ID);
                             textView1.setText(arrs[which]);
