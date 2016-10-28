@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -17,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -43,8 +41,6 @@ import com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
-import org.angmarch.views.NiceSpinner;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +53,7 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 import static com.kwsoft.kehuhua.config.Constant.itemValue;
+import static java.lang.String.valueOf;
 
 /**
  * Created by Administrator on 2016/6/7 0007.
@@ -133,23 +130,23 @@ public class Add_EditAdapter extends BaseAdapter {
     @SuppressWarnings("unchecked")
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        final int fieldRole = Integer.valueOf(String.valueOf(fieldSet.get(position).get("fieldRole")));
+        final int fieldRole = Integer.valueOf(valueOf(fieldSet.get(position).get("fieldRole")));
         Log.e("TAG", "所在位置 position：" + position + "  fieldRole:" + fieldRole);
 //初始化必填字段标志
         int ifMust = 0;
         if (fieldSet.get(position).get("ifMust") != null) {
-            ifMust = Integer.valueOf(String.valueOf(fieldSet.get(position).get("ifMust")));
+            ifMust = Integer.valueOf(valueOf(fieldSet.get(position).get("ifMust")));
         }
 //初始化是否可修改标志
         int ifUpdate = 0;
         if (fieldSet.get(position).get("ifUpdate") != null) {
-            ifUpdate = Integer.valueOf(String.valueOf(fieldSet.get(position).get("ifUpdate")));
+            ifUpdate = Integer.valueOf(valueOf(fieldSet.get(position).get("ifUpdate")));
         }
 
         convertView = inflater.inflate(R.layout.activity_add_item, null);
 //初始化左侧名称
         TextView textView = (TextView) convertView.findViewById(R.id.add_item_name);
-        String fieldCnName = String.valueOf(fieldSet.get(position).get("fieldCnName"));
+        String fieldCnName = valueOf(fieldSet.get(position).get("fieldCnName"));
         if (fieldCnName.equals("") || fieldCnName.equals("null")) {
             fieldCnName = "";
         }
@@ -196,7 +193,7 @@ public class Add_EditAdapter extends BaseAdapter {
         String defaultName;
         Object itemObj = fieldSet.get(position).get(Constant.itemName);
         if (itemObj != null) {
-            defaultName = String.valueOf(itemObj);
+            defaultName = valueOf(itemObj);
         } else {
             defaultName = "";
         }
@@ -205,7 +202,7 @@ public class Add_EditAdapter extends BaseAdapter {
 //chooseType判断
         int chooseType = -1;
         if (fieldSet.get(position).get("chooseType") != null) {
-            chooseType = Integer.valueOf(String.valueOf(fieldSet.get(position).get("chooseType")));
+            chooseType = Integer.valueOf(valueOf(fieldSet.get(position).get("chooseType")));
         }
         final int finalChooseType = chooseType;
 
@@ -255,7 +252,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 add_edit_text.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
             }
             if (fieldRole == 8) {//订单编号
-                Constant.tmpFieldId = String.valueOf(fieldSet.get(position).get("tmpFieldId"));
+                Constant.tmpFieldId = valueOf(fieldSet.get(position).get("tmpFieldId"));
                 Log.e("TAG", "Constant.tmpFieldId " + Constant.tmpFieldId);
                 Log.e("TAG", "Constant.tmpFieldId " + Constant.tmpFieldId);
                 Log.e("TAG", "Constant.tmpFieldId " + Constant.tmpFieldId);
@@ -323,11 +320,11 @@ public class Add_EditAdapter extends BaseAdapter {
             int dicDefaultSelectInt;
             String dicDefaultSelect;
             //有值的情况
-            if (!defaultName.equals("")) {
+            if (!defaultName.equals("")&&!defaultName.equals("null")) {
                 byId = getById(dicList, byId, Integer.valueOf(defaultName));
                 //无值、有默认值的情况
-            } else if (!String.valueOf(fieldSet.get(position).get("dicDefaultSelect")).equals("")) {
-                dicDefaultSelect = String.valueOf(fieldSet.get(position).get("dicDefaultSelect"));
+            } else if (!valueOf(fieldSet.get(position).get("dicDefaultSelect")).equals("")) {
+                dicDefaultSelect = valueOf(fieldSet.get(position).get("dicDefaultSelect"));
                 //获得默认选中值
                 dicDefaultSelectInt = Integer.valueOf(dicDefaultSelect);
                 //如果有默认选中值，将byId确定
@@ -339,19 +336,25 @@ public class Add_EditAdapter extends BaseAdapter {
             List<String> dataset = new LinkedList<>();
 
             for (int i = 0; i < dicList.size(); i++) {
-                dataset.add(String.valueOf(dicList.get(i).get("DIC_NAME")));
+                dataset.add(valueOf(dicList.get(i).get("DIC_NAME")));
             }
 //            add_spinner.attachDataSource(dataset);
 //            add_spinner.setSelectedIndex(byId);
 //            add_spinner.setTextColor(Color.BLACK);
             // add_spinner.invalidateDrawable(context.getResources().getDrawable(R.mipmap.ic_launcher));
-            fieldSet.get(position).put(itemValue, String.valueOf(dicList.get(byId).get("DIC_ID")));
-            fieldSet.get(position).put(Constant.itemName, String.valueOf(dicList.get(byId).get("DIC_ID")));
+            fieldSet.get(position).put(Constant.itemValue, valueOf(dicList.get(byId).get("DIC_ID")));
+            fieldSet.get(position).put(Constant.itemName, valueOf(dicList.get(byId).get("DIC_ID")));
+            String dicName=String.valueOf(dicList.get(byId).get("DIC_NAME"));
+
+
+            if (!dicName.equals("")&&!dicName.equals("null")) {
+                textView1.setText(dicName);
+            }
+
 
             final List<Map<String, Object>> finalDicList = dicList;
-            final String oldDicId = String.valueOf(fieldSet.get(position).get("true_defaultShowVal"));
+            final String oldDicId = valueOf(fieldSet.get(position).get("true_defaultShowVal"));
             Log.e("TAG", "oldDicId " + oldDicId);
-
             final int size = dataset.size();
             final String[] arrs = (String[]) dataset.toArray(new String[size]);
             textView1.setOnClickListener(new OnClickListener() {
@@ -364,10 +367,11 @@ public class Add_EditAdapter extends BaseAdapter {
 
                                 public void onClick(DialogInterface dialog, int which) {
                                    // Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
-                                    String DIC_ID = String.valueOf(finalDicList.get(which).get("DIC_ID"));
+                                    String DIC_ID = valueOf(finalDicList.get(which).get("DIC_ID"));
                                     fieldSet.get(position).put(itemValue, DIC_ID);
                                     fieldSet.get(position).put(Constant.itemName, DIC_ID);
                                     textView1.setText(arrs[which]);
+                                    Log.e("TAG", "字典选择完毕 fieldSet.get(position) "+fieldSet.get(position).toString());
                                     dialog.dismiss();
                                 }
                             }).create();
@@ -407,7 +411,9 @@ public class Add_EditAdapter extends BaseAdapter {
 //
 //                }
 //            });
-            Log.e("TAG", "字典适配完毕 ");
+
+
+            Log.e("TAG", "字典适配完毕 fieldSet.get(position) "+fieldSet.get(position).toString());
 //3、日期
 
         } else if (fieldRole == 14 || fieldRole == 26 || fieldRole == 28) {
@@ -564,7 +570,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
                 //判断选择了x张图片
 
-                String numPic = String.valueOf(fieldSet.get(position).get(itemValue));
+                String numPic = valueOf(fieldSet.get(position).get(itemValue));
 
                 if (!numPic.equals("null") && !numPic.equals("")) {
 
@@ -592,7 +598,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
             String itemName;
             if (fieldSet.get(position).get(Constant.itemName) != null) {
-                itemName = String.valueOf(fieldSet.get(position).get(Constant.itemName));
+                itemName = valueOf(fieldSet.get(position).get(Constant.itemName));
             } else {
                 itemName = "";
             }
@@ -607,7 +613,7 @@ public class Add_EditAdapter extends BaseAdapter {
                     List<Map<String, String>> needFilterList = getNeedFilter(position);
                     String idArrs = "";
                     try {
-                        idArrs = String.valueOf(fieldSet.get(position).get(itemValue));
+                        idArrs = valueOf(fieldSet.get(position).get(itemValue));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -627,7 +633,7 @@ public class Add_EditAdapter extends BaseAdapter {
 //6、内部对象多值
         else if (fieldRole == 21) {
 
-            String addStyle = String.valueOf(fieldSet.get(position).get("addStyle"));
+            String addStyle = valueOf(fieldSet.get(position).get("addStyle"));
             if (addStyle.equals("1") || addStyle.equals("2")) {
 
                 if (isShow) {
@@ -636,7 +642,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 }
                 String itemName;
                 if (fieldSet.get(position).get(Constant.itemName) != null) {
-                    itemName = String.valueOf(fieldSet.get(position).get(Constant.itemName));
+                    itemName = valueOf(fieldSet.get(position).get(Constant.itemName));
                 } else {
                     itemName = "";
                 }
@@ -652,7 +658,7 @@ public class Add_EditAdapter extends BaseAdapter {
                         List<Map<String, String>> needFilterList = getNeedFilter(position);
                         String idArrs = "";
                         if (fieldSet.get(position).get(itemValue) != null) {
-                            idArrs = String.valueOf(fieldSet.get(position).get(itemValue));
+                            idArrs = valueOf(fieldSet.get(position).get(itemValue));
                         }
                         if (finalChooseType != 1) {
                             toMultiValueActivity(finalFieldCnName, "true", idArrs, childPra, needFilterList, position);
@@ -668,14 +674,14 @@ public class Add_EditAdapter extends BaseAdapter {
 
                 String unlimitedAddValue = "";
                 if (fieldSet.get(position).get("tempListValue") != null) {
-                    unlimitedAddValue = String.valueOf(fieldSet.get(position).get("tempListValue"));
+                    unlimitedAddValue = valueOf(fieldSet.get(position).get("tempListValue"));
 
                 }
 /**
  * 无限添加按钮
  */
 ////获取参数
-                final String showFieldArr = String.valueOf(fieldSet.get(position).get("showFieldArr"));
+                final String showFieldArr = valueOf(fieldSet.get(position).get("showFieldArr"));
                 final String fieldSetStr = JSON.toJSONString(fieldSet);
 ////异步请求模板数据
                 final String finalUnlimitedAddValue = unlimitedAddValue;
@@ -693,7 +699,7 @@ public class Add_EditAdapter extends BaseAdapter {
                             intent.putExtra("unlimitedAddValue", finalUnlimitedAddValue);
                             intent.putExtra("position", position + "");
                             intent.putExtra("tableId", tableId);
-                            intent.putExtra("relationTableId", String.valueOf(fieldSet.get(position).get("relationTableId")));
+                            intent.putExtra("relationTableId", valueOf(fieldSet.get(position).get("relationTableId")));
                             intent.putExtra("pageId", pageId);
                             mActivity.startActivityForResult(intent, 2);
                         } catch (Exception e) {
@@ -723,7 +729,7 @@ public class Add_EditAdapter extends BaseAdapter {
     private boolean isShow(int position, TextView textView, TextView textViewIfMust) {
         boolean isShow = true;
         if (fieldSet.get(position).get("jsWhereStr") != null) {
-            String jsWhereStr = String.valueOf(fieldSet.get(position).get("jsWhereStr")).replace(" ", "").replace("==", "");
+            String jsWhereStr = valueOf(fieldSet.get(position).get("jsWhereStr")).replace(" ", "").replace("==", "");
             String jsWhereStrFieldId = jsWhereStr.substring(jsWhereStr.indexOf(":") + 1, jsWhereStr.indexOf("}"));
             String jsWhereStrValue = jsWhereStr.substring(jsWhereStr.indexOf("}") + 1, jsWhereStr.length());
             int fieldIdNeed = Integer.valueOf(jsWhereStrFieldId);
@@ -731,11 +737,11 @@ public class Add_EditAdapter extends BaseAdapter {
             int countNum = 0;
             for (int i = 0; i < fieldSet.size(); i++) {
                 countNum++;
-                int fieldIdTemp = Integer.valueOf(String.valueOf(fieldSet.get(i).get("fieldId")));
+                int fieldIdTemp = Integer.valueOf(valueOf(fieldSet.get(i).get("fieldId")));
                 if (fieldIdNeed == fieldIdTemp) {
                     //获得字典值
                     if (fieldSet.get(i).get("true_defaultShowVal") != null) {
-                        int dicTemp = Integer.valueOf(String.valueOf(fieldSet.get(i).get("true_defaultShowVal")));
+                        int dicTemp = Integer.valueOf(valueOf(fieldSet.get(i).get("true_defaultShowVal")));
                         if (dicNeed == dicTemp) {
                             break;
                         }
@@ -761,7 +767,7 @@ public class Add_EditAdapter extends BaseAdapter {
         } else {
             //正常循环
             for (int i = 0; i < dicList.size(); i++) {
-                if (Integer.parseInt(String.valueOf(dicList.get(i).get("DIC_ID"))) == dicDefaultSelectInt) {
+                if (Integer.parseInt(valueOf(dicList.get(i).get("DIC_ID"))) == dicDefaultSelectInt) {
                     byId = i;
                     break;
                 }
@@ -777,7 +783,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 (List<Map<String, Object>>) fieldSet.get(position).get("dicList");
 
 
-        String dicChildShow = String.valueOf(fieldSet.get(position).get("dicChildShow"));
+        String dicChildShow = valueOf(fieldSet.get(position).get("dicChildShow"));
         List<Integer> dicChildShowList = new ArrayList<>();
         if (dicChildShow != null && !dicChildShow.equals("") && !dicChildShow.equals("null")) {
             //将字符串类型数组转换为int型集合
@@ -790,7 +796,7 @@ public class Add_EditAdapter extends BaseAdapter {
             List<Map<String, Object>> dicListNew = new ArrayList<>();
             if (dicList.size() > 0) {
                 for (int i = 0; i < dicList.size(); i++) {
-                    int dicIdTemp = Integer.valueOf(String.valueOf(dicList.get(i).get("DIC_ID")));
+                    int dicIdTemp = Integer.valueOf(valueOf(dicList.get(i).get("DIC_ID")));
                     if (dicChildShowList.contains(dicIdTemp)) {
                         dicListNew.add(dicList.get(i));
                     }
@@ -807,7 +813,7 @@ public class Add_EditAdapter extends BaseAdapter {
         List<Map<String, String>> needFilterList = new ArrayList<>();
         try {
             //当前表position位置的needFilter
-            String isSession = String.valueOf(fieldSet.get(position).get("needFilter"));
+            String isSession = valueOf(fieldSet.get(position).get("needFilter"));
             //判断是否为无限添加的item进入选项
             if (mActivity instanceof AddTemplateDataActivity && Constant.fieldSetStr != null) {
                 List<Map<String, Object>> fieldSet2 = JSON.parseObject(Constant.fieldSetStr,
@@ -839,24 +845,24 @@ public class Add_EditAdapter extends BaseAdapter {
                 //如果有值赋值，没值为空串
                 String idValues = "";
                 for (int l = 0; l < fieldSetTemp.size(); l++) {
-                    if (Integer.valueOf(String.valueOf(fieldSetTemp.get(l).get("fieldRole"))) == 21) {
-                        if ((String.valueOf(fieldSetTemp.get(l).get("fieldId"))
+                    if (Integer.valueOf(valueOf(fieldSetTemp.get(l).get("fieldRole"))) == 21) {
+                        if ((valueOf(fieldSetTemp.get(l).get("fieldId"))
                                 .equals(needFilterStr[1]))) {
 //                            Log.e("TAG", "fieldSetTemp.get(l)21" + fieldSetTemp.get(l).get(itemValue));
                             if (fieldSetTemp.get(l).get(itemValue) != null) {
-                                idValues = String.valueOf(fieldSetTemp.get(l).get(itemValue));
+                                idValues = valueOf(fieldSetTemp.get(l).get(itemValue));
                             } else {
-                                Toast.makeText(context, "您需要填写" + String.valueOf(fieldSetTemp.get(l).get("fieldCnName")), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "您需要填写" + valueOf(fieldSetTemp.get(l).get("fieldCnName")), Toast.LENGTH_SHORT).show();
                             }
                         }
                     } else {
-                        if ((String.valueOf(fieldSetTemp.get(l).get("fieldId"))
+                        if ((valueOf(fieldSetTemp.get(l).get("fieldId"))
                                 .equals(needFilterStr[1]))) {
 //                            Log.e("TAG", "fieldSetTemp.get(l)20" + fieldSetTemp.get(l).get(itemValue));
                             if (fieldSetTemp.get(l).get(itemValue) != null) {
-                                idValues = String.valueOf(fieldSetTemp.get(l).get(itemValue));
+                                idValues = valueOf(fieldSetTemp.get(l).get(itemValue));
                             } else {
-                                Toast.makeText(context, "您需要填写" + String.valueOf(fieldSetTemp.get(l).get("fieldCnName")), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "您需要填写" + valueOf(fieldSetTemp.get(l).get("fieldCnName")), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -886,7 +892,7 @@ public class Add_EditAdapter extends BaseAdapter {
             intent.putExtra("viewName", viewName);
             intent.putExtra("idArrs", idArrs);
             intent.putExtra("isMulti", aTrue);
-            intent.putExtra("position", String.valueOf(position));
+            intent.putExtra("position", valueOf(position));
             intent.putExtra("needFilterListStr", needFilterListStr);
             Log.e("TAG", "向下拉树传递needFilterListStr" + needFilterListStr);
             mActivity.startActivityForResult(intent, 2);
@@ -907,7 +913,7 @@ public class Add_EditAdapter extends BaseAdapter {
             intent.putExtra("viewName", viewName);
             intent.putExtra("needFilterListStr", needFilterListStr);
             intent.putExtra("idArrs", idArrs);
-            intent.putExtra("position", String.valueOf(position));
+            intent.putExtra("position", valueOf(position));
             intent.putExtra("isMulti", isMulti);
             mActivity.startActivityForResult(intent, 2);
         } catch (Exception e) {

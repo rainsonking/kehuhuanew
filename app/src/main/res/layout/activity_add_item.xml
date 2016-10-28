@@ -60,15 +60,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:paddingRight="10dp"
                 android:background="@null"
                 android:hint="请填写"
                 android:textColorHint="@color/gray"
                 android:inputType="textMultiLine"
                 android:maxLines="10"
                 android:minLines="1"
-                android:textColor="@color/list_item_right"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:visibility="gone" />
 
@@ -76,11 +74,10 @@
                 android:id="@+id/add_general"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:hint="请选择"
                 android:textColorHint="@color/gray"
-                android:textColor="@color/list_item_right"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:visibility="gone" />
 
@@ -97,7 +94,8 @@
                 android:id="@+id/add_spinner"
                 android:layout_width="match_parent"
                 android:textColor="@color/black"
-                android:textSize="17dp"
+                android:textSize="15sp"
+                android:hint="请选择"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:visibility="gone"/>
@@ -130,7 +128,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
                     android:layout_toEndOf="@+id/image_upload"
                     android:textColor="@color/list_item_right"
                     android:textSize="17sp" />
