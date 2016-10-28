@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -356,21 +357,36 @@ public class Add_EditAdapter extends BaseAdapter {
             textView1.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new AlertDialog.Builder(context).setTitle("").setItems(arrs, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
-                            String DIC_ID = String.valueOf(finalDicList.get(which).get("DIC_ID"));
-                            fieldSet.get(position).put(itemValue, DIC_ID);
-                            fieldSet.get(position).put(Constant.itemName, DIC_ID);
-                            textView1.setText(arrs[which]);
+                    ArrayAdapter adapter = new ArrayAdapter(context, R.layout.activity_adapter_radio_item, R.id.text1, arrs);
 
-//                            if (!oldDicId.equals(DIC_ID)) {
-//                                notifyDataSetChanged();
-//                            }
+                    AlertDialog dialog = new AlertDialog.Builder(context).setTitle("").
+                            setAdapter(adapter, new DialogInterface.OnClickListener() {
 
-                            dialog.dismiss();
-                        }
-                    }).show();
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
+                                    String DIC_ID = String.valueOf(finalDicList.get(which).get("DIC_ID"));
+                                    fieldSet.get(position).put(itemValue, DIC_ID);
+                                    fieldSet.get(position).put(Constant.itemName, DIC_ID);
+                                    textView1.setText(arrs[which]);
+                                    dialog.dismiss();
+                                }
+                            }).create();
+                    dialog.show();
+//                    new AlertDialog.Builder(context).setTitle("").setItems(arrs, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
+//                            String DIC_ID = String.valueOf(finalDicList.get(which).get("DIC_ID"));
+//                            fieldSet.get(position).put(itemValue, DIC_ID);
+//                            fieldSet.get(position).put(Constant.itemName, DIC_ID);
+//                            textView1.setText(arrs[which]);
+//
+////                            if (!oldDicId.equals(DIC_ID)) {
+////                                notifyDataSetChanged();
+////                            }
+//
+//                            dialog.dismiss();
+//                        }
+//                    }).show();
                 }
             });
 //            add_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
