@@ -4,11 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.zhy.http.okhttp.callback.StringCallback;
+import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.IOException;
 
-import okhttp3.Call;
 import okhttp3.Response;
 
 /**
@@ -16,11 +15,17 @@ import okhttp3.Response;
  *
  */
 
-public class EdusStringCallback extends StringCallback {
+public abstract class EdusStringCallback extends Callback<String> {
+
+    
     public Context mContext;
+    private static final String TAG = "EdusStringCallback";
+
 
     public EdusStringCallback(Context mContext) {
         this.mContext = mContext;
+        Log.e(TAG, "EdusStringCallback: 是否已走callback");
+        SwitchStatueCode.netToast((Activity) this.mContext);
     }
 
 
@@ -30,17 +35,5 @@ public class EdusStringCallback extends StringCallback {
         return response.body().string();
     }
 
-
-    @Override
-    public void onError(Call call, Exception e, int id) {
-        Log.e("TAG", "callback测试  "+call+"  id  "+id);
-        SwitchStatueCode.netToast((Activity) mContext);
-
-    }
-
-    @Override
-    public void onResponse(String response, int id) {
-
-    }
 
 }

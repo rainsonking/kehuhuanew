@@ -652,11 +652,11 @@ public class ListActivity2 extends BaseActivity {
             if (toolListPop != null && toolListPop.isShowing()) {
                 toolListPop.dismiss();
             } else {
-                final View toolLayout = getLayoutInflater().inflate(
+                final View popInflateView = getLayoutInflater().inflate(
                         R.layout.activity_list_buttonlist, null);
-                ListView toolListPopView = (ListView) toolLayout
+                ListView toolListPopView = (ListView) popInflateView
                         .findViewById(R.id.buttonList);
-                TextView tv_dismiss = (TextView) toolLayout.findViewById(R.id.tv_dismiss);
+                TextView tv_dismiss = (TextView) popInflateView.findViewById(R.id.tv_dismiss);
                 tv_dismiss.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -684,7 +684,7 @@ public class ListActivity2 extends BaseActivity {
                                 }
                             }
                         });
-                initPopWindowDropdown(toolLayout);
+                initPopWindowDropdown(popInflateView);
 
             }
         } catch (Exception e) {

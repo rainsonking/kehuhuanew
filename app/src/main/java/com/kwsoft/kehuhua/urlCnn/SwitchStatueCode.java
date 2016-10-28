@@ -1,6 +1,7 @@
 package com.kwsoft.kehuhua.urlCnn;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -9,8 +10,17 @@ import android.widget.Toast;
  */
 
 public class SwitchStatueCode {
+
+
     static int statusCode=0;//
+    private static final String TAG = "SwitchStatueCode";
+
+
+
+
     public static void netToast(Activity activity) {
+
+        Log.e(TAG, "netToast: statusCode"+statusCode);
         switch(statusCode){
             case 500:Toast.makeText(activity, "服务器内部错误",Toast.LENGTH_SHORT).show();break;
             case 501:Toast.makeText(activity, "服务器无法识别请求",Toast.LENGTH_SHORT).show();break;
