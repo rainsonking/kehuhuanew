@@ -338,10 +338,6 @@ public class Add_EditAdapter extends BaseAdapter {
             for (int i = 0; i < dicList.size(); i++) {
                 dataset.add(valueOf(dicList.get(i).get("DIC_NAME")));
             }
-//            add_spinner.attachDataSource(dataset);
-//            add_spinner.setSelectedIndex(byId);
-//            add_spinner.setTextColor(Color.BLACK);
-            // add_spinner.invalidateDrawable(context.getResources().getDrawable(R.mipmap.ic_launcher));
             fieldSet.get(position).put(Constant.itemValue, valueOf(dicList.get(byId).get("DIC_ID")));
             fieldSet.get(position).put(Constant.itemName, valueOf(dicList.get(byId).get("DIC_ID")));
             String dicName=String.valueOf(dicList.get(byId).get("DIC_NAME"));
@@ -361,59 +357,19 @@ public class Add_EditAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     ArrayAdapter adapter = new ArrayAdapter(context, R.layout.activity_adapter_radio_item, R.id.text1, arrs);
-
                     AlertDialog dialog = new AlertDialog.Builder(context).setTitle("").
                             setAdapter(adapter, new DialogInterface.OnClickListener() {
-
                                 public void onClick(DialogInterface dialog, int which) {
-                                   // Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
                                     String DIC_ID = valueOf(finalDicList.get(which).get("DIC_ID"));
                                     fieldSet.get(position).put(itemValue, DIC_ID);
                                     fieldSet.get(position).put(Constant.itemName, DIC_ID);
                                     textView1.setText(arrs[which]);
-                                    Log.e("TAG", "字典选择完毕 fieldSet.get(position) "+fieldSet.get(position).toString());
                                     dialog.dismiss();
                                 }
                             }).create();
                     dialog.show();
-//                    new AlertDialog.Builder(context).setTitle("").setItems(arrs, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
-//                            String DIC_ID = String.valueOf(finalDicList.get(which).get("DIC_ID"));
-//                            fieldSet.get(position).put(itemValue, DIC_ID);
-//                            fieldSet.get(position).put(Constant.itemName, DIC_ID);
-//                            textView1.setText(arrs[which]);
-//
-////                            if (!oldDicId.equals(DIC_ID)) {
-////                                notifyDataSetChanged();
-////                            }
-//
-//                            dialog.dismiss();
-//                        }
-//                    }).show();
                 }
             });
-//            add_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int positionDic, long id) {
-//                    String DIC_ID = String.valueOf(finalDicList.get(positionDic).get("DIC_ID"));
-//
-//                    fieldSet.get(position).put(itemValue, DIC_ID);
-//                    fieldSet.get(position).put(Constant.itemName, DIC_ID);
-//
-//                    if (!oldDicId.equals(DIC_ID)) {
-//                        notifyDataSetChanged();
-//                    }
-//                }
-//
-//                @Override
-//                public void onNothingSelected(AdapterView<?> parent) {
-//
-//                }
-//            });
-
-
-            Log.e("TAG", "字典适配完毕 fieldSet.get(position) "+fieldSet.get(position).toString());
 //3、日期
 
         } else if (fieldRole == 14 || fieldRole == 26 || fieldRole == 28) {

@@ -595,10 +595,60 @@ public class ListActivity2 extends BaseActivity {
         }
     }
 
+
+    public void initPopWindowDropdown(View view) {
+        //内容，高度，宽度
+        toolListPop = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        //动画效果
+        toolListPop.setAnimationStyle(R.style.PopupWindowAnimation);
+        //菜单背景色
+        ColorDrawable dw = new ColorDrawable(0xffffffff);
+        toolListPop.setBackgroundDrawable(dw);
+        //显示位置
+        toolListPop.showAtLocation(getLayoutInflater().inflate(R.layout.activity_list_avtivity2, null), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+        //设置背景半透明
+        backgroundAlpha(0.7f);
+        //关闭事件
+        toolListPop.setOnDismissListener(new popupDismissListener());
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                /*if( popupWindow!=null && popupWindow.isShowing()){
+                    popupWindow.dismiss();
+                    popupWindow=null;
+                }*/
+                // 这里如果返回true的话，touch事件将被拦截
+                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+                return false;
+            }
+        });
+    }
+    /**
+     * 设置添加屏幕的背景透明度
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(float bgAlpha)
+    {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getWindow().setAttributes(lp);
+    }
+
+    /**
+     * 添加新笔记时弹出的popWin关闭的事件，主要是为了将背景透明度改回来
+     *
+     */
+    class popupDismissListener implements PopupWindow.OnDismissListener{
+
+        @Override
+        public void onDismiss() {
+            backgroundAlpha(1f);
+        }
+
+    }
+
     public void buttonList() {
         try {
-
-
             if (toolListPop != null && toolListPop.isShowing()) {
                 toolListPop.dismiss();
             } else {
@@ -634,53 +684,7 @@ public class ListActivity2 extends BaseActivity {
                                 }
                             }
                         });
-                // 创建弹出窗口
-                // 窗口内容为layoutLeft，里面包含一个ListView
-                // 窗口宽度跟tvLeft一样
-                toolListPop = new PopupWindow(toolLayout, ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                ColorDrawable cd = new ColorDrawable(0b1);
-                toolListPop.setBackgroundDrawable(cd);
-                toolListPop.setAnimationStyle(R.style.PopupWindowAnimation);
-                //设置半透明
-                WindowManager.LayoutParams params = getWindow().getAttributes();
-                params.alpha = 0.7f;
-                getWindow().setAttributes(params);
-
-                toolListPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        WindowManager.LayoutParams params = getWindow().getAttributes();
-                        params.alpha = 1f;
-                        getWindow().setAttributes(params);
-                    }
-                });
-                toolListPop.update();
-                toolListPop.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                toolListPop.setTouchable(true); // 设置popupwindow可点击
-                toolListPop.setOutsideTouchable(true); // 设置popupwindow外部可点击
-                toolListPop.setFocusable(true); // 获取焦点
-                toolListPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                toolListPop.showAtLocation(toolLayout, Gravity.BOTTOM, 0, 0);
-
-                // 设置popupwindow的位置（相对tvLeft的位置）
-                int topBarHeight = mToolbar.getBottom();
-                toolListPop.showAsDropDown(toolListPopView, 0,
-                        (topBarHeight - toolListPopView.getHeight()) / 2);
-
-                toolListPop.setTouchInterceptor(new View.OnTouchListener() {
-
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        // 如果点击了popupwindow的外部，popupwindow也会消失
-                        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                            toolListPop.dismiss();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
+                initPopWindowDropdown(toolLayout);
 
             }
         } catch (Exception e) {

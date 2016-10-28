@@ -60,7 +60,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="15dp"
-        android:background="@mipmap/often_more"
+        android:background="@drawable/nav_news"
         />
 
 </RelativeLayout>

@@ -57,7 +57,7 @@ public class AssortFragment extends Fragment {
                     if (swipeRefreshLayout.isRefreshing()) {
                         adapter.notifyDataSetChanged();
                         swipeRefreshLayout.setRefreshing(false);//设置不刷新
-                        Toast.makeText(getActivity().getApplicationContext(), "数据已刷新", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "数据已刷新", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -168,7 +168,7 @@ public class AssortFragment extends Fragment {
     public void postLogin() {
         if (!((BaseActivity) getActivity()).hasInternetConnected()) {
             Looper.prepare();
-            Toast.makeText(getActivity().getApplicationContext(), "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "当前网络不可用，请检查网络！", Toast.LENGTH_SHORT).show();
             Looper.loop();
             swipeRefreshLayout.setRefreshing(false);//直接设置不刷新
         } else {
