@@ -14,7 +14,7 @@ import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
-import com.kwsoft.kehuhua.urlCnn.SwitchStatueCode;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.sangbo.autoupdate.CheckVersion;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -102,9 +102,8 @@ public class StuProLoginActivity extends BaseActivity {
                         .execute(new EdusStringCallback(StuProLoginActivity.this) {
                             @Override
                             public void onError(Call call, Exception e, int id) {
+                                ErrorToast.errorToast(mContext,e);
                                 dialog.dismiss();
-                                Log.e(TAG, "onError: Call  "+call+"  id  "+id);
-                                SwitchStatueCode.netToast(StuProLoginActivity.this);
                                 toLoginPage();
                             }
 

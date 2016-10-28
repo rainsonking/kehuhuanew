@@ -24,6 +24,7 @@ import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.application.MyApplication;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -226,8 +227,8 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
                 .execute(new EdusStringCallback(ResetPwdActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         getProgressDialog().dismiss();
-                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 
                     @Override

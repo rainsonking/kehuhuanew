@@ -30,6 +30,7 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.StuInfoActivity;
@@ -371,8 +372,9 @@ private static final String TAG = "StudyFragment";
                     .execute(new EdusStringCallback(getActivity()) {
                         @Override
                         public void onError(Call call, Exception e, int id) {
+                            ErrorToast.errorToast(mContext,e);
                             pull_refresh_scrollview.onRefreshComplete();
-                            Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+
                         }
 
                         @Override

@@ -24,6 +24,7 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.model.OnDataListener;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.view.CourseView;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -361,7 +362,7 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
                 .execute(new EdusStringCallback(getActivity()) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e(TAG, "onError: Call  " + call + "  id  " + id);
+                        ErrorToast.errorToast(mContext,e);
                     }
 
                     @Override

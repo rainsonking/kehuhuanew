@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.version.Common.DataCleanManager;
 import com.kwsoft.version.FeedbackActivity;
@@ -98,7 +99,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 .execute(new EdusStringCallback(getActivity()) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                        ErrorToast.errorToast(mContext,e);
                     }
 
                     @Override

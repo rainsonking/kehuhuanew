@@ -1,18 +1,14 @@
 package com.kwsoft.version;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -22,10 +18,8 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
-import com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity;
 import com.kwsoft.kehuhua.widget.CnToolbar;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
-import com.kwsoft.version.androidRomType.AndtoidRomUtil;
 import com.kwsoft.version.fragment.AssortFragment;
 import com.kwsoft.version.fragment.CourseFragment;
 import com.kwsoft.version.fragment.MeFragment;
@@ -38,7 +32,6 @@ import java.util.List;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
-import me.iwf.photopicker.PhotoPicker;
 
 /**
  * 学员端看板界面
@@ -73,24 +66,24 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
     public void initDialog() {
 
-        com.kwsoft.version.CustomDialog.Builder builder = new com.kwsoft.version.CustomDialog.Builder(StuMainActivity.this);
-//                builder.setMessage("这个就是自定义的提示框");
-        builder.setTitle("入园须知");
-        builder.setPositiveButton("我知道了!", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                //设置你的操作事项
-            }
-        });
-
-        builder.setNegativeButton("",
-                new android.content.DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        builder.create().show();
+//        CustomDialog.Builder builder = new com.kwsoft.version.CustomDialog.Builder(StuMainActivity.this);
+////                builder.setMessage("这个就是自定义的提示框");
+//        builder.setTitle("入园须知");
+//        builder.setPositiveButton("我知道了!", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//                //设置你的操作事项
+//            }
+//        });
+//
+//        builder.setNegativeButton("",
+//                new android.content.DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//        builder.create().show();
     }
 
     @Override
