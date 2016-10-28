@@ -1,5 +1,6 @@
 package com.kwsoft.kehuhua.adcustom;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,10 +18,11 @@ import com.alibaba.fastjson.TypeReference;
 import com.kwsoft.kehuhua.adapter.Add_EditAdapter;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,10 +133,11 @@ public class AddItemsActivity extends BaseActivity {
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(mContext) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         dialog.dismiss();
+                        ErrorToast.errorToast(mContext,e);
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 
@@ -181,7 +184,7 @@ public class AddItemsActivity extends BaseActivity {
         Log.e("TAG", "解析添加数据开始展示 " + fieldSet.toString());
         if (fieldSet != null && fieldSet.size() > 0) {
             Constant.fieldSetTemp = fieldSet;
-            adapter = new Add_EditAdapter(AddItemsActivity.this, fieldSet, paramsMap);
+            adapter = new Add_EditAdapter(mContext, fieldSet, paramsMap);
             lvAddItem.setAdapter(adapter);
             dialog.dismiss();
         }else{
@@ -217,7 +220,7 @@ public class AddItemsActivity extends BaseActivity {
     }
 
     private void requestAddCommit() {
-        String value = DataProcess.commit(AddItemsActivity.this,fieldSet);
+        String value = DataProcess.commit((Activity) mContext,fieldSet);
         if (!value.equals("no")) {
             if (hasInternetConnected()) {
                 dialog.show();
@@ -232,12 +235,13 @@ public class AddItemsActivity extends BaseActivity {
                         .get()
                         .url(volleyUrl)
                         .build()
-                        .execute(new StringCallback() {
+                        .execute(new EdusStringCallback(mContext) {
                             @Override
                             public void onError(Call call, Exception e, int id) {
                                 dialog.dismiss();
+                                ErrorToast.errorToast(mContext,e);
                                 Log.e(TAG, "onError: Call  "+call+"  id  "+id);
-                                Toast.makeText(AddItemsActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "添加失败", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -248,7 +252,7 @@ public class AddItemsActivity extends BaseActivity {
                                 if (!isCommitSuccess.equals("0")) {
                                     toListActivity();
                                 } else {
-                                    Toast.makeText(AddItemsActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "添加失败", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -263,7 +267,7 @@ public class AddItemsActivity extends BaseActivity {
      * 跳转至子菜单列表
      */
     public void toListActivity() {
-        Toast.makeText(AddItemsActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "添加成功", Toast.LENGTH_SHORT).show();
         dialog.dismiss();
         this.finish();
     }
@@ -319,7 +323,7 @@ public class AddItemsActivity extends BaseActivity {
                         }
                     }
                     secondValue += "&" + DataProcess.toCommitStr(
-                            AddItemsActivity.this,
+                            (Activity) mContext,
                             myValueList.get(i));
                 }
 
@@ -396,10 +400,11 @@ public class AddItemsActivity extends BaseActivity {
                 .params(parMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(mContext) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         dialog.dismiss();
+                        ErrorToast.errorToast(mContext,e);
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 

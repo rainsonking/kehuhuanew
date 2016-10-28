@@ -11,8 +11,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Url;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -121,9 +122,10 @@ public class TestActivity extends BaseActivity {
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(TestActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         dialog.dismiss();
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }

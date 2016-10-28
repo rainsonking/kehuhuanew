@@ -24,7 +24,9 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.loadDialog.LoadingDialog;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.sangbo.autoupdate.CheckVersion;
@@ -62,7 +64,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_stu_login_sec);
         CloseActivityClass.activityList.add(this);
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
+        dialog=new LoadingDialog(mContext,"登录中...");
         initJudgeSave();
         initView();
 
@@ -221,10 +223,15 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                         .params(map)
                         .url(volleyUrl)
                         .build()
-                        .execute(new EdusStringCallback(StuLoginActivity.this) {
+                        .execute(new EdusStringCallback(mContext) {
                             @Override
                             public void onError(Call call, Exception e, int id) {
+                                ErrorToast.errorToast(mContext,e);
                                 dialog.dismiss();
+                                ErrorToast.errorToast(mContext,e);
+                                Log.e(TAG, "onError: e.getClass()"+e.getClass());
+
+
                             }
 
                             @Override
@@ -274,7 +281,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             }
         } else {
             dialog.dismiss();
-            Toast.makeText(StuLoginActivity.this, "服务器超时", Toast.LENGTH_SHORT).show();
+            Toast.makeText(StuLoginActivity.this, "服务端无数据", Toast.LENGTH_SHORT).show();
         }
     }
 

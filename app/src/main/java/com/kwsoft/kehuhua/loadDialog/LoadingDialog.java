@@ -44,13 +44,14 @@ public class LoadingDialog {
             mLoadingDialog.show();
             mLoadingView.startAnim();
         }
+
     }
 
     public void dismiss(){
         if (mLoadingDialog!=null) {
             mLoadingView.stopAnim();
             mLoadingDialog.dismiss();
-            mLoadingDialog=null;
+//            mLoadingDialog=null;//原本类中带=null，将其删除，否则show方法无法执行第二次
         }
     }
 }

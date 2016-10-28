@@ -22,10 +22,11 @@ import com.kwsoft.kehuhua.adcustom.TestActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.config.Url;
 import com.kwsoft.kehuhua.login.LoginActivity;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.kwsoft.kehuhua.view.LoadMoreRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.HashMap;
 import java.util.List;
@@ -108,9 +109,10 @@ public class UnGetFragment extends Fragment implements View.OnClickListener{
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(getActivity()) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         isLoadMore=false;
                         listView.notifyMoreFinish(true);
                         //refreshListView.hideFooterView();

@@ -13,8 +13,9 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,9 +99,10 @@ public class RowsReadActivity extends AppCompatActivity {
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(RowsReadActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 

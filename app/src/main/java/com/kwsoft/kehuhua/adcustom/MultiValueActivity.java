@@ -19,9 +19,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.kwsoft.kehuhua.adapter.MultiValueAdapter;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.Utils;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -167,9 +168,10 @@ public class MultiValueActivity extends BaseActivity {
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(MultiValueActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         dialog.dismiss();
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }

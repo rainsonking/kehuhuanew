@@ -77,8 +77,6 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder thisHolder, int position) {
-
-        Log.e("TAG", "recyclerView " + position);
         if (thisHolder instanceof ListViewHolder) {
             final ListViewHolder holder = (ListViewHolder) thisHolder;
             List<Map<String, String>> item = getData(position);
@@ -138,7 +136,6 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 e.printStackTrace();
             }
 
-            Log.e("TAG", "适配List完毕  ");
 
 //判断跳转子表格
             final String titleName = item.get(0).get("fieldCnName2");

@@ -29,6 +29,7 @@ import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.StuInfoActivity;
@@ -36,7 +37,6 @@ import com.kwsoft.version.StuMainActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
 import com.kwsoft.version.view.StudyGridView;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -368,7 +368,7 @@ private static final String TAG = "StudyFragment";
                     .params(paramsMap)
                     .url(volleyUrl)
                     .build()
-                    .execute(new StringCallback() {
+                    .execute(new EdusStringCallback(getActivity()) {
                         @Override
                         public void onError(Call call, Exception e, int id) {
                             pull_refresh_scrollview.onRefreshComplete();

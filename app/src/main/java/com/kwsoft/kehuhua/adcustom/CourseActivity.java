@@ -18,9 +18,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.model.OnDataListener;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.view.CourseView;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -252,9 +253,10 @@ public class CourseActivity extends AppCompatActivity implements OnDataListener,
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(CourseActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 

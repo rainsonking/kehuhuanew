@@ -26,9 +26,10 @@ import com.kwsoft.kehuhua.fragments.FragmentTabAdapter;
 import com.kwsoft.kehuhua.fragments.GetFragment;
 import com.kwsoft.kehuhua.fragments.UnGetFragment;
 import com.kwsoft.kehuhua.login.LoginActivity;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -226,13 +227,11 @@ public class MessagAlertActivity extends BaseActivity {
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(MessagAlertActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         getProgressDialog().dismiss();
-                        Log.i("123", "请求失败！");
-                        Toast.makeText(MessagAlertActivity.this, "系统正在维护中,请稍后再试...", Toast.LENGTH_LONG).show();
-                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 
                     @Override

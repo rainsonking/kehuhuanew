@@ -1,10 +1,8 @@
 package com.kwsoft.kehuhua.wechatPicture;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -21,17 +19,16 @@ import com.kwsoft.kehuhua.adcustom.RowsAddActivity;
 import com.kwsoft.kehuhua.adcustom.RowsEditActivity;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -228,11 +225,10 @@ private WaterWaveProgress waveProgress;
                 .files("myFiles", files)
                 .url(url)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(SelectPictureActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
-                        Toast.makeText(SelectPictureActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        ErrorToast.errorToast(mContext,e);
                         waveProgress.setVisibility(View.GONE);
                     }
 
@@ -312,27 +308,5 @@ private WaterWaveProgress waveProgress;
     @Override
     public void onClick(View view) {
 
-    }
-
-    public void setTheNumberProgressBar() {
-
-
-//        timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (!isFinish) {
-//                            bnp.incrementProgressBy(2);
-//                            if (bnp.isFinished()) {
-//                                isFinish = false;
-//                            }
-//                        }
-//                    }
-//                });
-//            }
-//        }, 1000, 100);
     }
 }

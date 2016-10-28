@@ -17,11 +17,12 @@ import com.alibaba.fastjson.TypeReference;
 import com.kwsoft.kehuhua.adapter.Add_EditAdapter;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,9 +132,10 @@ public class RowsEditActivity extends BaseActivity {
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(RowsEditActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         dialog.dismiss();
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
@@ -229,9 +231,10 @@ public class RowsEditActivity extends BaseActivity {
                         .get()
                         .url(volleyUrl)
                         .build()
-                        .execute(new StringCallback() {
+                        .execute(new EdusStringCallback(RowsEditActivity.this) {
                             @Override
                             public void onError(Call call, Exception e, int id) {
+                                ErrorToast.errorToast(mContext,e);
                                 dialog.dismiss();
                                 Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                                 Toast.makeText(RowsEditActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
@@ -345,9 +348,10 @@ public class RowsEditActivity extends BaseActivity {
                 .params(parMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(RowsEditActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         dialog.dismiss();
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }

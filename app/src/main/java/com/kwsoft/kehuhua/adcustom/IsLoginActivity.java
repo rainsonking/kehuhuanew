@@ -12,10 +12,11 @@ import com.alibaba.fastjson.JSON;
 import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.login.LoginActivity;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.utils.DiskLruCacheHelper;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -86,9 +87,10 @@ public class IsLoginActivity extends Activity {
                 .params(paramsMap)
                 .url(loginUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(IsLoginActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
 //                        mainPage(diskData);
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }

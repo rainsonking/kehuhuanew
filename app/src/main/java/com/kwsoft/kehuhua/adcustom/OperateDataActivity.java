@@ -18,11 +18,12 @@ import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.OperateDataAdapter;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.view.RecycleViewDivider;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,9 +84,10 @@ public class OperateDataActivity extends BaseActivity {
                 .params(paramsMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(OperateDataActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         dialog.dismiss();
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
@@ -221,9 +223,10 @@ public class OperateDataActivity extends BaseActivity {
                         .get()
                         .url(volleyUrl)
                         .build()
-                        .execute(new StringCallback() {
+                        .execute(new EdusStringCallback(OperateDataActivity.this) {
                             @Override
                             public void onError(Call call, Exception e, int id) {
+                                ErrorToast.errorToast(mContext,e);
                                 dialog.dismiss();
                                 Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                                 Toast.makeText(OperateDataActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
@@ -366,9 +369,10 @@ public class OperateDataActivity extends BaseActivity {
                         .get()
                         .url(volleyUrl)
                         .build()
-                        .execute(new StringCallback() {
+                        .execute(new EdusStringCallback(OperateDataActivity.this) {
                             @Override
                             public void onError(Call call, Exception e, int id) {
+                                ErrorToast.errorToast(mContext,e);
                                 dialog.dismiss();
                                 Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                                 Toast.makeText(OperateDataActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
@@ -517,9 +521,10 @@ public class OperateDataActivity extends BaseActivity {
                 .params(parMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(OperateDataActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         dialog.dismiss();
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }

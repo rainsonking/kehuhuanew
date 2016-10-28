@@ -2,7 +2,6 @@ package com.kwsoft.kehuhua.urlCnn;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -19,13 +18,12 @@ public abstract class EdusStringCallback extends Callback<String> {
 
     
     public Context mContext;
-    private static final String TAG = "EdusStringCallback";
 
 
     public EdusStringCallback(Context mContext) {
         this.mContext = mContext;
-        Log.e(TAG, "EdusStringCallback: 是否已走callback");
         SwitchStatueCode.netToast((Activity) this.mContext);
+
     }
 
 
@@ -34,6 +32,4 @@ public abstract class EdusStringCallback extends Callback<String> {
     {
         return response.body().string();
     }
-
-
 }

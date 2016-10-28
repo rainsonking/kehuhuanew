@@ -23,13 +23,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.DiskLruCacheHelper;
 import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -143,9 +144,10 @@ public class SearchActivity extends FragmentActivity {
                 .params(paramsMapNew)
                 .url(volleyUrl)
                 .build()
-                .execute(new StringCallback() {
+                .execute(new EdusStringCallback(SearchActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext,e);
                         Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 

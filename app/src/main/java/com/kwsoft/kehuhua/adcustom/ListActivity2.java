@@ -29,12 +29,13 @@ import com.cjj.MaterialRefreshListener;
 import com.kwsoft.kehuhua.adapter.ListAdapter2;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.view.RecycleViewDivider;
 import com.kwsoft.kehuhua.view.WrapContentLinearLayoutManager;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,7 +107,7 @@ public class ListActivity2 extends BaseActivity {
             @Override
             public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
 
-                if (mAdapter.getItemCount() < totalNum) {
+                if (mAdapter!=null&&mAdapter.getItemCount() < totalNum) {
 
                     loadMoreData();
                 } else {
@@ -216,24 +217,42 @@ public class ListActivity2 extends BaseActivity {
                     .params(paramsMap)
                     .url(volleyUrl)
                     .build()
-                    .execute(new StringCallback() {
+                    .execute(new EdusStringCallback(ListActivity2.this) {
                         @Override
                         public void onError(Call call, Exception e, int id) {
+                            ErrorToast.errorToast(mContext,e);
                             mRefreshLayout.finishRefresh();
                             dialog.dismiss();
+                            backStart();
                             Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                         }
 
                         @Override
                         public void onResponse(String response, int id) {
                             Log.e(TAG, "onResponse: "+"  id  "+id);
+
                             setStore(response);
                         }
                     });
     }else{
-            Log.e("TAG", "无网络");
+
+            dialog.dismiss();
             mRefreshLayout.finishRefresh();
-            Snackbar.make(mRecyclerView, "请连接网络", Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(ListActivity2.this, "请连接网络", Toast.LENGTH_SHORT).show();
+            backStart();
+        }
+    }
+
+
+    public void backStart(){
+
+        //下拉失败后需要将加上limit的strat返还给原来的start，否则会获取不到数据
+        if ( state == STATE_MORE) {
+            //start只能是limit的整数倍
+            if (start>limit) {
+                start-=limit;
+            }
+            mRefreshLayout.finishRefreshLoadMore();
         }
     }
 
@@ -381,7 +400,7 @@ public class ListActivity2 extends BaseActivity {
                     if (datas.size() == 0) {
                         Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
                     } else {
-                        Snackbar.make(mRecyclerView, "更新完成", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRecyclerView, "刷新完成，共"+totalNum+"条", Snackbar.LENGTH_SHORT).show();
                     }
 
                 }
@@ -391,7 +410,7 @@ public class ListActivity2 extends BaseActivity {
                     mAdapter.addData(mAdapter.getDatas().size(), datas);
                     mRecyclerView.scrollToPosition(mAdapter.getDatas().size());
                     mRefreshLayout.finishRefreshLoadMore();
-                    Snackbar.make(mRecyclerView, "更新了" + datas.size() + "条数据", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mRecyclerView, "增加了" + datas.size() + "条数据", Snackbar.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -415,6 +434,7 @@ public class ListActivity2 extends BaseActivity {
             }
         });
         dialog.dismiss();
+        Snackbar.make(mRecyclerView, "加载完成，共"+totalNum+"条", Snackbar.LENGTH_SHORT).show();
 
     }
 
