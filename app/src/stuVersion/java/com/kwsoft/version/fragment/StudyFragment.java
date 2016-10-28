@@ -91,7 +91,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         RollPagerView mRollViewPager = (RollPagerView) view.findViewById(R.id.roll_view_pager);
 
         //设置播放时间间隔
-        mRollViewPager.setPlayDelay(2000);
+        mRollViewPager.setPlayDelay(4000);
         //设置透明度
         mRollViewPager.setAnimationDurtion(1500);
         //设置适配器
@@ -231,7 +231,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                         name = String.valueOf(listMap1.get(0).get("name"));
                     }
                 }
-                map.put("name", name + "个");
+                map.put("name", name);
                 parentLists.add(map);
             }
         } catch (Exception e) {

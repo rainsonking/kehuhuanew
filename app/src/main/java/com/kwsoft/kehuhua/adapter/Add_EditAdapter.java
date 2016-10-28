@@ -1,7 +1,9 @@
 package com.kwsoft.kehuhua.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -56,7 +59,6 @@ import static com.kwsoft.kehuhua.config.Constant.itemValue;
 
 /**
  * Created by Administrator on 2016/6/7 0007.
- *
  */
 public class Add_EditAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;
@@ -177,7 +179,8 @@ public class Add_EditAdapter extends BaseAdapter {
 //初始化日期选、时间、内部对象多值选择器
         final TextView addGeneral = (TextView) convertView.findViewById(R.id.add_general);
 //初始化字典选择器单值选择项
-        NiceSpinner add_spinner = (NiceSpinner) convertView.findViewById(R.id.add_spinner);
+//        NiceSpinner add_spinner = (NiceSpinner) convertView.findViewById(R.id.add_spinner);
+        final TextView textView1 = (TextView) convertView.findViewById(R.id.add_spinner);
 //初始化无限添加按钮
         Button add_unlimited = (Button) convertView.findViewById(R.id.add_unlimited);
 //初始化item项参数，供传递到多选和树形选择用
@@ -310,7 +313,7 @@ public class Add_EditAdapter extends BaseAdapter {
             Log.e("TAG", "字典适配开始 ");
             Log.e("TAG", "字典适配开始 ");
             if (isShow) {
-                add_spinner.setVisibility(View.VISIBLE);
+                textView1.setVisibility(View.VISIBLE);
             }
             //删除无用字典值数据
             List<Map<String, Object>> dicList = getNewDicList(position);
@@ -337,34 +340,58 @@ public class Add_EditAdapter extends BaseAdapter {
             for (int i = 0; i < dicList.size(); i++) {
                 dataset.add(String.valueOf(dicList.get(i).get("DIC_NAME")));
             }
-            add_spinner.attachDataSource(dataset);
-            add_spinner.setSelectedIndex(byId);
-            add_spinner.setTextColor(Color.BLACK);
-           // add_spinner.invalidateDrawable(context.getResources().getDrawable(R.mipmap.ic_launcher));
+//            add_spinner.attachDataSource(dataset);
+//            add_spinner.setSelectedIndex(byId);
+//            add_spinner.setTextColor(Color.BLACK);
+            // add_spinner.invalidateDrawable(context.getResources().getDrawable(R.mipmap.ic_launcher));
             fieldSet.get(position).put(itemValue, String.valueOf(dicList.get(byId).get("DIC_ID")));
             fieldSet.get(position).put(Constant.itemName, String.valueOf(dicList.get(byId).get("DIC_ID")));
 
             final List<Map<String, Object>> finalDicList = dicList;
             final String oldDicId = String.valueOf(fieldSet.get(position).get("true_defaultShowVal"));
             Log.e("TAG", "oldDicId " + oldDicId);
-            add_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            final int size = dataset.size();
+            final String[] arrs = (String[]) dataset.toArray(new String[size]);
+            textView1.setOnClickListener(new OnClickListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int positionDic, long id) {
-                    String DIC_ID = String.valueOf(finalDicList.get(positionDic).get("DIC_ID"));
+                public void onClick(View view) {
+                    new AlertDialog.Builder(context).setTitle("选择区域").setItems(arrs, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
+                            String DIC_ID = String.valueOf(finalDicList.get(which).get("DIC_ID"));
+//
+                            fieldSet.get(position).put(itemValue, DIC_ID);
+                            fieldSet.get(position).put(Constant.itemName, DIC_ID);
+                            textView1.setText(arrs[which]);
 
-                    fieldSet.get(position).put(itemValue, DIC_ID);
-                    fieldSet.get(position).put(Constant.itemName, DIC_ID);
+//                            if (!oldDicId.equals(DIC_ID)) {
+//                                notifyDataSetChanged();
+//                            }
 
-                    if (!oldDicId.equals(DIC_ID)) {
-                        notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
+                            dialog.dismiss();
+                        }
+                    }).show();
                 }
             });
+//            add_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int positionDic, long id) {
+//                    String DIC_ID = String.valueOf(finalDicList.get(positionDic).get("DIC_ID"));
+//
+//                    fieldSet.get(position).put(itemValue, DIC_ID);
+//                    fieldSet.get(position).put(Constant.itemName, DIC_ID);
+//
+//                    if (!oldDicId.equals(DIC_ID)) {
+//                        notifyDataSetChanged();
+//                    }
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) {
+//
+//                }
+//            });
             Log.e("TAG", "字典适配完毕 ");
 //3、日期
 
@@ -393,7 +420,7 @@ public class Add_EditAdapter extends BaseAdapter {
 
 
             final String finalDateType = dateType;
-            addGeneral.setOnClickListener(new View.OnClickListener() {
+            addGeneral.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Calendar c = Calendar.getInstance();
@@ -511,7 +538,7 @@ public class Add_EditAdapter extends BaseAdapter {
  */
             if (isShow && ifUpdate == 1) {
                 image_upload_layout.setVisibility(View.VISIBLE);
-                image_upload.setOnClickListener(new View.OnClickListener() {
+                image_upload.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(mActivity, SelectPictureActivity.class);
@@ -559,7 +586,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 addGeneral.setText(itemName);
             }
             final String finalFieldCnName1 = fieldCnName;
-            addGeneral.setOnClickListener(new View.OnClickListener() {
+            addGeneral.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     List<Map<String, String>> needFilterList = getNeedFilter(position);
@@ -604,7 +631,7 @@ public class Add_EditAdapter extends BaseAdapter {
                 }
 
                 final String finalFieldCnName = fieldCnName;
-                addGeneral.setOnClickListener(new View.OnClickListener() {
+                addGeneral.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         List<Map<String, String>> needFilterList = getNeedFilter(position);
@@ -638,7 +665,7 @@ public class Add_EditAdapter extends BaseAdapter {
 ////异步请求模板数据
                 final String finalUnlimitedAddValue = unlimitedAddValue;
                 final String finalFieldCnName2 = fieldCnName;
-                add_unlimited.setOnClickListener(new View.OnClickListener() {
+                add_unlimited.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
 //                        requestData(showFieldArr);
@@ -737,10 +764,10 @@ public class Add_EditAdapter extends BaseAdapter {
 
         String dicChildShow = String.valueOf(fieldSet.get(position).get("dicChildShow"));
         List<Integer> dicChildShowList = new ArrayList<>();
-        if (dicChildShow != null && !dicChildShow.equals("")&& !dicChildShow.equals("null")) {
+        if (dicChildShow != null && !dicChildShow.equals("") && !dicChildShow.equals("null")) {
             //将字符串类型数组转换为int型集合
             String[] dicChildShowStrArr = dicChildShow.split(",");
-            Log.e(TAG, "getNewDicList: dicChildShowStrArr "+dicChildShow );
+            Log.e(TAG, "getNewDicList: dicChildShowStrArr " + dicChildShow);
             for (String aDicChildShowStrArr : dicChildShowStrArr) {
                 dicChildShowList.add(Integer.parseInt(aDicChildShowStrArr));
             }
@@ -872,6 +899,17 @@ public class Add_EditAdapter extends BaseAdapter {
             e.printStackTrace();
         }
     }
+
+
+    public void showDialog(final Context context, final String[] arrs) {
+        new AlertDialog.Builder(context).setTitle("选择区域").setItems(arrs, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
 }
 
 

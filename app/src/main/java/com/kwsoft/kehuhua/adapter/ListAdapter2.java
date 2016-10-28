@@ -73,7 +73,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         Log.e("TAG", "recyclerView " + position);
         if (thisHolder instanceof ListViewHolder) {
-            ListViewHolder holder = (ListViewHolder) thisHolder;
+            final ListViewHolder holder = (ListViewHolder) thisHolder;
             List<Map<String, String>> item = getData(position);
             try {
                 final String title = item.get(0).get("fieldCnName2");
@@ -148,6 +148,8 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         intent.putExtra("childTab", JSON.toJSONString(childTab));
                         intent.putExtra("titleName", titleName);
                         mContext.startActivity(intent);
+//                        holder.click_open_btn.setAlpha(new Float(0.75));
+
                     }
                 });
             }
@@ -182,6 +184,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         mDatas.clear();
         notifyItemRangeRemoved(0, mDatas.size());
     }
+
 
     /**
      * 下拉刷新更新数据

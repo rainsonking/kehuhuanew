@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--   选中时的图片背景
+     -->
+    <item android:state_checked="true" android:color="#45d5ff"/>
+    <!--   单击时的背景图片
+     -->
+    <item android:state_pressed="true" android:color="#45d5ff"/>
+    <!--   默认时的背景图片
+     -->
+    <item android:color="@color/text_7c8084"/>
+
+</selector>

@@ -85,14 +85,22 @@
                 android:visibility="gone" />
 
 
-            <org.angmarch.views.NiceSpinner
+            <!--<org.angmarch.views.NiceSpinner-->
+                <!--android:id="@+id/add_spinner"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:visibility="gone">-->
+
+            <!--</org.angmarch.views.NiceSpinner>-->
+            <TextView
                 android:id="@+id/add_spinner"
                 android:layout_width="match_parent"
+                android:textColor="@color/black"
+                android:textSize="17dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:visibility="gone">
-
-            </org.angmarch.views.NiceSpinner>
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/add_unlimited"

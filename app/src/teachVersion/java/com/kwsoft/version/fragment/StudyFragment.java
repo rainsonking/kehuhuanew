@@ -244,7 +244,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 String name = "";
                 if (listMap1.size() > 0) {
                     if (listMap1.get(0) != null && listMap1.get(0).size() > 0) {
-                        name = String.valueOf(listMap1.get(0).get("name"))+ "个";
+                        name = String.valueOf(listMap1.get(0).get("name"));
                     }
                 }
                 map.put("name", name);

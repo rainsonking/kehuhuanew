@@ -37,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="14dp"
                 android:layout_marginTop="14dp"
-                android:background="?attr/colorPrimary"
+                android:background="#5da6ff"
                 android:gravity="center_vertical" />
 
             <TextView
@@ -60,7 +60,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="center_vertical"
-                android:src="@mipmap/basics_into" />
+                android:src="@mipmap/teach_basics_into" />
         </RelativeLayout>
 
         <LinearLayout
@@ -258,7 +258,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/shape_text_border"
+                android:background="@drawable/select_bg_item"
                 android:gravity="center"
                 android:paddingBottom="4dp"
                 android:paddingTop="3dp"

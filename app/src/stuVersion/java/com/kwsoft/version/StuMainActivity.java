@@ -115,7 +115,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 //        Drawable drawable = resources.getDrawable(R.drawable.nav_news);
 //        mToolbar.setRightButtonIcon(mContext.getResources().getDrawable(R.drawable.nav_news));
 //        mToolbar.setLeftButtonIcon(mContext.getResources().getDrawable(R.drawable.nav_scan_code));
-        mToolbar.setTitle("学习");
+        mToolbar.setTitle("学员端");
         mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,7 +172,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
                 super.OnRgsExtraCheckedChanged(radioGroup, checkedId, index);
                 switch (checkedId) {
                     case R.id.radio0:
-                        mToolbar.setTitle("学习");
+                        mToolbar.setTitle("学员端");
                         break;
                     case R.id.radio1:
                         mToolbar.setTitle("课程表");
@@ -181,7 +181,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
                         mToolbar.setTitle("学员端");
                         break;
                     case R.id.radio3:
-                        mToolbar.setTitle("分类");
+                        mToolbar.setTitle("学员端");
                         break;
 
                 }
