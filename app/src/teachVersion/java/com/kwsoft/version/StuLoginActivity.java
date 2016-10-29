@@ -64,7 +64,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_stu_login_sec);
         CloseActivityClass.activityList.add(this);
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        dialog=new LoadingDialog(mContext,"登录中...");
+        dialog=new LoadingDialog(mContext,"正在登录中...");
         initJudgeSave();
         initView();
 

@@ -25,6 +25,7 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.bean.LoginError;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.loadDialog.LoadingDialog;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.BadgeUtil;
@@ -62,7 +63,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_stu_login_sec);
         CloseActivityClass.activityList.add(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
+        dialog=new LoadingDialog(mContext,"正在登录中...");
         initJudgeSave();
         initView();
     }
