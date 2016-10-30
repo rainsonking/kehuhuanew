@@ -37,7 +37,7 @@
     <color name="gold">#FFD700</color><!--金色 -->
     <color name="pink">#FFC0CB</color><!--粉红色 -->
     <color name="lightpink">#FFB6C1</color><!--亮粉红色 -->
-    <color name="orange">#FFA500</color><!--橙色 -->
+    <!--<color name="orange">#FFA500</color>&lt;!&ndash;橙色 &ndash;&gt;-->
     <color name="lightsalmon">#FFA07A</color><!--亮肉色 -->
     <color name="darkorange">#FF8C00</color><!--暗桔黄色 -->
     <color name="coral">#FF7F50</color><!--珊瑚色 -->
@@ -254,4 +254,13 @@
     <color name="me_bg3">#f7f7f7</color>
     <color name="course_bg_title">#f5f5f5</color>
     <color name="me_divider_line">#e3e3e3</color>
+
+    <!--//日期时间选择器-->
+    <color name="button_ensure">#ff6000</color>
+
+    <color name="cutting_line">#dfdfdf</color>
+
+    <color name="orange">#FF8111</color>
+    <color name="wheel_unselect_text">#c2c1c1</color>
+    <color name="wheel_bg">#f2f2f2</color>
 </resources>

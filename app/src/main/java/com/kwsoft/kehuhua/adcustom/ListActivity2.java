@@ -461,14 +461,12 @@ public class ListActivity2 extends BaseActivity {
     public void toPage(int position) {
         int buttonType = (int) buttonSet.get(position).get("buttonType");
         Map<String, Object> buttonSetItem = buttonSet.get(position);
-        String buttonSetItemStr = JSON.toJSONString(buttonSetItem);
-        Log.e(TAG, "toPage: buttonSetItemStr"+buttonSetItemStr);
+        buttonSetItem.put("tableIdList", tableId);
+        buttonSetItem.put("pageIdList", pageId);
         switch (buttonType) {
             case 0://添加页面
-                Intent intent = new Intent(ListActivity2.this, AddItemsActivity.class);
-                intent.putExtra("buttonSetItemStr", buttonSetItemStr);
-                intent.putExtra("tableIdList", tableId);
-                intent.putExtra("pageIdList", pageId);
+                Intent intent = new Intent(mContext, OperateDataActivity.class);
+                intent.putExtra("itemSet", JSON.toJSONString(buttonSetItem));
                 startActivityForResult(intent, 5);
                 break;
             case 3://批量删除操作
@@ -540,66 +538,32 @@ public class ListActivity2 extends BaseActivity {
                                     }
                                 }
                             });
-                    // 创建弹出窗口
-                    // 窗口内容为layoutLeft，里面包含一个ListView
-                    // 窗口宽度跟tvLeft一样
-//                    childListPop = new PopupWindow(toolLayout, ViewGroup.LayoutParams.WRAP_CONTENT,
-//                            ViewGroup.LayoutParams.WRAP_CONTENT);
                     DisplayMetrics metric = new DisplayMetrics();
                     getWindowManager().getDefaultDisplay().getMetrics(metric);
                     int width = metric.widthPixels;     // 屏幕宽度（像素）
                     childListPop = new PopupWindow(toolLayout, (width / 3) * 2,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
-                    //设置颜色
-                    // ColorDrawable cd = new ColorDrawable(0b1);
-                    // childListPop.setBackgroundDrawable(cd);
-                    //childListPop.setBackgroundDrawable(getResources().getDrawable(R.mipmap.often_drop_curriculum_bg));
                     //设置半透明
                     WindowManager.LayoutParams params = getWindow().getAttributes();
-//                    params.alpha = 0.7f;
                     getWindow().setAttributes(params);
 
                     childListPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
                         @Override
                         public void onDismiss() {
                             WindowManager.LayoutParams params = getWindow().getAttributes();
-                            //  params.alpha = 1f;
                             getWindow().setAttributes(params);
                         }
                     });
-
-//                    childListPop.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
                     childListPop.setTouchable(true); // 设置popupwindow可点击
                     childListPop.setOutsideTouchable(true); // 设置popupwindow外部可点击
                     childListPop.setFocusable(true); // 获取焦点
-//                    childListPop.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-                    // 设置popupwindow的位置（位于顶栏下方）
-
                     childListPop.update();
-
                     toolLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                    int popupWidth = toolLayout.getMeasuredWidth();
-
-                    Log.e("TAG", "popupWidth " + popupWidth);
-
-
-                    //获取两者的宽度
-//                    int childListPopWith=Utils.getViewHeight(toolLayout, false);
-
-                    int rlTopBarWith = mToolbar.getWidth();
-                    Log.e("TAG", "rlTopBarWith " + rlTopBarWith);
-
-
-                   // int delta = (rlTopBarWith - popupWidth) / 8;
                     int delta = width / 6;
-                    Log.e("TAG", "X偏移量 " + delta);
                     childListPop.showAsDropDown(mToolbar, delta, 0);
-
                     childListPop.setTouchInterceptor(new View.OnTouchListener() {
-
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            // 如果点击了popupwindow的外部，popupwindow也会消失
                             if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
                                 childListPop.dismiss();
                                 return true;
@@ -705,7 +669,6 @@ public class ListActivity2 extends BaseActivity {
                             }
                         });
                 initPopWindowDropdown(popInflateView);
-
             }
         } catch (Exception e) {
             Toast.makeText(ListActivity2.this, "无按钮数据", Toast.LENGTH_SHORT).show();
