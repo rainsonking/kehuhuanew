@@ -22,13 +22,6 @@ import java.util.regex.PatternSyntaxException;
  *
  */
 public class Constant {
-    /**
-     * 系统地址：http://192.168.6.46:8080/edus_auto/
-     * <p>
-     * 陈蒙地址：http://192.168.6.150:8081/edus_auto/
-     * <p>
-     * 阿里服务器地址  http://182.92.108.162:8124/edus_auto/
-     */
         public static String sysUrl = "http://182.92.108.162:8129/edus_auto/";//外网项目
 //    public static String sysUrl = "http://182.92.108.162/edus_auto/";//外网项目
     // public static String sysUrl = "http://192.168.6.171:8080/edus_auto/";//小庞项目
