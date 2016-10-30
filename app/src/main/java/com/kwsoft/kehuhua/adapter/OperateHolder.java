@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import com.kwsoft.kehuhua.adcustom.R;
 
-import org.angmarch.views.NiceSpinner;
-
 /**
  * Created by Administrator on 2016/10/21 0021.
  *
@@ -50,7 +48,7 @@ public class OperateHolder extends RecyclerView.ViewHolder {
     Button image_upload,add_unlimited;
     EditText add_edit_text;
     final TextView addGeneral;
-    NiceSpinner add_spinner;
+    TextView add_spinner;
 
 
     OperateHolder(View view) {
@@ -65,7 +63,7 @@ public class OperateHolder extends RecyclerView.ViewHolder {
         image_upload = (Button) view.findViewById(R.id.image_upload);
         add_edit_text = (EditText) view.findViewById(R.id.add_edit_text);
         addGeneral = (TextView) view.findViewById(R.id.add_general);
-        add_spinner = (NiceSpinner) view.findViewById(R.id.add_spinner);
+        add_spinner = (TextView) view.findViewById(R.id.add_spinner);
         add_unlimited = (Button) view.findViewById(R.id.add_unlimited);
 
     }
