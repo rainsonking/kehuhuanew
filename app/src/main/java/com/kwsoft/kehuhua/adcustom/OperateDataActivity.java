@@ -1,5 +1,6 @@
 package com.kwsoft.kehuhua.adcustom;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -68,15 +69,21 @@ public class OperateDataActivity extends BaseActivity {
     }
 
     private void getData() {
+        //不同页面类型请求Url不一样
         String volleyUrl="";
         switch (buttonType){
-            case 18:
-                volleyUrl = Constant.sysUrl + Constant.requestRowsAdd;
+
+            case 0://列表添加
+                volleyUrl = Constant.sysUrl + Constant.requestAdd;
                 break;
-            case 12:
+            case 12://关联修改
                 volleyUrl = Constant.sysUrl + Constant.requestEdit;
                 paramsMap.put("tNumber", "0");
                 break;
+            case 18://关联添加
+                volleyUrl = Constant.sysUrl + Constant.requestRowsAdd;
+                break;
+
         }
         //请求
         OkHttpUtils
@@ -112,17 +119,24 @@ public class OperateDataActivity extends BaseActivity {
 //获取fieldSet
             Map<String, Object> pageSet = (Map<String, Object>) buttonSet.get("pageSet");
             fieldSet = (List<Map<String, Object>>) pageSet.get("fieldSet");
-            if (pageSet.get("relationFieldId") != null) {
-                Constant.relationFieldId = String.valueOf(pageSet.get("relationFieldId"));
+
 //判断添加还是修改，keyRelation赋值不一样
                 switch (buttonType){
+                    case 0://添加无此参数
+                        break;
                     case 18:
+                        Log.e(TAG, "setStore: pageSet.get(\"relationFieldId\")"+pageSet.get("relationFieldId"));
+                        if (pageSet.get("relationFieldId") != null) {
+                            Constant.relationFieldId = String.valueOf(pageSet.get("relationFieldId"));
+
                         keyRelation = "t0_au_" + tableId + "_" + pageId + "_" + Constant.relationFieldId + "=" + dataId;
+                        }
                         break;
                     case 12:
                         keyRelation = "&t0_au_" + tableId + "_" + pageId + "=" + dataId;
                         break;
                 }
+
                 Log.e("TAG", "keyRelation " + keyRelation);
 
                 //hideFieldSet,隐藏字段
@@ -132,7 +146,7 @@ public class OperateDataActivity extends BaseActivity {
                 }
 
 
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -150,8 +164,8 @@ public class OperateDataActivity extends BaseActivity {
      */
     //暂时禁止刷新，刷新会导致显示view错乱
     private void refreshData() {
-//        state = STATE_REFREH;
-//        getData();
+        state = STATE_REFREH;
+        getData();
         mRefreshLayout.finishRefresh();
     }
 
@@ -176,34 +190,27 @@ public class OperateDataActivity extends BaseActivity {
                 normalRequest();
                 break;
             case STATE_REFREH:
-                if (mAdapter != null) {
-                    mAdapter.clearData();
-                    mAdapter.addData(fieldSet);
-                    mRecyclerView.scrollToPosition(0);
-                    mRefreshLayout.finishRefresh();
-                    if (fieldSet.size() == 0) {
-                        Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
-                    } else {
-                        Snackbar.make(mRecyclerView, "更新完成", Snackbar.LENGTH_SHORT).show();
-                    }
+//                if (mAdapter != null) {
+//                    mAdapter.clearData();
+//                    mAdapter.addData(fieldSet);
+//                    mRecyclerView.scrollToPosition(0);
+//                    mRefreshLayout.finishRefresh();
+//                    if (fieldSet.size() == 0) {
+//                        Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
+//                    } else {
+//                        Snackbar.make(mRecyclerView, "更新完成", Snackbar.LENGTH_SHORT).show();
+//                    }
+//                }
+                normalRequest();
+                if (fieldSet.size() == 0) {
+                    Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(mRecyclerView, "更新完成", Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             default:
                 break;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 
@@ -212,11 +219,25 @@ public class OperateDataActivity extends BaseActivity {
         if (!value.equals("no")) {
             if (hasInternetConnected()) {
                 dialog.show();
-
-                //请求地址
-                String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
-                        Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
-                        value + "&" + hideFieldParagram + "&" + keyRelation;
+                String volleyUrl1="";
+                switch (buttonType){
+                    case 0://添加提交地址
+                       volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
+                                Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
+                                value + "&" + hideFieldParagram;
+                        break;
+                    case 18:
+                        volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
+                                Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
+                                value + "&" + hideFieldParagram + "&" + keyRelation;
+                        break;
+                    case 12:
+                        volleyUrl1 = Constant.sysUrl + Constant.commitEdit + "?" +
+                                Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
+                                value + "&" + hideFieldParagram + "&" + keyRelation;
+                        break;
+                }
+                //请求地址（关联添加和修改）
                 String volleyUrl = volleyUrl1.replaceAll(" ", "%20").replaceAll("&&","&");
                 //get请求
                 OkHttpUtils
@@ -228,7 +249,6 @@ public class OperateDataActivity extends BaseActivity {
                             public void onError(Call call, Exception e, int id) {
                                 ErrorToast.errorToast(mContext,e);
                                 dialog.dismiss();
-                                Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                                 Toast.makeText(OperateDataActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
                             }
 
@@ -236,7 +256,7 @@ public class OperateDataActivity extends BaseActivity {
                             public void onResponse(String response, int id) {
                                 Log.e(TAG, "onResponse: "+response);
                                 if (response != null && !response.equals("0")) {
-//                                    toListActivity();
+                                    backToInfo();
                                 } else {
                                     Toast.makeText(OperateDataActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
                                 }
@@ -268,31 +288,36 @@ public class OperateDataActivity extends BaseActivity {
      */
     //获取参数
     private void getIntentData() {
-
+        //初始化参数Map
+        paramsMap = new HashMap<>();
         //获取数据并解析
         Intent intent = getIntent();
         String buttonSetItemStr = intent.getStringExtra("itemSet");
         Map<String, Object> buttonSetItem = JSON.parseObject(buttonSetItemStr);
         Log.e(TAG, "getIntentData: buttonSetItem "+buttonSetItem.toString());
-
         //赋值页面标题
         buttonName = String.valueOf(buttonSetItem.get("buttonName"));
         String buttonTypeStr=String.valueOf(buttonSetItem.get("buttonType"));
         buttonType=Integer.valueOf(buttonTypeStr);
-        //获取参数
+        //获取参数并添加
+        //mainTableId
         mainTableId = String.valueOf(buttonSetItem.get("tableIdList"));
-        mainPageId = String.valueOf(buttonSetItem.get("pageIdList"));
-        tableId = String.valueOf(buttonSetItem.get("tableId"));
-        pageId = String.valueOf(buttonSetItem.get("startTurnPage"));
-        dataId = String.valueOf(buttonSetItem.get("dataId"));
-
-        //封装参数
-        paramsMap = new HashMap<>();
-        paramsMap.put(Constant.tableId, tableId);
-        paramsMap.put(Constant.pageId, pageId);
         paramsMap.put(Constant.mainTableId, mainTableId);
+        //mainPageId
+        mainPageId = String.valueOf(buttonSetItem.get("pageIdList"));
         paramsMap.put(Constant.mainPageId, mainPageId);
-        paramsMap.put(mainId, dataId);
+        //tableId
+        tableId = String.valueOf(buttonSetItem.get("tableId"));
+        paramsMap.put(Constant.tableId, tableId);
+        //pageId
+        pageId = String.valueOf(buttonSetItem.get("startTurnPage"));
+        paramsMap.put(Constant.pageId, pageId);
+        //dataId：在对列表操作的时候是没有的，只有行级操作的时候才有
+        dataId = String.valueOf(buttonSetItem.get("dataId"));
+        if (dataId!=null&&!dataId.equals("null")) {
+
+            paramsMap.put(mainId, dataId);
+        }
         Log.e(TAG, "getIntentData: paramsMap "+paramsMap.toString());
     }
 
@@ -319,7 +344,7 @@ public class OperateDataActivity extends BaseActivity {
 
 
     private void initRefreshLayout() {
-        mRefreshLayout.setLoadMore(true);
+        mRefreshLayout.setLoadMore(false);
         mRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
@@ -351,58 +376,11 @@ public class OperateDataActivity extends BaseActivity {
         builder.create().show();
     }
 
-    private void requestAddCommit() {
-        String value = DataProcess.commit(OperateDataActivity.this, fieldSet);
-        if (!value.equals("no")) {
-            if (hasInternetConnected()) {
-                dialog.show();
-                String volleyUrl1 = Constant.sysUrl + Constant.commitAdd + "?" +
-                        Constant.tableId + "=" + tableId + "&" + Constant.pageId + "=" + pageId + "&" +
-                        value + "&" + hideFieldParagram + "&" + keyRelation;
-
-
-                String volleyUrl = volleyUrl1.replaceAll(" ", "%20").replaceAll("&&","&");
-                Log.e("TAG", "关联添加提交地址：" + volleyUrl);
-
-                //get请求
-                OkHttpUtils
-                        .get()
-                        .url(volleyUrl)
-                        .build()
-                        .execute(new EdusStringCallback(OperateDataActivity.this) {
-                            @Override
-                            public void onError(Call call, Exception e, int id) {
-                                ErrorToast.errorToast(mContext,e);
-                                dialog.dismiss();
-                                Log.e(TAG, "onError: Call  "+call+"  id  "+id);
-                                Toast.makeText(OperateDataActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onResponse(String response, int id) {
-                                Log.e(TAG, "onResponse: "+"  id  "+id);
-                                Log.e("TAG", "获得操作结果" + response);
-                                String isCommitSuccess = String.valueOf(response);
-                                if (!isCommitSuccess.equals("0")) {
-                                    toListActivity();
-                                } else {
-                                    Toast.makeText(OperateDataActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-            }else{
-                Toast.makeText(this, "无网络", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    public void toListActivity() {
+    public void backToInfo() {
         Toast.makeText(OperateDataActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
         dialog.dismiss();
         this.finish();
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -420,7 +398,6 @@ public class OperateDataActivity extends BaseActivity {
                 assert dataMap != null;
                 //num代表数目，ids代表所选的id们，names所选id对应的名称，isMulti为true多选，都则单选
                 //position为记录的值应该插入的位置
-                String num = String.valueOf(dataMap.get("num"));
                 String ids = String.valueOf(dataMap.get("ids"));
                 String names = String.valueOf(dataMap.get("names"));
                 String isMulti = String.valueOf(dataMap.get("isMulti"));
@@ -436,13 +413,13 @@ public class OperateDataActivity extends BaseActivity {
 //                    fieldSet.get(position).put(Constant.secondKey, "t1_au_" + fieldSet.get(position).get("relationTableId") + "_" +
 //                            fieldSet.get(position).get("showFieldArr") +
 //                            "_" + fieldSet.get(position).get("dialogField"));
-                    mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyItemChanged(position);
                     //单选情况
                 } else {
                     fieldSet.get(position).put(Constant.itemValue, ids);
                     Log.e("TAG", "单选回填的值 " + ids);
                     fieldSet.get(position).put(Constant.itemName, names);
-                    mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyItemChanged(position);
                     //订单编号生成,只有
                     if (!Constant.tmpFieldId.equals("") && Constant.tmpFieldId.equals(String.valueOf(fieldSet.get(position).get("fieldId")))) {
                         try {
@@ -458,7 +435,7 @@ public class OperateDataActivity extends BaseActivity {
 
                 }
             } else if (5 == resultCode) {
-                //无限添加返回的listlistmap字符串
+                //无限添加返回的listListMap字符串
                 Constant.jumpNum = 0;
                 Bundle bundle = data.getBundleExtra("bundle");
                 String myValue = bundle.getString("myValue");
@@ -474,8 +451,6 @@ public class OperateDataActivity extends BaseActivity {
                         //将选择结果赋值给父类dz值
 
                         for (int i = 0; i < myValueList.size(); i++) {
-                            List<Map<String, Object>> itemMaps = myValueList.get(i);
-
                             for (int j = 0; j < myValueList.get(i).size(); j++) {
                                 String tempKeyIdArr = String.valueOf(myValueList.get(i).get(j).get("tempKeyIdArr"));
                                 if (tempKeyIdArr != null && !tempKeyIdArr.equals("")) {
@@ -483,14 +458,14 @@ public class OperateDataActivity extends BaseActivity {
                                 }
                             }
                             secondValue += "&" + DataProcess.toCommitStr(
-                                    OperateDataActivity.this,
+                                    (Activity) mContext,
                                     myValueList.get(i));
                         }
                     }
                 }
                 Log.e("TAG", "secondValue " + secondValue);
                 fieldSet.get(positionLast).put(Constant.itemValue, myValueList.size() + "&" + secondValue);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemChanged(positionLast);
             }else if (resultCode == 101) {
                 //返回添加页面后复位jump值
                 Constant.jumpNum = 0;
@@ -502,7 +477,7 @@ public class OperateDataActivity extends BaseActivity {
                 fieldSet.get(position).put(Constant.itemValue, codeListStr);
                 fieldSet.get(position).put(Constant.itemName, codeListStr);
                 Log.e("TAG", "fieldSet.get(picturePosition) " + fieldSet.get(position).toString());
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemChanged(position);
             }
         }
 
@@ -521,7 +496,7 @@ public class OperateDataActivity extends BaseActivity {
                 .params(parMap)
                 .url(volleyUrl)
                 .build()
-                .execute(new EdusStringCallback(OperateDataActivity.this) {
+                .execute(new EdusStringCallback(mContext) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         ErrorToast.errorToast(mContext,e);
@@ -545,7 +520,7 @@ public class OperateDataActivity extends BaseActivity {
             if (fieldRole == 8) {
                 fieldSet.get(i).put(Constant.itemValue, jsonData);
                 fieldSet.get(i).put(Constant.itemName, jsonData);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemChanged(i);
 
             }
         }
