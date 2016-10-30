@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:overlay="true"
+        app:isLoadMore="false"
         app:wave_color="@android:color/transparent">
 
         <android.support.v7.widget.RecyclerView
@@ -29,7 +30,7 @@
             android:layout_height="match_parent"
             android:descendantFocusability="beforeDescendants"
             app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/activity_list_item"
+            tools:listitem="@layout/activity_add_item"
             >
 
         </android.support.v7.widget.RecyclerView>
