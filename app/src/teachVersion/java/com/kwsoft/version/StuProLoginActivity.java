@@ -63,7 +63,12 @@ public class StuProLoginActivity extends BaseActivity {
             nameValue = sPreferences.getString("name", "");
             pwdValue = sPreferences.getString("pwd", "");
 
+            try {
                 postLogin();
+            } catch (Exception e) {
+                Toast.makeText(this, "当前项目链接可能出错", Toast.LENGTH_LONG).show();
+                toLoginPage();
+            }
 
 
         }else{

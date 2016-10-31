@@ -182,7 +182,14 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                postLogin1();
+                try {
+                    postLogin1();
+                } catch (Exception e) {
+                    Toast.makeText(this, "当前项目链接可能出错", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent();
+                    intent.setClass(StuLoginActivity.this, SetIpPortActivity.class);
+                    startActivity(intent);
+                }
                 break;
             default:
                 break;

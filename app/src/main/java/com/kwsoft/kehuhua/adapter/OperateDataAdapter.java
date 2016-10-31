@@ -31,6 +31,7 @@ import com.kwsoft.kehuhua.adcustom.UnlimitedAddActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.datetimeselect.SelectDateDialog;
 import com.kwsoft.kehuhua.datetimeselect.SelectTimeDialog;
+import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity;
 
 import java.text.SimpleDateFormat;
@@ -202,7 +203,9 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         holder.add_edit_text.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     }
                     if (fieldRole == 3) {//身份证号
-                        holder.add_edit_text.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        holder.add_edit_text.setInputType(InputType.TYPE_CLASS_PHONE);
+                        InputFilter[] filters = {new InputFilter.LengthFilter(18)};
+                        holder.add_edit_text.setFilters(filters);
                         //add_edit_text.
                     }
                     if (fieldRole == 12) {//身份证号
@@ -250,7 +253,8 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     int dicDefaultSelectInt;
                     String dicDefaultSelect;
                     //有值的情况
-                    if (!defaultName.equals("")&&!defaultName.equals("null")) {
+
+                    if (!defaultName.equals("")&&!defaultName.equals("null")&&Utils.isNum(defaultName)) {
                         byId = getById(dicList, byId, Integer.valueOf(defaultName));
                         //无值、有默认值的情况
                     } else if (!valueOf(mDatas.get(position).get("dicDefaultSelect")).equals("")) {

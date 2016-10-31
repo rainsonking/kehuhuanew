@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="81dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    >
     <!--公共控件，左侧显示名-->
     <RelativeLayout
         android:id="@+id/relave"
@@ -29,7 +30,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:text="姓名："
             android:textColor="@color/list_item_left"
             android:textSize="15sp" />

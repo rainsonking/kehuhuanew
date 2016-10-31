@@ -240,4 +240,14 @@ public class Utils {
         return hex.toString();
     }
 
+    //判断字符串是否能转换为int
+    public static boolean isNum(String str){
+        int temp = 0;
+        try{
+            temp = Integer.parseInt(str);
+        }catch(Exception e){
+            return false;
+        }
+        return true;
+    }
 }

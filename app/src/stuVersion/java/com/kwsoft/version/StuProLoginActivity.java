@@ -64,7 +64,12 @@ public class StuProLoginActivity extends BaseActivity {
             //取出用户名和密码并直接跳转至登录页面
             nameValue = sPreferences.getString("name", "");
             pwdValue = sPreferences.getString("pwd", "");
-            postLogin();
+            try {
+                postLogin();
+            } catch (Exception e) {
+                Toast.makeText(this, "当前项目链接可能出错", Toast.LENGTH_LONG).show();
+                toLoginPage();
+            }
         }else{
             toLoginPage();
         }
