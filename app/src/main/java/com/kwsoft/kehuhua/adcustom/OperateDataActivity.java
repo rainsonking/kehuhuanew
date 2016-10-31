@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +21,6 @@ import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.DataProcess;
-import com.kwsoft.kehuhua.view.RecycleViewDivider;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -96,7 +94,6 @@ public class OperateDataActivity extends BaseActivity {
                     public void onError(Call call, Exception e, int id) {
                         ErrorToast.errorToast(mContext,e);
                         dialog.dismiss();
-                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
                     }
 
                     @Override
@@ -113,7 +110,7 @@ public class OperateDataActivity extends BaseActivity {
     @SuppressWarnings("unchecked")
     private void setStore(String response) {
 
-        Log.e("TAG", "解析添加数据1");
+        Log.e("TAG", "解析操作数据");
         try {
             Map<String, Object> buttonSet = JSON.parseObject(response);
 //获取fieldSet
@@ -125,7 +122,6 @@ public class OperateDataActivity extends BaseActivity {
                     case 0://添加无此参数
                         break;
                     case 18:
-                        Log.e(TAG, "setStore: pageSet.get(\"relationFieldId\")"+pageSet.get("relationFieldId"));
                         if (pageSet.get("relationFieldId") != null) {
                             Constant.relationFieldId = String.valueOf(pageSet.get("relationFieldId"));
 
@@ -170,16 +166,9 @@ public class OperateDataActivity extends BaseActivity {
     }
 
     public void normalRequest() {
-        Log.e(TAG, "normalRequest: ");
         mAdapter = new OperateDataAdapter(fieldSet, paramsMap);
         mRecyclerView.setAdapter(mAdapter);
-//        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(OperateDataActivity.this));
-        mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
-//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//        mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
-
         dialog.dismiss();
-
     }
 
     private void showData() {

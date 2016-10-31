@@ -15,19 +15,19 @@
         android:background="@color/white"
         android:orientation="horizontal">
 
-        <com.huangzj.simplewheelview.view.WheelView
+        <com.kwsoft.kehuhua.datetimeselect.WheelView
             android:id="@+id/select_date_wheel_year_wheel"
             android:layout_width="fill_parent"
             android:layout_height="150dp"
             android:layout_weight="1" />
 
-        <com.huangzj.simplewheelview.view.WheelView
+        <com.kwsoft.kehuhua.datetimeselect.WheelView
             android:id="@+id/select_date_month_wheel"
             android:layout_width="fill_parent"
             android:layout_height="150dp"
             android:layout_weight="1" />
 
-        <com.huangzj.simplewheelview.view.WheelView
+        <com.kwsoft.kehuhua.datetimeselect.WheelView
             android:id="@+id/select_date_day_wheel"
             android:layout_width="fill_parent"
             android:layout_height="150dp"

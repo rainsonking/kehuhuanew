@@ -281,9 +281,7 @@ public class TreeViewActivity extends AppCompatActivity {
         Intent intentTree = new Intent();
         if(Constant.jumpNum1==4){
             intentTree.setClass(TreeViewActivity.this, AddTemplateDataActivity.class);
-        }else if (Constant.jumpNum==1) {
-            intentTree.setClass(TreeViewActivity.this, AddItemsActivity.class);
-        }else if(Constant.jumpNum==2){
+        }else if(Constant.jumpNum==1){
             intentTree.setClass(TreeViewActivity.this, OperateDataActivity.class);
         }
 

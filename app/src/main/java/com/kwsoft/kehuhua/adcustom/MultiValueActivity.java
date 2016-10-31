@@ -307,8 +307,6 @@ public class MultiValueActivity extends BaseActivity {
         if (Constant.jumpNum1 == 4) {
             intent.setClass(MultiValueActivity.this, AddTemplateDataActivity.class);
         } else if (Constant.jumpNum == 1) {
-            intent.setClass(MultiValueActivity.this, AddItemsActivity.class);
-        } else if (Constant.jumpNum == 2) {
             intent.setClass(MultiValueActivity.this, OperateDataActivity.class);
         }
 

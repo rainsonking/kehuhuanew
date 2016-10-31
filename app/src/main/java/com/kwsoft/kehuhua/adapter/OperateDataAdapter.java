@@ -22,8 +22,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.fourmob.datetimepicker.date.DatePickerDialog;
-import com.kwsoft.kehuhua.adcustom.AddItemsActivity;
 import com.kwsoft.kehuhua.adcustom.AddTemplateDataActivity;
 import com.kwsoft.kehuhua.adcustom.MultiValueActivity;
 import com.kwsoft.kehuhua.adcustom.OperateDataActivity;
@@ -31,12 +29,10 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.TreeViewActivity;
 import com.kwsoft.kehuhua.adcustom.UnlimitedAddActivity;
 import com.kwsoft.kehuhua.config.Constant;
-import com.kwsoft.kehuhua.utils.NoDoubleClickListener;
+import com.kwsoft.kehuhua.datetimeselect.SelectDateDialog;
+import com.kwsoft.kehuhua.datetimeselect.SelectTimeDialog;
 import com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity;
-import com.sleepbot.datetimepicker.time.RadialPickerLayout;
-import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -98,11 +94,8 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mContext = parent.getContext();
         this.mActivity = (Activity) mContext;
         Log.e(TAG, "onCreateViewHolder: 适配器创建");
-        if (mActivity instanceof AddItemsActivity) {
+        if(mActivity instanceof OperateDataActivity) {
             Constant.jumpNum = 1;
-            fm = ((AddItemsActivity) mContext).getSupportFragmentManager();
-        } else if (mActivity instanceof OperateDataActivity) {
-            Constant.jumpNum = 2;
             fm = ((OperateDataActivity) mContext).getSupportFragmentManager();
         } else if (mActivity instanceof AddTemplateDataActivity) {
             Constant.jumpNum1 = 4;
@@ -188,7 +181,6 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         fieldRole == 6 || fieldRole == 7 || fieldRole == 11 ||
                         fieldRole == 12 || fieldRole == 13 || fieldRole == 8 ||
                         fieldRole == 9 || fieldRole == 24 || fieldRole == 29) {
-//            add_edit_text.setHint("请填写");
 
                     if (fieldRole == 24) {//密码格式
                         holder.add_edit_text.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -198,10 +190,6 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         InputFilter[] filters = {new InputFilter.LengthFilter(11)};
                         holder.add_edit_text.setFilters(filters);
                         // add_edit_text.setError("请输入正确的手机号");
-                    }
-                    if (fieldRole == 4) {//邮箱
-                        holder.add_edit_text.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                        holder.add_edit_text.setError("请输入正确的邮箱");
                     }
                     if (fieldRole == 13) {//金额，带小数点
                         holder.add_edit_text.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -340,54 +328,53 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
 
 
-                    final String finalDateType = dateType;
-                    holder.addGeneral.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final Calendar c = Calendar.getInstance();
-                            c.setTimeInMillis(System.currentTimeMillis());
-                            //默认选中当前时间
-                            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((new DatePickerDialog.OnDateSetListener() {
-                                        @Override
-                                        public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-                                            //获得年月日
-                                            int monthNew = month + 1;
-                                            final String dateTime2 = year + "-" + monthNew + "-" + day;
-                                            TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                                                    (new TimePickerDialog.OnTimeSetListener() {
-                                                        @Override
-                                                        public void onTimeSet(RadialPickerLayout view, int hour, int minute) {
-                                                            //获得时分并与日期加在一起，后缀加上秒数
-                                                            String sDt = dateTime2 + " " + hour + ":" + minute + ":00";
-                                                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                                            try {
-                                                                Date dt2 = sdf.parse(sDt);
-                                                                SimpleDateFormat sdf2 = new SimpleDateFormat(finalDateType);
-                                                                String dateStr = sdf2.format(dt2);
-                                                                holder.addGeneral.setText(dateStr);
-                                                                mDatas.get(position).put(itemValue, dateStr);
-                                                                mDatas.get(position).put(Constant.itemName, dateStr);
-                                                            } catch (ParseException e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        }
-                                                    }), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
-                                                    false, false);
-                                            timePickerDialog.setVibrate(true);
-                                            timePickerDialog.setCloseOnSingleTapMinute(false);
-                                            timePickerDialog.show(fm, TIMEPICKER_TAG);
-                                        }
-                                    }),
-                                    c.get(Calendar.YEAR),
-                                    c.get(Calendar.MONTH),
-                                    c.get(Calendar.DAY_OF_MONTH),
-                                    true);
-                            datePickerDialog.setVibrate(true);
-                            datePickerDialog.setYearRange(1983, 2030);
-                            datePickerDialog.setCloseOnSingleTapDay(false);
-                            datePickerDialog.show(fm, DATEPICKER_TAG);
-                        }
-                    });
+                   holder.addGeneral.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View view) {
+                           SelectDateDialog mSelectDateDialog = new SelectDateDialog(mContext);
+                           mSelectDateDialog.setOnClickListener(new SelectDateDialog.OnClickListener() {
+                               @Override
+                               public boolean onSure(int mYear, int mMonth, int mDay, long time) {
+                                   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                   final String date=dateFormat.format(time);
+                                   //选择时间
+                                   SelectTimeDialog mSelectTimeDialog=new SelectTimeDialog(mContext, new SelectTimeDialog.OnClickListener() {
+                                       @Override
+                                       public boolean onSure(int hour, int minute, int setTimeType) {
+                                           String result = String.format("%02d:%02d:%02d", hour, minute,0);
+                                           String dateAndTime=date+" "+result;
+                                           holder.addGeneral.setText(dateAndTime);
+                                           Log.e(TAG, "onSure: dateAndTime  "+dateAndTime);
+                                           mDatas.get(position).put(itemValue, dateAndTime);
+                                           mDatas.get(position).put(Constant.itemName, dateAndTime);
+                                           return false;
+                                       }
+
+                                       @Override
+                                       public boolean onCancel() {
+                                           return false;
+                                       }
+                                   });
+                                   Calendar c = Calendar.getInstance();
+                                   c.setTimeInMillis(System.currentTimeMillis());
+                                   mSelectTimeDialog.show(c.get(Calendar.HOUR_OF_DAY),
+                                           c.get(Calendar.MINUTE),
+                                           c.get(Calendar.SECOND));
+                                   return false;
+                               }
+
+                               @Override
+                               public boolean onCancel() {
+                                   return false;
+                               }
+                           });
+                           Calendar c = Calendar.getInstance();
+                           c.setTimeInMillis(System.currentTimeMillis());
+                           mSelectDateDialog.show(c.get(Calendar.YEAR),
+                                   c.get(Calendar.MONTH),
+                                   c.get(Calendar.DAY_OF_MONTH));
+                       }
+                   });
 
 //4、时间
 
@@ -418,38 +405,34 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         mDatas.get(position).put(Constant.itemName, defaultName);
                     }
 
-                    final String finalDateType = dateType;
-                    holder.addGeneral.setOnClickListener(new NoDoubleClickListener() {
-                        @Override
-                        public void onNoDoubleClick(View v) {
-                            final Calendar c = Calendar.getInstance();
-                            c.setTimeInMillis(System.currentTimeMillis());
-                            //默认选中当前时间
-                            TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-                                    (new TimePickerDialog.OnTimeSetListener() {
-                                        @Override
-                                        public void onTimeSet(RadialPickerLayout view, int hour, int minute) {
-                                            String sDt = hour + ":" + minute + ":00";
-                                            SimpleDateFormat sdf = new SimpleDateFormat(finalDateType);
-                                            try {
-                                                Date dt2 = sdf.parse(sDt);
-                                                SimpleDateFormat sdf2 = new SimpleDateFormat(finalDateType);
-                                                String dateStr = sdf2.format(dt2);
-                                                holder.addGeneral.setText(dateStr);
-                                                mDatas.get(position).put(itemValue, dateStr);
-                                                mDatas.get(position).put(Constant.itemName, dateStr);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
-                                    false, false);
-                            timePickerDialog.setVibrate(true);
-                            timePickerDialog.setCloseOnSingleTapMinute(false);
-                            timePickerDialog.show(fm, TIMEPICKER_TAG);
+//                    final String finalDateType = dateType;
+holder.addGeneral.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        SelectTimeDialog mSelectTimeDialog=new SelectTimeDialog(mContext, new SelectTimeDialog.OnClickListener() {
+            @Override
+            public boolean onSure(int hour, int minute, int setTimeType) {
+                String result = String.format("%02d:%02d:%02d", hour, minute,0);
+                holder.addGeneral.setText(result);
+                Log.e(TAG, "onSure: result"+result);
+                mDatas.get(position).put(itemValue, result);
+                mDatas.get(position).put(Constant.itemName, result);
+                return false;
+            }
 
-                        }//onclick完毕
-                    });
+            @Override
+            public boolean onCancel() {
+                return false;
+            }
+        });
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        mSelectTimeDialog.show(c.get(Calendar.HOUR_OF_DAY),
+                c.get(Calendar.MINUTE),
+                c.get(Calendar.SECOND));
+    }
+});
+
                 } else if (fieldRole == 19) {
 /**
  *
@@ -842,7 +825,6 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Constant.relationField = position;
                 }
                 needFilterMap.put(needFilterStr[0], idValues);
-
                 needFilterList.add(needFilterMap);
             }
         }
@@ -889,13 +871,4 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-
-    public void showDialog(final Context context, final String[] arrs) {
-        new AlertDialog.Builder(context).setTitle("选择区域").setItems(arrs, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(context, "您已经选择了: " + which + ":" + arrs[which], Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }).show();
-    }
 }

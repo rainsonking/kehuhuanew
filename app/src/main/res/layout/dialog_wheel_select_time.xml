@@ -16,7 +16,7 @@
             android:layout_height="150dp"
             android:layout_weight="1">
 
-            <com.huangzj.simplewheelview.view.WheelView
+            <com.kwsoft.kehuhua.datetimeselect.WheelView
                 android:id="@+id/select_time_wheel_left"
                 android:layout_width="fill_parent"
                 android:layout_height="150dp" />
@@ -37,7 +37,7 @@
             android:layout_height="150dp"
             android:layout_weight="1">
 
-            <com.huangzj.simplewheelview.view.WheelView
+            <com.kwsoft.kehuhua.datetimeselect.WheelView
                 android:id="@+id/select_time_wheel_right"
                 android:layout_width="fill_parent"
                 android:layout_height="150dp" />

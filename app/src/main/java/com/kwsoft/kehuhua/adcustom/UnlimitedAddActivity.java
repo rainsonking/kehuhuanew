@@ -178,11 +178,7 @@ public class UnlimitedAddActivity extends AppCompatActivity {
         if (Constant.jumpNum1==4) {
             intent.setClass(UnlimitedAddActivity.this, AddTemplateDataActivity.class);
         }else  if (Constant.jumpNum==1) {
-            intent.setClass(UnlimitedAddActivity.this, AddItemsActivity.class);
-        }else if(Constant.jumpNum==2){
-            intent.setClass(UnlimitedAddActivity.this, RowsEditActivity.class);
-        }else if(Constant.jumpNum==3){
-            intent.setClass(UnlimitedAddActivity.this, RowsAddActivity.class);
+            intent.setClass(UnlimitedAddActivity.this, OperateDataActivity.class);
         }
 //拼接参数
 

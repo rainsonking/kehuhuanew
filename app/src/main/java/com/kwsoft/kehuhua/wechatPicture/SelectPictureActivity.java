@@ -13,12 +13,9 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.kwsoft.kehuhua.adcustom.AddItemsActivity;
+import com.kwsoft.kehuhua.adcustom.OperateDataActivity;
 import com.kwsoft.kehuhua.adcustom.R;
-import com.kwsoft.kehuhua.adcustom.RowsAddActivity;
-import com.kwsoft.kehuhua.adcustom.RowsEditActivity;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
-import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
@@ -288,13 +285,8 @@ private WaterWaveProgress waveProgress;
 
     private void jump2Activity() {
         Intent intentTree = new Intent();
-        if (Constant.jumpNum == 1) {
-            intentTree.setClass(SelectPictureActivity.this, AddItemsActivity.class);
-        } else if (Constant.jumpNum == 2) {
-            intentTree.setClass(SelectPictureActivity.this, RowsEditActivity.class);
-        } else if (Constant.jumpNum == 3) {
-            intentTree.setClass(SelectPictureActivity.this, RowsAddActivity.class);
-        }
+
+        intentTree.setClass(SelectPictureActivity.this, OperateDataActivity.class);
 
         Bundle bundle = new Bundle();
 
