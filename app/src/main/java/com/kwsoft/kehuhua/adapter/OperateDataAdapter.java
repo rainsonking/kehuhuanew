@@ -53,11 +53,9 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context mContext;
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;
     private static final int VIEW_TYPE = 1;
-    private static final String DATEPICKER_TAG = "datepicker";
-    private static final String TIMEPICKER_TAG = "timepicker";
     private Activity mActivity;
     private String tableId, dataId, pageId;
-    private android.support.v4.app.FragmentManager fm;
+
     /**
      * 获取条目 View填充的类型
      * 默认返回0
@@ -96,10 +94,8 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Log.e(TAG, "onCreateViewHolder: 适配器创建");
         if(mActivity instanceof OperateDataActivity) {
             Constant.jumpNum = 1;
-            fm = ((OperateDataActivity) mContext).getSupportFragmentManager();
         } else if (mActivity instanceof AddTemplateDataActivity) {
             Constant.jumpNum1 = 4;
-            fm = ((AddTemplateDataActivity) mContext).getSupportFragmentManager();
         }
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
         if (VIEW_TYPE == viewType) {

@@ -316,7 +316,7 @@ public class OperateDataActivity extends BaseActivity {
         mToolbar.setTitle(buttonName);
         mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
         //左侧返回按钮
-        mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.often_more));
+        mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.edit_commit1));
         mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
