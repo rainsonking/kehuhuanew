@@ -133,19 +133,19 @@ public class AssortFragment extends Fragment {
                 });
         menuListMap = DataProcess.toStuParentList(menuListAll);
 
-        int leg = menuListMap.size() % 3;
-        if (leg == 1) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("image", "");
-            map.put("menuName", "");
-            menuListMap.add(map);
-            menuListMap.add(map);
-        } else if (leg == 2) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("image", "");
-            map.put("menuName", "");
-            menuListMap.add(map);
-        }
+//        int leg = menuListMap.size() % 3;
+//        if (leg == 1) {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("image", "");
+//            map.put("menuName", "");
+//            menuListMap.add(map);
+//            menuListMap.add(map);
+//        } else if (leg == 2) {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("image", "");
+//            map.put("menuName", "");
+//            menuListMap.add(map);
+//        }
 
         Log.e("TAG", "menuListMap初始值 " + menuListMap.toString());
         adapter = new SimpleAdapter(getActivity(), menuListMap,
@@ -223,19 +223,19 @@ public class AssortFragment extends Fragment {
         menuListMap.addAll(DataProcess.toStuParentList(menuListAll));
         Log.e("TAG", "刷新后的父类菜单数据=" + menuListMap.toString());
 
-        int leg = menuListMap.size() % 3;
-        if (leg == 1) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("image", "");
-            map.put("menuName", "");
-            menuListMap.add(map);
-            menuListMap.add(map);
-        } else if (leg == 2) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("image", "");
-            map.put("menuName", "");
-            menuListMap.add(map);
-        }
+//        int leg = menuListMap.size() % 3;
+//        if (leg == 1) {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("image", "");
+//            map.put("menuName", "");
+//            menuListMap.add(map);
+//            menuListMap.add(map);
+//        } else if (leg == 2) {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("image", "");
+//            map.put("menuName", "");
+//            menuListMap.add(map);
+//        }
     }
 
 

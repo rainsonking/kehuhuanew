@@ -169,8 +169,8 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                          if ((simpleAdapter.getCount()==(i+1))){
-                       // if (i == 7) {
+                        if ((simpleAdapter.getCount() == (i + 1))) {
+                            // if (i == 7) {
                             StuMainActivity activity = (StuMainActivity) getActivity();
                             activity.fragmentClick();
                         } else {
@@ -250,15 +250,16 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             for (int k = 0; k < 7; k++) {
                 menuListMaps.add(menuListMap.get(k));
             }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("menuName", "全部");
+            map.put("image", R.drawable.stu_see_all);
+            menuListMaps.add(map);
         } else {
             //小于7个的情况
             menuListMaps.addAll(menuListMap);
         }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("menuName", "全部");
-        map.put("image", R.drawable.stu_see_all);
-        menuListMaps.add(map);
         Log.e("TAG", "parentList去掉手机端 " + menuListMap.toString());
         return menuListMaps;
     }
@@ -349,9 +350,10 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-private static final String TAG = "StudyFragment";
+    private static final String TAG = "StudyFragment";
+
     public void getLoginData(String volleyUrl) {
-        if (((BaseActivity)getActivity()).hasInternetConnected()) {
+        if (((BaseActivity) getActivity()).hasInternetConnected()) {
 
             //参数
             sPreferences = getActivity().getSharedPreferences(Constant.proId, MODE_PRIVATE);
@@ -372,23 +374,24 @@ private static final String TAG = "StudyFragment";
                     .execute(new EdusStringCallback(getActivity()) {
                         @Override
                         public void onError(Call call, Exception e, int id) {
-                            ErrorToast.errorToast(mContext,e);
+                            ErrorToast.errorToast(mContext, e);
                             pull_refresh_scrollview.onRefreshComplete();
 
                         }
 
                         @Override
                         public void onResponse(String response, int id) {
-                            Log.e(TAG, "onResponse: "+"  id  "+id);
+                            Log.e(TAG, "onResponse: " + "  id  " + id);
                             mainPage(response);
                         }
                     });
-    }else{
+        } else {
 
             pull_refresh_scrollview.onRefreshComplete();
             Toast.makeText(getActivity(), "无网络", Toast.LENGTH_SHORT).show();
         }
     }
+
     //此方法传递菜单JSON数据
     @SuppressWarnings("unchecked")
     private void mainPage(String menuData) {
