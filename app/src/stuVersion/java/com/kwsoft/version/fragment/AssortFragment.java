@@ -26,6 +26,7 @@ import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.DataProcess;
 import com.kwsoft.kehuhua.utils.Utils;
+import com.kwsoft.version.view.AsortGridView;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import okhttp3.Call;
 public class AssortFragment extends Fragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private GridView homeGridView;
+    private AsortGridView homeGridView;
     private List<Map<String, Object>> menuListMap;
     private SimpleAdapter adapter;
     private List<Map<String, Object>> menuListAll;
@@ -85,7 +86,7 @@ public class AssortFragment extends Fragment {
     private void initView(View v) {
 //        TextView tvTitle = (TextView) v.findViewById(R.id.textView);
 //        tvTitle.setText("分类");
-        homeGridView = (GridView) v.findViewById(R.id.stu_home_grid);
+        homeGridView = (AsortGridView) v.findViewById(R.id.stu_home_grid);
 
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,

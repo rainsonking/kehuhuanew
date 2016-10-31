@@ -9,6 +9,14 @@
 
     <!--<include layout="@layout/activity_stu_title" />-->
 
+    <com.jude.rollviewpager.RollPagerView
+        android:id="@+id/roll_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:rollviewpager_play_delay="3000" />
+
+
+
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
         android:id="@+id/pull_refresh_scrollview"
         android:layout_width="match_parent"
@@ -24,11 +32,7 @@
             android:orientation="vertical">
 
 
-            <com.jude.rollviewpager.RollPagerView
-                android:id="@+id/roll_view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                app:rollviewpager_play_delay="3000" />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
