@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#f4f4f4"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <com.kwsoft.kehuhua.widget.CommonToolbar

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="81dp">
+    android:layout_height="81dp"
+    android:background="@color/white">
     <!--公共控件，左侧显示名-->
     <RelativeLayout
         android:id="@+id/relave"
@@ -61,13 +62,13 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:background="@null"
-                android:paddingRight="15dp"
                 android:hint="请填写"
-                android:textColorHint="@color/gray"
                 android:inputType="textMultiLine"
                 android:maxLines="10"
                 android:minLines="1"
+                android:paddingRight="15dp"
                 android:textColor="@color/black"
+                android:textColorHint="@color/gray"
                 android:textSize="15sp"
                 android:visibility="gone" />
 
@@ -77,30 +78,30 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="请选择"
-                android:textColorHint="@color/gray"
                 android:textColor="@color/black"
+                android:textColorHint="@color/gray"
                 android:textSize="15sp"
                 android:visibility="gone" />
 
 
             <!--<org.angmarch.views.NiceSpinner-->
-                <!--android:id="@+id/add_spinner"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerInParent="true"-->
-                <!--android:visibility="gone">-->
+            <!--android:id="@+id/add_spinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:visibility="gone">-->
 
             <!--</org.angmarch.views.NiceSpinner>-->
             <TextView
                 android:id="@+id/add_spinner"
                 android:layout_width="match_parent"
-                android:textColor="@color/black"
-                android:textSize="15sp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:hint="请选择"
                 android:paddingRight="15dp"
-                android:layout_height="match_parent"
-               android:gravity="center_vertical"
-                android:visibility="gone"/>
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/add_unlimited"
@@ -152,16 +153,12 @@
                 android:layout_height="match_parent" />
         </RelativeLayout>
 
-        <!--android:background="#40323232"-->
-
-
-        <!--android:background="@color/no_edit_tv"-->
     </RelativeLayout>
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="#e2e2e2"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_below="@+id/relave"-->
-        <!--/>-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:background="#dedede" />
 </RelativeLayout>
