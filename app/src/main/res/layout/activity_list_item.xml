@@ -263,6 +263,7 @@
                 android:paddingBottom="4dp"
                 android:paddingTop="3dp"
                 android:text="查看相关列表"
+                android:focusable="false"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 

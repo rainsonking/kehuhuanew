@@ -261,6 +261,7 @@
                 android:background="@drawable/select_bg_item"
                 android:gravity="center"
                 android:paddingBottom="4dp"
+                android:focusable="false"
                 android:paddingTop="3dp"
                 android:text="查看相关列表"
                 android:textColor="@color/white"
