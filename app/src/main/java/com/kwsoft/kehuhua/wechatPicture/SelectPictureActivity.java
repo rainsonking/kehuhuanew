@@ -3,14 +3,19 @@ package com.kwsoft.kehuhua.wechatPicture;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.kwsoft.kehuhua.adcustom.OperateDataActivity;
@@ -18,6 +23,10 @@ import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.urlCnn.ErrorToast;
+import com.kwsoft.kehuhua.wechatPicture.andio.AudioRecordButton;
+import com.kwsoft.kehuhua.wechatPicture.andio.MediaManager;
+import com.kwsoft.kehuhua.wechatPicture.andio.Recorder;
+import com.kwsoft.kehuhua.wechatPicture.andio.RecorderAdapter;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -40,8 +49,6 @@ import static com.kwsoft.kehuhua.config.Constant.pictureUrl;
 import static com.kwsoft.kehuhua.config.Constant.sysUrl;
 import static com.kwsoft.kehuhua.config.Constant.topBarColor;
 
-//import static com.google.gson.jpush.internal.a.z.R;
-
 /**
  * Created by Administrator on 2016/10/13 0013.
  */
@@ -56,7 +63,17 @@ public class SelectPictureActivity extends BaseActivity implements View.OnClickL
 
     String codeListStr;
     private static final String TAG = "SelectPictureActivity";
-private WaterWaveProgress waveProgress;
+    private WaterWaveProgress waveProgress;
+
+    //录制视频参数
+    AudioRecordButton button;
+    private ListView mlistview;
+    private ArrayAdapter<Recorder> mAdapter;
+    private View viewanim;
+    private List<Recorder> mDatas = new ArrayList<Recorder>();
+    private Button btn_up;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +82,13 @@ private WaterWaveProgress waveProgress;
         initView();
 //        initData();
 //        setListener();
+        //展示音频
+        initAudioView();
     }
 
     public void initView() {
         Intent intent = getIntent();
         position = intent.getStringExtra("position");
-
 
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
         mToolbar.setTitle("作业");
@@ -83,7 +101,7 @@ private WaterWaveProgress waveProgress;
                 finish();
             }
         });
-         mToolbar.showRightImageButton();
+        mToolbar.showRightImageButton();
 
         //右侧下拉按钮
         mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
@@ -100,10 +118,10 @@ private WaterWaveProgress waveProgress;
         WindowManager wm = (WindowManager) this
                 .getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
-      //  int height = wm.getDefaultDisplay().getHeight();
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)waveProgress.getLayoutParams();
+        //  int height = wm.getDefaultDisplay().getHeight();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) waveProgress.getLayoutParams();
         //layoutParams.setMargins(width/4,12,10,5);//4个参数按顺序分别是左上右下
-        layoutParams.setMarginStart(width/3);
+        layoutParams.setMarginStart(width / 3);
         waveProgress.setLayoutParams(layoutParams); //mView是控件
         adapter = new PhotoPickerAdapter(imgPaths);
 
@@ -131,15 +149,122 @@ private WaterWaveProgress waveProgress;
                     bundle.putInt("position", position);
                     goToActivityForResult(SelectPictureActivity.this, EnlargePicActivity.class, bundle, position);
                 }
-
             }
         });
+
+
+    }
+
+    private void initAudioView() {
+        //展示音频
+        mlistview = (ListView) findViewById(R.id.listview);
+        button = (AudioRecordButton) findViewById(R.id.recordButton);
+        btn_up = (Button) findViewById(R.id.btn_up);
+        btn_up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Recorder recorder = mDatas.get(0);
+                String path = recorder.getFilePathString();
+                uploadAudio(path);
+            }
+        });
+
+        PermissionGen.with(SelectPictureActivity.this)
+                .addRequestCode(106)
+                .permissions(
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request();
+
+        button.setAudioFinishRecorderListener(new AudioRecordButton.AudioFinishRecorderListener() {
+
+            @Override
+            public void onFinished(float seconds, String filePath) {
+                // TODO Auto-generated method stub
+                Log.e("filepath=", filePath);
+                Recorder recorder = new Recorder(seconds, filePath);
+                mDatas.add(recorder);
+                mAdapter.notifyDataSetChanged();
+                mlistview.setSelection(mDatas.size() - 1);
+            }
+        });
+
+        mAdapter = new RecorderAdapter(this, mDatas);
+        mlistview.setAdapter(mAdapter);
+
+
+        mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // 播放动画
+                if (viewanim != null) {//让第二个播放的时候第一个停止播放
+                    // viewanim.setBackgroundResource(R.id.id_recorder_anim);
+                    //  viewanim.setBackgroundResource(R.mipmap.adj);
+                    viewanim.setBackgroundResource(R.mipmap.ic_launcher);
+                    viewanim = null;
+                }
+                viewanim = view.findViewById(R.id.id_recorder_anim);
+                viewanim.setBackgroundResource(R.drawable.play);
+                AnimationDrawable drawable = (AnimationDrawable) viewanim
+                        .getBackground();
+                drawable.start();
+                // 播放音频
+                MediaManager.playSound(mDatas.get(i).filePathString,
+                        new MediaPlayer.OnCompletionListener() {
+
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                // viewanim.setBackgroundResource(R.id.id_recorder_anim);
+                                viewanim.setBackgroundResource(R.mipmap.ic_launcher);
+                            }
+                        });
+            }
+        });
+
+    }
+
+    /**
+     * 上传音频
+     *
+     */
+    private void uploadAudio(String path) {
+        File audioFile = new File(path);
+        Log.e("audioFile=", audioFile.getPath());
+        String url = sysUrl + pictureUrl;
+
+        OkHttpUtils.post()//
+                .addFile("audiofile", audioFile.getName(), audioFile)
+                .url(url)
+                .build()
+                .execute(new EdusStringCallback(SelectPictureActivity.this) {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ErrorToast.errorToast(mContext, e);
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e("response", response);
+                        getFileCode(response);
+                    }
+                });
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
+
+    @PermissionSuccess(requestCode = 106)
+    public void doSomething() {
+        Toast.makeText(this, "打开权限成功", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionFail(requestCode = 106)
+    public void doFailSomething() {
+        Toast.makeText(this, "Contact permission is not granted", Toast.LENGTH_SHORT).show();
+    }
+
 
     @PermissionSuccess(requestCode = 100)
     public void doCapture() {
@@ -225,7 +350,7 @@ private WaterWaveProgress waveProgress;
                 .execute(new EdusStringCallback(SelectPictureActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ErrorToast.errorToast(mContext,e);
+                        ErrorToast.errorToast(mContext, e);
                         waveProgress.setVisibility(View.GONE);
                     }
 
@@ -300,5 +425,24 @@ private WaterWaveProgress waveProgress;
     @Override
     public void onClick(View view) {
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MediaManager.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        MediaManager.resume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MediaManager.release();
     }
 }
