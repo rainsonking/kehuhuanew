@@ -97,8 +97,7 @@
         <activity android:name=".RowsReadActivity" />
         <activity android:name=".RowsAddActivity" />
         <activity
-            android:name=".TreeViewActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".TreeViewActivity" />
         <activity
             android:name=".MenuActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -115,7 +114,9 @@
             android:name=".MessagAlertActivity"
             android:label="消息" />
         <activity android:name="com.kwsoft.kehuhua.wechatPicture.SelectPictureActivity" />
-        <activity android:name="com.kwsoft.kehuhua.wechatPicture.EnlargePicActivity"></activity>
+        <activity android:name="com.kwsoft.kehuhua.wechatPicture.EnlargePicActivity">
+
+        </activity>
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />

@@ -2,18 +2,15 @@ package com.kwsoft.kehuhua.adcustom;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
 import com.kwsoft.kehuhua.treeViewUtils.FileBean;
 import com.kwsoft.kehuhua.treeViewUtils.Node;
@@ -22,6 +19,7 @@ import com.kwsoft.kehuhua.treeViewUtils.SimpleTreeListViewAdapter;
 import com.kwsoft.kehuhua.treeViewUtils.TreeListViewAdapter;
 import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
 import com.kwsoft.kehuhua.urlCnn.ErrorToast;
+import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.ArrayList;
@@ -30,21 +28,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import okhttp3.Call;
 
-public class TreeViewActivity extends AppCompatActivity {
+import static com.kwsoft.kehuhua.config.Constant.topBarColor;
+
+public class TreeViewActivity extends BaseActivity {
     Map<String, Object> dataMap;
     Map<String, String> paramsMap = new HashMap<>();
     String paramsStr, tableId, pageId;
-    @Bind(R.id.tree_back_edit)
-    ImageView treeBackEdit;
-    @Bind(R.id.tree_list_commint)
-    ImageView treeListCommint;
-    @Bind(R.id.tree_textViewTitle)
-    TextView treeTextViewTitle;
     private String isMulti;
     private ListView mTree;
     private SimpleTreeListViewAdapter<OrgBean> mAdapter;
@@ -59,12 +51,34 @@ public class TreeViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tree_view);
         ButterKnife.bind(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        initView();
         getDataIntent();//获取数据
 
-        mTree = (ListView) findViewById(R.id.list_tree);
+
         requestData();
 
+    }
+    private CommonToolbar mToolbar;
+    @Override
+    public void initView() {
+
+        mTree = (ListView) findViewById(R.id.list_tree);
+        mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
+        mToolbar.setBackgroundColor(getResources().getColor(topBarColor));
+        //左侧返回按钮
+        mToolbar.setRightButtonIcon(getResources().getDrawable(R.mipmap.edit_commit1));
+        mToolbar.setLeftButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        mToolbar.setRightButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                jump2Activity();
+            }
+        });
     }
 
     private void getDataIntent() {
@@ -82,7 +96,7 @@ public class TreeViewActivity extends AppCompatActivity {
         position= String.valueOf(intent.getStringExtra("position"));
         String viewName=intent.getStringExtra("viewName");
 
-        treeTextViewTitle.setText(viewName);
+        mToolbar.setTitle(viewName);
         String  needFilterListStr = String.valueOf(intent.getStringExtra("needFilterListStr"));
 
         List<Map<String,String>> needFilterList=JSON.parseObject(needFilterListStr,
@@ -118,7 +132,7 @@ public class TreeViewActivity extends AppCompatActivity {
 
     private static final String TAG = "TreeViewActivity";
     
-    private void requestData() {
+    public void requestData() {
         final String volleyUrl = Constant.sysUrl + Constant.requestTreeDialog;
 
         Log.e("TAG", "网络获取内多dataUrl " + volleyUrl);
@@ -291,17 +305,5 @@ public class TreeViewActivity extends AppCompatActivity {
         intentTree.putExtra("bundle", bundle);
         setResult(2, intentTree);
         this.finish();
-    }
-
-    @OnClick({R.id.tree_back_edit, R.id.tree_list_commint})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tree_back_edit:
-                this.finish();
-                break;
-            case R.id.tree_list_commint:
-                jump2Activity();
-                break;
-        }
     }
 }

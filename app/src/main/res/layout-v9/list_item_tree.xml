@@ -20,6 +20,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_toEndOf="@id/id_item_icon"
+    android:shadowColor="@color/blueviolet"
     android:focusable="false"
     />
     <TextView
@@ -29,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/tree_check"
         android:text="hello_world"
+        android:textColor="@color/black"
         android:textSize="18sp" />
 
 </RelativeLayout>

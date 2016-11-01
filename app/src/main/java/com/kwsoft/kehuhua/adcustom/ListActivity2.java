@@ -434,7 +434,12 @@ public class ListActivity2 extends BaseActivity {
             }
         });
         dialog.dismiss();
-        Snackbar.make(mRecyclerView, "加载完成，共"+totalNum+"条", Snackbar.LENGTH_SHORT).show();
+        if (totalNum>0) {
+            Snackbar.make(mRecyclerView, "加载完成，共"+totalNum+"条", Snackbar.LENGTH_SHORT).show();
+        }else{
+            Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
+
+        }
 
     }
 

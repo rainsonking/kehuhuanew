@@ -2,7 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent">
+    android:layout_height="45dp"
+    >
     <!--android:background="@color/black"-->
     <LinearLayout
         android:id="@+id/child_toolbar_leftButton"
@@ -30,17 +31,8 @@
         android:text="shuxing"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:visibility="gone" />
+         />
     <!--android:visibility="gone"-->
-    <ImageView
-        android:id="@+id/is_child_iv"
-        android:layout_width="3dp"
-        android:layout_height="3dp"
-        android:layout_alignBottom="@+id/child_toolbar_title"
-        android:layout_marginStart="10dp"
-        android:visibility="gone"
-        android:layout_toEndOf="@+id/child_toolbar_title"
-        android:src="@mipmap/often_drop" />
     <!--android:visibility="gone"-->
 
     <ImageButton
@@ -51,7 +43,17 @@
         android:layout_centerVertical="true"
         android:background="#00000000"
         android:visibility="gone"
+        />
 
+    <ImageView
+        android:id="@+id/is_child_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/child_toolbar_title"
+        android:layout_marginStart="4dp"
+        android:visibility="gone"
+        android:layout_toEndOf="@+id/child_toolbar_title"
+        android:src="@mipmap/often_drop"
         />
 
 </RelativeLayout>
