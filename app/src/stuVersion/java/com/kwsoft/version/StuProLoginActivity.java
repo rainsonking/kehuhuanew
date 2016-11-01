@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 
 public class StuProLoginActivity extends BaseActivity {
@@ -218,5 +219,18 @@ public class StuProLoginActivity extends BaseActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.onResume(mContext);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(mContext);
     }
 }
