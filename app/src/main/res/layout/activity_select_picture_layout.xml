@@ -52,25 +52,66 @@
                 android:scrollbars="none"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="5dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.kwsoft.kehuhua.wechatPicture.andio.AudioRecordButton
+                    android:id="@+id/recordButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/button_recordnormal"
+                    android:gravity="center"
+                    android:minHeight="0dp"
+                    android:padding="5dp"
+                    android:text="@string/normal"
+                    android:textColor="#727272">
+
+                </com.kwsoft.kehuhua.wechatPicture.andio.AudioRecordButton>
+
+               <Button
+                   android:id="@+id/btn_up"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="5dp"
+                   android:text="上传音频"/>
+            </LinearLayout>
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_weight="1"
+                android:background="#ebebeb"
+                android:divider="@null"
+                android:dividerHeight="10dp">
+
+            </ListView>
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:paddingTop="40dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="40dp">
 
             <com.kwsoft.kehuhua.wechatPicture.WaterWaveProgress
                 android:id="@+id/waterWaveProgress1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:visibility="gone"
                 android:layout_marginRight="30dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 tools:maxProgress="100"
                 tools:progress="0" />
         </LinearLayout>
