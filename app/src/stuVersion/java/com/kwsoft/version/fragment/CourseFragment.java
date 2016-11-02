@@ -108,7 +108,7 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
         initView(view);
         url = Constant.sysUrl + "dataPlAdd_interfaceShowDateCourse.do";
         //?mainId=73&tableId=19&minDate=2016-05-26&maxDate=2016-06-26
-
+        Log.e("url=", url);
         requestCourseData(url);
         return view;
     }
@@ -158,7 +158,7 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
         Log.e("TAG", "课程表监测点2");
         // tv_date.setText(currentDateTime.getMonthOfYear() + "月");
         tv_date.setText(currentDateTime.getMonthOfYear() + "");
-        tv_year.setText(currentDateTime.getYear()+"");
+        tv_year.setText(currentDateTime.getYear() + "");
         layout_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,7 +179,7 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
                                 }
 
                                 tv_date.setText(monthNew);
-                                tv_year.setText(year+"");
+                                tv_year.setText(year + "");
 //                                addGeneral.setText(year + "-" + monthNew + "-" + dayNew);
                                 Log.i("123", "date===>" + year + "-" + monthNew + "-" + dayNew);
                                 String dateStr = year + "-" + monthNew + "-" + dayNew;
@@ -266,6 +266,8 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
 //            String[] jieGuo2 = jieGuo1[1].split("&");
 //            tableId = jieGuo2[0];
             tableId = Constant.stuCourseTableId;
+            Log.e("tableidsd", Constant.stuCourseTableId);
+            Log.e("useidsd", Constant.USERID);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -300,7 +302,7 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
         currentDateTime = dateTime;
 //        tv_date.setText(currentDateTime.getMonthOfYear()+"月");
         tv_date.setText(currentDateTime.getMonthOfYear() + "");
-        tv_year.setText(currentDateTime.getYear()+"");
+        tv_year.setText(currentDateTime.getYear() + "");
         DateTime midDate = dateTime.withDayOfWeek(DateTimeConstants.THURSDAY);
         DateTime startDate = midDate.plusDays(-3);
         DateTime endDate = midDate.plusDays(3);
@@ -362,12 +364,13 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
                 .execute(new EdusStringCallback(getActivity()) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ErrorToast.errorToast(mContext,e);
+                        ErrorToast.errorToast(mContext, e);
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         Log.e(TAG, "onResponse: " + "  id  " + id);
+                        Log.e("onres=",response);
                         setStore(response);
                     }
                 });

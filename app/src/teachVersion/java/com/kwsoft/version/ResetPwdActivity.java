@@ -181,8 +181,8 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            requestData(Constant.sysUrl + StuPra.changePsw);
-                            Log.e("dialog-", StuPra.changePsw);
+                            requestData(Constant.sysUrl + StuPra.teachchangePsw);
+                            Log.e("dialog-", StuPra.teachchangePsw);
 
                         }
                     });
@@ -207,7 +207,7 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_LONG).show();
             return;
         }
-        getProgressDialog().show();
+        dialog.show();
         Log.i("123", "test====>" + volleyUrl);
 
 
@@ -216,9 +216,10 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
         //String stuId = getLoginUserSharedPre().getString("USERID", "");
         String stuId =  sPreferences.getString("userid", "");
         Log.e("stuid",stuId);
-        paramsMap.put("stuId", stuId);
+        paramsMap.put("userId", stuId);
         paramsMap.put("oldPassword", edOldpwd.getText().toString());
         paramsMap.put("newPassword", edConfirmpwd.getText().toString());
+        paramsMap.put("source","1");
         //请求
         OkHttpUtils
                 .post()
@@ -242,7 +243,7 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void setStore(String jsonData) {
-        getProgressDialog().dismiss();
+        dialog.dismiss();
         Log.i("123", "jsonData====>" + jsonData);
         try {
             JSONObject object = new JSONObject(jsonData);

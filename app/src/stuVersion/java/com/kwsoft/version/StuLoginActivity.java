@@ -293,6 +293,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                     new TypeReference<Map<String, Object>>() {
                     });
             Map<String, Object> loginfo = (Map<String, Object>) menuMap.get("loginInfo");
+          Log.e("loginf-",loginfo.toString());
             String userid = String.valueOf(loginfo.get("USERID"));
             Constant.USERID = String.valueOf(loginfo.get("USERID"));
             sPreferences.edit().putString("userid", userid).apply();

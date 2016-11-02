@@ -46,6 +46,7 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
     private LinearLayout btnConfirm;
     private LinearLayout btn_commit_enabled;
     private SharedPreferences sPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,7 +160,7 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
                 String againNewPsw = edConfirmpwd.getText().toString();
                 //String oldPswLocal = getLoginUserSharedPre().getString("changePassword", "");
                 String oldPswLocal = sPreferences.getString("pwd", "");
-                Log.e("oldpwd",oldPswLocal);
+                Log.e("oldpwd", oldPswLocal);
                 if (TextUtils.isEmpty(oldPsw)) {
                     Toast.makeText(this, "请填写原密码！", Toast.LENGTH_SHORT).show();
                 } else if (!TextUtils.equals(oldPsw, oldPswLocal)) {
@@ -202,19 +203,20 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
     }
 
     private static final String TAG = "ResetPwdActivity";
+
     private void requestData(String volleyUrl) {
         if (!hasInternetConnected()) {
             Toast.makeText(this, "当前网络不可用，请检查网络！", Toast.LENGTH_LONG).show();
             return;
         }
-        getProgressDialog().show();
+        dialog.show();
         Log.i("123", "test====>" + volleyUrl);
 
         //参数
         Map<String, String> paramsMap = new HashMap<String, String>();
         //String stuId = getLoginUserSharedPre().getString("USERID", "");
-        String stuId =  sPreferences.getString("userid", "");
-        Log.e("stuId",stuId);
+        String stuId = sPreferences.getString("userid", "");
+        Log.e("stuId", stuId);
         paramsMap.put("stuId", stuId);
         paramsMap.put("oldPassword", edOldpwd.getText().toString());
         paramsMap.put("newPassword", edConfirmpwd.getText().toString());
@@ -227,20 +229,21 @@ public class ResetPwdActivity extends BaseActivity implements View.OnClickListen
                 .execute(new EdusStringCallback(ResetPwdActivity.this) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ErrorToast.errorToast(mContext,e);
-                        getProgressDialog().dismiss();
+                        ErrorToast.errorToast(mContext, e);
+                        dialog.dismiss();
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        Log.e(TAG, "onResponse: " + "  id  " + id);
+                        Log.e("response=", response);
                         setStore(response);
                     }
                 });
     }
 
     private void setStore(String jsonData) {
-        getProgressDialog().dismiss();
+        dialog.dismiss();
         Log.i("123", "jsonData====>" + jsonData);
         try {
             JSONObject object = new JSONObject(jsonData);

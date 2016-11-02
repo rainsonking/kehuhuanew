@@ -14,6 +14,8 @@ public class StuPra {
     public static String stuInfoTableId = "2";//学员个人资料tableId
     public static String stuInfoPageId = "2873";//学员个人资料pageId
 
+    public final static String teachchangePsw = "phone_resetMainProjectPassword.do?";//教师端修改密码
+
 
     //存储老师端父类菜单的图标
     public static int[] imgs = {R.drawable.edus_nav_market_normal,

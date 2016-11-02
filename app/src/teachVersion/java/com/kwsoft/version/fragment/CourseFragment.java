@@ -262,6 +262,8 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
 //            String[] jieGuo2 = jieGuo1[1].split("&");
 //            tableId = jieGuo2[0];
             tableId = Constant.stuCourseTableId;
+            Log.e("tableds=",Constant.stuCourseTableId);
+            Log.e("useridds=",Constant.USERID);
         } catch (Exception e) {
             e.printStackTrace();
         }
