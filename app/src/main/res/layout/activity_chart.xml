@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.kwsoft.kehuhua.adcustom.ChartActivity">
+
+    <com.kwsoft.kehuhua.widget.CommonToolbar
+        android:id="@+id/common_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="?attr/colorPrimary"
+        app:isShowTitle="true">
+    </com.kwsoft.kehuhua.widget.CommonToolbar>
+
+   <WebView
+       android:id="@+id/wb"
+       android:layout_below="@+id/common_toolbar"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+   </WebView>
+</RelativeLayout>

@@ -24,6 +24,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.kwsoft.kehuhua.adcustom.BlankActivity;
+import com.kwsoft.kehuhua.adcustom.ChartActivity;
 import com.kwsoft.kehuhua.adcustom.CourseActivity;
 import com.kwsoft.kehuhua.adcustom.ListActivity2;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
@@ -178,7 +179,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                             }
                     );
                 } else if (i == 1) {
-                    Intent intent = new Intent(getActivity(), BlankActivity.class);
+                    Intent intent = new Intent(getActivity(), ChartActivity.class);
                     intent.putExtra("titleName", String.valueOf(menuListMaps.get(i).get("menuName")));
                     startActivity(intent);
                 } else if (i == 2) {

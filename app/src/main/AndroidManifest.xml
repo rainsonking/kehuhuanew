@@ -86,6 +86,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ExpandableActivity" />
         <activity android:name=".BlankActivity" />
+        <activity android:name=".ChartActivity" />
+
         <activity android:name=".AddItemsActivity" />
         <activity android:name=".RowsEditActivity" />
         <activity
