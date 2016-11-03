@@ -29,6 +29,7 @@ import com.kwsoft.kehuhua.utils.Utils;
 import com.kwsoft.version.view.AsortGridView;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class AssortFragment extends Fragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private AsortGridView homeGridView;
-    private List<Map<String, Object>> menuListMap;
+    private List<Map<String, Object>> menuListMap = new ArrayList<>();
     private SimpleAdapter adapter;
     private List<Map<String, Object>> menuListAll;
 
@@ -101,6 +102,12 @@ public class AssortFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+       // new LoadDataThread().start();
+    }
+
 
     /**
      * 加载菜单数据的线程
@@ -133,20 +140,6 @@ public class AssortFragment extends Fragment {
                 });
         menuListMap = DataProcess.toStuParentList(menuListAll);
 
-//        int leg = menuListMap.size() % 3;
-//        if (leg == 1) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("image", "");
-//            map.put("menuName", "");
-//            menuListMap.add(map);
-//            menuListMap.add(map);
-//        } else if (leg == 2) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("image", "");
-//            map.put("menuName", "");
-//            menuListMap.add(map);
-//        }
-
         Log.e("TAG", "menuListMap初始值 " + menuListMap.toString());
         adapter = new SimpleAdapter(getActivity(), menuListMap,
                 R.layout.fragment_assort_item, new String[]{"image", "menuName"},
@@ -160,6 +153,10 @@ public class AssortFragment extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
+//    public void onRefreshClick() {
+//        new LoadDataThread().start();
+//    }
 
 
     /**
@@ -193,7 +190,7 @@ public class AssortFragment extends Fragment {
                     .execute(new EdusStringCallback(getActivity()) {
                         @Override
                         public void onError(Call call, Exception e, int id) {
-                            ErrorToast.errorToast(mContext,e);
+                            ErrorToast.errorToast(mContext, e);
 
                             ((BaseActivity) getActivity()).dialog.dismiss();
                         }

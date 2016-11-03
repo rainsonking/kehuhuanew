@@ -358,6 +358,11 @@ public class ListActivity2 extends BaseActivity {
         showData();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        refreshData();
+    }
 
     /**
      * 下拉刷新方法

@@ -68,12 +68,16 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     private List<Map<String, Object>> menuListMap = new ArrayList<>();
     private PullToRefreshScrollView pull_refresh_scrollview;
     private SharedPreferences sPreferences;
+    private Boolean isLogin = false;
+    public String arrStr, menuStr, stuUrl;
+    public Bundle arrBundle;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_study, container, false);
         initView(view);
+        stuUrl = Constant.sysUrl + Constant.projectLoginUrl;
         ButterKnife.bind(this, view);
         return view;
     }
@@ -137,27 +141,39 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 //执行刷新函数
-                String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
-                getLoginData(volleyUrl);
+
+                getLoginData(stuUrl);
             }
         });
 
         //获取ScrollView布局，此文中用不到
         //mScrollView = mPullRefreshScrollView.getRefreshableView();
-        initData();
+
+        getData();
+        // initData();
 
     }
 
+    @Override
+    public void onResume() {
+        Log.e("isLogin=", isLogin + "");
+        super.onResume();
+        if (!isLogin) {
+            isLogin = arrBundle.getBoolean("isLogin");
+            initData();
+        } else {
+            getLoginData(stuUrl);
+        }
+//
+    }
 
     public void initData() {
-        //设置看板数据
-        Bundle arrBundle = getArguments();
-        String arrStr = arrBundle.getString("arrStr");
+
         parentList = getkanbanData(arrStr);
         setKanbanAdapter(parentList);
-
+        Log.e("isLogin=", isLogin + "");
         //菜单列表中的gridview数据
-        String menuStr = arrBundle.getString("menuDataMap");
+
         if (menuStr != null) {
             menuListAll = JSON.parseObject(menuStr,
                     new TypeReference<List<Map<String, Object>>>() {
@@ -184,6 +200,13 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getActivity(), "无分类数据", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void getData() {
+        //设置看板数据
+        arrBundle = getArguments();
+        arrStr = arrBundle.getString("arrStr");
+        menuStr = arrBundle.getString("menuDataMap");
     }
 
     public void setMenuAdapter(List<Map<String, Object>> menuListMaps) {

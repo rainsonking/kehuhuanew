@@ -136,6 +136,12 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         initData();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
+        getLoginData(volleyUrl);
+    }
 
     public void initData() {
         //设置看板数据

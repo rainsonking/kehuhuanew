@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,10 +14,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.kwsoft.kehuhua.adcustom.MessagAlertActivity;
 import com.kwsoft.kehuhua.adcustom.R;
 import com.kwsoft.kehuhua.adcustom.base.BaseActivity;
 import com.kwsoft.kehuhua.config.Constant;
+import com.kwsoft.kehuhua.urlCnn.EdusStringCallback;
+import com.kwsoft.kehuhua.urlCnn.ErrorToast;
 import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.widget.CnToolbar;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
@@ -25,13 +30,17 @@ import com.kwsoft.version.fragment.CourseFragment;
 import com.kwsoft.version.fragment.MeFragment;
 import com.kwsoft.version.fragment.StuFragmentTabAdapter;
 import com.kwsoft.version.fragment.StudyFragment;
+import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
+import okhttp3.Call;
 
 /**
  * 学员端看板界面
@@ -45,6 +54,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
     private CnToolbar mToolbar;
     SharedPreferences sPreferences;
     private String useridOld;
+    AssortFragment menuFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +151,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         Bundle studyBundle = new Bundle();
         studyBundle.putString("arrStr", arrStr);
         studyBundle.putString("menuDataMap", menuDataMap);
+        studyBundle.putBoolean("isLogin",true);
         studyFragment.setArguments(studyBundle);
 
         Bundle courseBundle = new Bundle();
@@ -175,6 +186,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
                         break;
                     case R.id.radio3:
                         mToolbar.setTitle("学员端");
+
                         break;
 
                 }
