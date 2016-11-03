@@ -72,6 +72,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     public String arrStr, menuStr, stuUrl;
     public Bundle arrBundle;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -168,7 +169,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     public void initData() {
-
         parentList = getkanbanData(arrStr);
         setKanbanAdapter(parentList);
         Log.e("isLogin=", isLogin + "");

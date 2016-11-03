@@ -146,7 +146,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        Log.e(TAG, "onResponse: "+"  id  "+response);
                         setStore(response);
                     }
                 });
@@ -167,9 +167,22 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         try {
             assert stuInfoMap != null;
             dataList = (List<Map<String, Object>>) stuInfoMap.get("dataList");
+
+            Map<String, Object> pageSetMap = (Map<String, Object>) stuInfoMap.get("pageSet");
+            List<Map<String, Object>> pageSet = (List<Map<String, Object>>) pageSetMap.get("fieldSet");
+            Log.e("pageSet", pageSet.toString());
+            String fieldCnName, fieldAliasName = "";
+            for (int i = 0; i < pageSet.size(); i++) {
+                Map<String, Object> map = pageSet.get(i);
+                fieldCnName = map.get("fieldCnName") + "";
+                if (fieldCnName.contains("校区")) {
+                    fieldAliasName = map.get("fieldAliasName") + "";
+                    break;
+                }
+            }
             Map<String, Object> map = dataList.get(0);
-            if (map.containsKey("AFM_14")) {
-                String school = (String) map.get("AFM_14");
+            if ((fieldAliasName.length() > 0) && (map.containsKey(fieldAliasName))) {
+                String school = (String) map.get(fieldAliasName);
                 stuSchoolArea.setText(school);
             } else {
                 stuSchoolArea.setText("");

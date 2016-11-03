@@ -41,7 +41,6 @@ import static com.kwsoft.kehuhua.config.Constant.tableId;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
- *
  */
 public class MeFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.tv_clean_cache)
@@ -99,12 +98,12 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 .execute(new EdusStringCallback(getActivity()) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ErrorToast.errorToast(mContext,e);
+                        ErrorToast.errorToast(mContext, e);
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e(TAG, "onResponse: "+"  id  "+id);
+                        Log.e(TAG, "onResponse: " + "  id  " + response);
                         setStore(response);
                     }
                 });
@@ -124,9 +123,21 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         try {
             assert stuInfoMap != null;
             dataList = (List<Map<String, Object>>) stuInfoMap.get("dataList");
+            Map<String, Object> pageSetMap = (Map<String, Object>) stuInfoMap.get("pageSet");
+            List<Map<String, Object>> pageSet = (List<Map<String, Object>>) pageSetMap.get("fieldSet");
+            Log.e("pageSet", pageSet.toString());
+            String fieldCnName, fieldAliasName = "";
+            for (int i = 0; i < pageSet.size(); i++) {
+                Map<String, Object> map = pageSet.get(i);
+                fieldCnName = map.get("fieldCnName") + "";
+                if (fieldCnName.equals("校区")) {
+                    fieldAliasName = map.get("fieldAliasName") + "";
+                    break;
+                }
+            }
             Map<String, Object> map = dataList.get(0);
-            if (map.containsKey("AFM_11")) {
-                String school = (String) map.get("AFM_11");
+            if ((fieldAliasName.length() > 0) && (map.containsKey(fieldAliasName))) {
+                String school = (String) map.get(fieldAliasName);
                 stuSchoolArea.setText(school);
             } else {
                 stuSchoolArea.setText("");
@@ -144,7 +155,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.stu_head_image,R.id.stu_version_layout, R.id.stu_log_out, R.id.stu_resetPwd, R.id.stu_info_data, R.id.ll_stu_clear_cache, R.id.ll_stu_feedback})
+    @OnClick({R.id.stu_head_image, R.id.stu_version_layout, R.id.stu_log_out, R.id.stu_resetPwd, R.id.stu_info_data, R.id.ll_stu_clear_cache, R.id.ll_stu_feedback})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.stu_head_image:

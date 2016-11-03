@@ -72,11 +72,16 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     private PullToRefreshScrollView pull_refresh_scrollview;
     private SharedPreferences sPreferences;
     private TextView tvUserrole, tvMonth, tvDay;
+    private Boolean isLogin = false;
+    public  String arrStr;
+    public Bundle arrBundle;
+    public String teachUrl;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_study, container, false);
+        teachUrl = Constant.sysUrl + Constant.projectLoginUrl;
         initView(view);
         ButterKnife.bind(this, view);
         return view;
@@ -127,26 +132,29 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 //执行刷新函数
-                String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
-                getLoginData(volleyUrl);
+
+                getLoginData(teachUrl);
             }
         });
         //获取ScrollView布局，此文中用不到
         //mScrollView = mPullRefreshScrollView.getRefreshableView();
-        initData();
+        getData();
+       // initData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        String volleyUrl = Constant.sysUrl + Constant.projectLoginUrl;
-        getLoginData(volleyUrl);
+        if (!isLogin) {
+            isLogin = arrBundle.getBoolean("isLogin");
+            initData();
+        } else {
+            getLoginData(teachUrl);
+        }
     }
 
     public void initData() {
         //设置看板数据
-        Bundle arrBundle = getArguments();
-        String arrStr = arrBundle.getString("arrStr");
         parentList = getkanbanData(arrStr);
         setKanbanAdapter(parentList);
         //菜单列表中的gridview数据
@@ -167,6 +175,11 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         map.put("image", image[3]);
         menuListAll.add(map);
         setMenuAdapter(menuListAll);
+    }
+
+    private void getData() {
+        arrBundle = getArguments();
+        arrStr = arrBundle.getString("arrStr");
     }
 
     public void setMenuAdapter(final List<Map<String, Object>> menuListMaps) {

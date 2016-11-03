@@ -124,6 +124,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         Bundle studyBundle = new Bundle();
         studyBundle.putString("arrStr", arrStr);
         studyBundle.putString("menuDataMap", menuDataMap);
+        studyBundle.putBoolean("isLogin",true);
         studyFragment.setArguments(studyBundle);
 
         Bundle menuBundle = new Bundle();
