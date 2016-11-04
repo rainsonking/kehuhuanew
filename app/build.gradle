@@ -132,4 +132,6 @@ dependencies {
 
     compile 'com.sangbo.autoupdate:autoUpdate:1.0.1'//自动更新
     compile 'com.zhy:okhttputils:2.6.2'//okHttp组件
+
+    compile 'com.pgyersdk:sdk:2.4.0'//蒲公英自动更新
 }

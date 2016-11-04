@@ -25,6 +25,7 @@ import com.kwsoft.version.ResetPwdActivity;
 import com.kwsoft.version.StuInfoActivity;
 import com.kwsoft.version.StuLoginActivity;
 import com.kwsoft.version.StuPra;
+import com.pgyersdk.update.PgyUpdateManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.HashMap;
@@ -182,7 +183,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.stu_version_layout:
                 //检测更新
-//                CheckVersion.update(this,true);
+                PgyUpdateManager.register(getActivity());
 
                 break;
 

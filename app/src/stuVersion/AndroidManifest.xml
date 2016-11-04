@@ -32,6 +32,10 @@
     <activity android:name="com.kwsoft.version.FeedbackActivity">
 
     </activity>
+    <meta-data
+        android:name="PGYER_APPID"
+        android:value="4f7ab8ff684e44d625df8d6c4368ba71" >
+    </meta-data>
 </application>
 
 </manifest>

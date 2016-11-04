@@ -338,6 +338,7 @@
                 </LinearLayout>
                 <!--查询当前版本-->
                 <LinearLayout
+                    android:id="@+id/ll_stu_version_check"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10sp"
