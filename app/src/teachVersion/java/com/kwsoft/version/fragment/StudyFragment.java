@@ -54,7 +54,6 @@ import okhttp3.Call;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
- *
  */
 public class StudyFragment extends Fragment implements View.OnClickListener {
 
@@ -73,9 +72,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     private SharedPreferences sPreferences;
     private TextView tvUserrole, tvMonth, tvDay;
     private Boolean isLogin = false;
-    public  String arrStr;
+    public String arrStr;
     public Bundle arrBundle;
-    public String teachUrl;
+    public String teachUrl, homePageListstr;
 
     @Nullable
     @Override
@@ -139,7 +138,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         //获取ScrollView布局，此文中用不到
         //mScrollView = mPullRefreshScrollView.getRefreshableView();
         getData();
-       // initData();
+        //菜单列表中的gridview数据
+        setMenuModel();
+        // initData();
     }
 
     @Override
@@ -157,7 +158,35 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         //设置看板数据
         parentList = getkanbanData(arrStr);
         setKanbanAdapter(parentList);
+    }
+
+    private void setMenuModel() {
         //菜单列表中的gridview数据
+        if ((homePageListstr != null) && (homePageListstr.length() > 0)) {
+            List<Map<String, Object>> listMap = JSON.parseObject(homePageListstr,
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
+            if ((listMap != null) && (listMap.size() > 0)) {
+                int leg;
+                menuListAll.clear();
+                for (int i = 0; i < listMap.size(); i++) {
+                    Map<String, Object> map = listMap.get(i);
+                    leg = (map.get("menuName").toString()).length();
+                    map.put("menuName", map.get("menuName").toString().substring(0,leg-5));
+                    map.put("image", image[i]);
+                    menuListAll.add(map);
+                }
+            } else {
+                initModel();
+            }
+        } else {
+            initModel();
+
+        }
+        setMenuAdapter(menuListAll);
+    }
+
+    private void initModel() {
         Map<String, Object> map = new HashMap<>();
         map.put("menuName", "扫码考勤");
         map.put("image", image[0]);
@@ -174,12 +203,13 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         map.put("menuName", "系统设置");
         map.put("image", image[3]);
         menuListAll.add(map);
-        setMenuAdapter(menuListAll);
     }
 
     private void getData() {
         arrBundle = getArguments();
         arrStr = arrBundle.getString("arrStr");
+       homePageListstr = arrBundle.getString("homePageList");
+        Log.e("homePageListstr",homePageListstr);
     }
 
     public void setMenuAdapter(final List<Map<String, Object>> menuListMaps) {
@@ -192,7 +222,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
                     PermissionGen.needPermission(StudyFragment.this, 106,
-                            new String[] {
+                            new String[]{
                                     Manifest.permission.CAMERA,
                                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                             }
@@ -214,10 +244,12 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     }
 
     private static final String TAG = "StudyFragment";
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
+
     @PermissionSuccess(requestCode = 106)
     public void doCapture() {
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
@@ -232,9 +264,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     public void setKanbanAdapter(List<Map<String, Object>> parentLists) {
         if ((parentLists.size()) % 2 == 1) {
             Map<String, Object> map = new HashMap<>();
-            map.put("image",R.color.white);
-            map.put("cnName","");
-            map.put("name","");
+            map.put("image", R.color.white);
+            map.put("cnName", "");
+            map.put("name", "");
             parentLists.add(map);
         }
         SimpleAdapter adapter = new SimpleAdapter(getActivity(), parentLists,
@@ -437,23 +469,24 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     .execute(new EdusStringCallback(getActivity()) {
                         @Override
                         public void onError(Call call, Exception e, int id) {
-                            ErrorToast.errorToast(mContext,e);
+                            ErrorToast.errorToast(mContext, e);
                             pull_refresh_scrollview.onRefreshComplete();
                         }
 
                         @Override
                         public void onResponse(String response, int id) {
-                            Log.e(TAG, "onResponse: "+"  id  "+id);
+                            Log.e(TAG, "onResponse: " + "  id  " + id);
                             mainPage(response);
                         }
                     });
-        }else{
+        } else {
 
             pull_refresh_scrollview.onRefreshComplete();
             Toast.makeText(getActivity(), "无网络", Toast.LENGTH_SHORT).show();
 
         }
     }
+
     //此方法传递菜单JSON数据
     @SuppressWarnings("unchecked")
     private void mainPage(String menuData) {

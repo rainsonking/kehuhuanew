@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
     private String menuDataMap;//看板数据、课程表数据、主菜单数据
     private CommonToolbar mToolbar;
     private String hideMenuList;//获取我的界面中的tableid pageid
+    private String homePageList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
         menuDataMap = intent.getStringExtra("menuDataMap");
         hideMenuList = intent.getStringExtra("hideMenuList");
+        homePageList=intent.getStringExtra("homePageList");
 
 
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
@@ -124,6 +127,8 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         Bundle studyBundle = new Bundle();
         studyBundle.putString("arrStr", arrStr);
         studyBundle.putString("menuDataMap", menuDataMap);
+        studyBundle.putString("homePageList",homePageList);
+        Log.e("homlie",homePageList);
         studyBundle.putBoolean("isLogin",true);
         studyFragment.setArguments(studyBundle);
 

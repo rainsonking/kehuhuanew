@@ -224,6 +224,7 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                 map.put(Constant.proIdName, Constant.proId);
                 map.put(Constant.timeName, Constant.menuAlterTime);
                 map.put(Constant.sourceName, Constant.sourceInt);
+                Log.e("proid",Constant.proId+"//"+Constant.menuAlterTime);
                 //请求
                 OkHttpUtils
                         .post()
@@ -237,8 +238,6 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
                                 dialog.dismiss();
                                 ErrorToast.errorToast(mContext,e);
                                 Log.e(TAG, "onError: e.getClass()"+e.getClass());
-
-
                             }
 
                             @Override
@@ -305,11 +304,21 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
             sPreferences.edit().putString("userid", userid).apply();
             List<Map<String, Object>> menuListMap1 = (List<Map<String, Object>>) menuMap.get("roleFollowList");
             List<Map<String, Object>> menuListMap2 = (List<Map<String, Object>>) menuMap.get("menuList");
+            List<Map<String, Object>> menuListMap3 = (List<Map<String, Object>>) menuMap.get("hideMenuList");
+            List<Map<String, Object>> menuListMap4 =null;
+            if (menuMap.containsKey("homePageList")){
+                menuListMap4 = (List<Map<String, Object>>) menuMap.get("homePageList");
+                Log.e("menuListMap3",JSON.toJSONString(menuListMap4));
+            }
+
+
 
             Intent intent = new Intent();
             intent.setClass(StuLoginActivity.this, StuMainActivity.class);
             intent.putExtra("jsonArray", JSON.toJSONString(menuListMap1));
             intent.putExtra("menuDataMap", JSON.toJSONString(menuListMap2));
+            intent.putExtra("hideMenuList", JSON.toJSONString(menuListMap3));
+            intent.putExtra("homePageList",JSON.toJSONString(menuListMap4));
             startActivity(intent);
             finish();
             dialog.dismiss();
