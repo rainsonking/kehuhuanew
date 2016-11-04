@@ -114,18 +114,21 @@
             <RelativeLayout
                 android:id="@+id/image_upload_layout"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="match_parent"
-                android:visibility="gone">
+                >
 
                 <Button
                     android:id="@+id/image_upload"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_centerVertical="true"
-                    android:background="?attr/colorPrimary"
+                    android:gravity="center"
+                   android:background="@drawable/photo_btn_first"
                     android:text="点击拍照"
+                    style="?android:attr/borderlessButtonStyle"
                     android:textColor="@color/white"
-                    android:textSize="17sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/pic_number"
@@ -133,6 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/image_upload"
+                    android:layout_marginLeft="10dp"
                     android:textColor="@color/list_item_right"
                     android:textSize="17sp" />
 

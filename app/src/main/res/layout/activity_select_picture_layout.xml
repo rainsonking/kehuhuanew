@@ -61,7 +61,7 @@
                 <com.kwsoft.kehuhua.wechatPicture.andio.AudioRecordButton
                     android:id="@+id/recordButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_marginBottom="7dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="2dp"
@@ -69,6 +69,7 @@
                     android:gravity="center"
                     android:minHeight="0dp"
                     android:padding="5dp"
+                    style="?android:attr/borderlessButtonStyle"
                     android:text="@string/normal"
                     android:textColor="#727272">
 
@@ -77,9 +78,15 @@
                <Button
                    android:id="@+id/btn_up"
                    android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_marginLeft="5dp"
-                   android:text="上传音频"/>
+                   android:layout_height="35dp"
+                   android:layout_marginLeft="10dp"
+                   android:layout_marginTop="2dp"
+                   android:gravity="center"
+                   android:background="@drawable/photo_btn_first"
+                   style="?android:attr/borderlessButtonStyle"
+                   android:textColor="@color/white"
+                   android:text="上传音频"
+                   android:textSize="15sp"/>
             </LinearLayout>
             <ListView
                 android:id="@+id/listview"
