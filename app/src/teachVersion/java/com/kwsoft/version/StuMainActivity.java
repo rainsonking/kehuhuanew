@@ -39,8 +39,9 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
     private String arrStr;
     private String menuDataMap;//看板数据、课程表数据、主菜单数据
     private CommonToolbar mToolbar;
-    private String hideMenuList;//获取我的界面中的tableid pageid
-    private String homePageList;
+    private String hideMenuList;//获取我的界面中的tableid pageid 个人资料
+    private String homePageList;//首页标题
+    private String feedbackInfoList;//反馈信息
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         menuDataMap = intent.getStringExtra("menuDataMap");
         hideMenuList = intent.getStringExtra("hideMenuList");
         homePageList=intent.getStringExtra("homePageList");
-
+        feedbackInfoList=intent.getStringExtra("feedbackInfoList");
 
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
 //        Resources resources = mContext.getResources().getDrawable(R.drawable.nav_news);
@@ -138,6 +139,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
         Bundle meBundle = new Bundle();
         meBundle.putString("hideMenuList", hideMenuList);
+        meBundle.putString("feedbackInfoList",feedbackInfoList);
         meFragment.setArguments(meBundle);
 
         List<Fragment> mFragments = new ArrayList<>();

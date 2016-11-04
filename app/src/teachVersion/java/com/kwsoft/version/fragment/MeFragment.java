@@ -56,6 +56,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.stu_version)
     TextView stuVersion;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,9 +84,43 @@ public class MeFragment extends Fragment implements View.OnClickListener {
 
         Bundle meBundle = getArguments();
         String meStr = meBundle.getString("hideMenuList");
+        String feedbackInfoListstr = meBundle.getString("feedbackInfoList");
 
         List<Map<String, Object>> meListMap = new ArrayList<>();
         Log.e(TAG, "initData: " + meStr);
+        getMeTableId(meStr, meListMap);
+
+        List<Map<String, Object>> feedbackListMap = new ArrayList<>();
+        Log.e(TAG, "feedbackInfoListstr: " + feedbackInfoListstr);
+        if (feedbackInfoListstr != null) {
+            try {
+                feedbackListMap = JSON.parseObject(feedbackInfoListstr,
+                        new TypeReference<List<Map<String, Object>>>() {
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (feedbackListMap != null && feedbackListMap.size() > 0) {
+                for (int i = 0; i < feedbackListMap.size(); i++) {
+                    Map<String, Object> map = feedbackListMap.get(i);
+                    String menuName = map.get("menuName").toString();
+                    if (menuName.contains("反馈信息")) {
+                        Constant.teachBackPAGEID = map.get("pageId").toString();
+                        Constant.teachBackTABLEID = map.get("tableId").toString();
+                        Log.e("backtableid", Constant.teachBackPAGEID + "/" + Constant.teachBackTABLEID);
+                        break;
+                    }
+                }
+                requestSet();
+            } else {
+                Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
+            }
+            Log.e("TAG", "获得学员端菜单数据：" + meStr);
+
+        }
+    }
+
+    private void getMeTableId(String meStr, List<Map<String, Object>> meListMap) {
         if (meStr != null) {
             try {
                 meListMap = JSON.parseObject(meStr,
@@ -96,7 +131,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             }
             if (meListMap != null && meListMap.size() > 0) {
                 for (int i = 0; i < meListMap.size(); i++) {
-                    Map<String, Object> map = meListMap.get(0);
+                    Map<String, Object> map = meListMap.get(i);
                     String menuName = map.get("menuName").toString();
                     if (menuName.contains("个人资料")) {
                         Constant.teachPerPAGEID = map.get("pageId").toString();
@@ -109,15 +144,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
 //                        Constant.teachBackTABLEID = map.get("tableId").toString();
 //                    }
                 }
-
-                requestSet();
+               // requestSet();
             } else {
                 Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
             }
             Log.e("TAG", "获得学员端菜单数据：" + meStr);
 
         }
-
     }
 
     /**
