@@ -177,7 +177,8 @@ public class StuProLoginActivity extends BaseActivity {
             sPreferences.edit().putString("userid", userid).apply();
             List<Map<String, Object>> menuListMap1 = (List<Map<String, Object>>) menuMap.get("roleFollowList");
             List<Map<String, Object>> menuListMap2 = (List<Map<String, Object>>) menuMap.get("menuList");
-            List<Map<String, Object>> menuListMap3 = (List<Map<String, Object>>) menuMap.get("hideMenuList");
+           // List<Map<String, Object>> menuListMap3 = (List<Map<String, Object>>) menuMap.get("hideMenuList");
+            List<Map<String, Object>> menuListMap3 = (List<Map<String, Object>>) menuMap.get("personInfoList");
             List<Map<String, Object>> menuListMap4 =null;
             if (menuMap.containsKey("homePageList")){
                 menuListMap4 = (List<Map<String, Object>>) menuMap.get("homePageList");

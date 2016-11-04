@@ -43,7 +43,6 @@ import static com.kwsoft.kehuhua.config.Constant.tableId;
 
 /**
  * Created by Administrator on 2016/9/6 0006.
- *
  */
 public class MeFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.tv_clean_cache)
@@ -67,6 +66,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     }
 
     private static final String TAG = "MeFragment";
+
     public void initData() {
 
         tvCleanCache.setText(getCache());
@@ -84,8 +84,8 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         Bundle meBundle = getArguments();
         String meStr = meBundle.getString("hideMenuList");
 
-        List<Map<String, Object>> meListMap=new ArrayList<>();
-        Log.e(TAG, "initData: "+meStr );
+        List<Map<String, Object>> meListMap = new ArrayList<>();
+        Log.e(TAG, "initData: " + meStr);
         if (meStr != null) {
             try {
                 meListMap = JSON.parseObject(meStr,
@@ -94,17 +94,20 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (meListMap!=null&&meListMap.size() > 0) {
+            if (meListMap != null && meListMap.size() > 0) {
                 for (int i = 0; i < meListMap.size(); i++) {
-                    Map<String, Object> map = meListMap.get(i);
+                    Map<String, Object> map = meListMap.get(0);
                     String menuName = map.get("menuName").toString();
                     if (menuName.contains("个人资料")) {
                         Constant.teachPerPAGEID = map.get("pageId").toString();
                         Constant.teachPerTABLEID = map.get("tableId").toString();
-                    }else if (menuName.contains("反馈信息")){
-                        Constant.teachBackPAGEID = map.get("pageId").toString();
-                        Constant.teachBackTABLEID = map.get("tableId").toString();
+                        Log.e("pagetable", Constant.teachPerPAGEID + "/" + Constant.teachPerTABLEID);
+                        break;
                     }
+//                    else if (menuName.contains("反馈信息")){
+//                        Constant.teachBackPAGEID = map.get("pageId").toString();
+//                        Constant.teachBackTABLEID = map.get("tableId").toString();
+//                    }
                 }
 
                 requestSet();
@@ -139,14 +142,14 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 .execute(new EdusStringCallback(getActivity()) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ErrorToast.errorToast(mContext,e);
-                        ((BaseActivity)getActivity()).dialog.dismiss();
-                        Log.e(TAG, "onError: Call  "+call+"  id  "+id);
+                        ErrorToast.errorToast(mContext, e);
+                        ((BaseActivity) getActivity()).dialog.dismiss();
+                        Log.e(TAG, "onError: Call  " + call + "  id  " + id);
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e(TAG, "onResponse: "+"  id  "+response);
+                        Log.e(TAG + "me", "onResponse: " + "  id  " + response);
                         setStore(response);
                     }
                 });
@@ -215,10 +218,10 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.stu_info_data:
-                if (!Constant.teachPerTABLEID.equals("")&&!Constant.teachPerPAGEID.equals("")) {
+                if (!Constant.teachPerTABLEID.equals("") && !Constant.teachPerPAGEID.equals("")) {
                     Intent intentStuInfo = new Intent(getActivity(), StuInfoActivity.class);
                     startActivity(intentStuInfo);
-                }else{
+                } else {
                     Toast.makeText(getActivity().getApplicationContext(), "无个人资料信息", Toast.LENGTH_SHORT).show();
                 }
 
