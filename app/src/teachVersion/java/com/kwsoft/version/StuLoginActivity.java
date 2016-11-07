@@ -1,9 +1,11 @@
 package com.kwsoft.version;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -36,6 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kr.co.namee.permissiongen.PermissionFail;
+import kr.co.namee.permissiongen.PermissionGen;
+import kr.co.namee.permissiongen.PermissionSuccess;
 import okhttp3.Call;
 
 /**
@@ -67,7 +72,34 @@ public class StuLoginActivity extends BaseActivity implements View.OnClickListen
         dialog=new LoadingDialog(mContext,"正在登录中...");
         initJudgeSave();
         initView();
+        initPermission();
+    }
 
+    private void initPermission() {
+        PermissionGen.with(StuLoginActivity.this)
+                .addRequestCode(188)
+                .permissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.INTERNET
+                )
+                .request();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+
+    @PermissionSuccess(requestCode = 188)
+    public void doSomething() {
+        Toast.makeText(this, "权限成功", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionFail(requestCode = 188)
+    public void doFailSomething() {
+        Toast.makeText(this, "权限获取失败", Toast.LENGTH_SHORT).show();
     }
 
     /**

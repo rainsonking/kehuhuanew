@@ -40,13 +40,13 @@ android {
         teachVersion {
             applicationId "com.kwsoft.version.teachVersion"
             resValue "string", "app_name", "教师端"
-            versionName "1.2.1"
+            versionName "1.2.2"
         }
 
         stuVersion {
             applicationId "com.kwsoft.version.stuVersion"
             resValue "string", "app_name", "学员端"
-            versionName "1.0.1"
+            versionName "1.0.2"
         }
     }
 //    lintOptions {

@@ -24,6 +24,7 @@ import com.kwsoft.version.fragment.MenuFragment;
 import com.kwsoft.version.fragment.StuFragmentTabAdapter;
 import com.kwsoft.version.fragment.StudyFragment;
 import com.kwsoft.version.view.CustomDialog;
+import com.pgyersdk.update.PgyUpdateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         initView();
         initFragment();
         // initDialog();
+        PgyUpdateManager.register(this);
     }
 
     public void initDialog() {
