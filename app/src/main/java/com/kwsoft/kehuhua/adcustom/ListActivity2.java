@@ -358,9 +358,11 @@ public class ListActivity2 extends BaseActivity {
         showData();
     }
 
+    public int isResume=0;
     @Override
     protected void onRestart() {
         super.onRestart();
+        isResume=1;
         refreshData();
     }
 
@@ -396,6 +398,7 @@ public class ListActivity2 extends BaseActivity {
                 normalRequest();
                 break;
             case STATE_REFREH:
+
                 if (mAdapter != null) {
 
                     mAdapter.clearData();
@@ -404,18 +407,19 @@ public class ListActivity2 extends BaseActivity {
                     mRefreshLayout.finishRefresh();
                     if (datas.size() == 0) {
                         Snackbar.make(mRecyclerView, "本页无数据", Snackbar.LENGTH_SHORT).show();
-                    } else {
-                        Snackbar.make(mRecyclerView, "刷新完成，共"+totalNum+"条", Snackbar.LENGTH_SHORT).show();
+                    } else if(isResume==0){
+                        Snackbar.make(mRecyclerView, "共"+totalNum+"条", Snackbar.LENGTH_SHORT).show();
                     }
 
                 }
+                isResume=0;
                 break;
             case STATE_MORE:
                 if (mAdapter != null) {
                     mAdapter.addData(mAdapter.getDatas().size(), datas);
                     mRecyclerView.scrollToPosition(mAdapter.getDatas().size());
                     mRefreshLayout.finishRefreshLoadMore();
-                    Snackbar.make(mRecyclerView, "增加了" + datas.size() + "条数据", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mRecyclerView, "更新了" + datas.size() + "条数据", Snackbar.LENGTH_SHORT).show();
                 }
 
                 break;
