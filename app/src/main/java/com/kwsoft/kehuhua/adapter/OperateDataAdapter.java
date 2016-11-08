@@ -249,7 +249,7 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     //删除无用字典值数据
                     List<Map<String, Object>> dicList = getNewDicList(position);
                     //设置默认选中值以及byId的位置
-                    int byId = -1;//
+                    int byId = 0;//
                     int dicDefaultSelectInt;
                     String dicDefaultSelect;
                     //有值的情况
@@ -263,8 +263,6 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         dicDefaultSelectInt = Integer.valueOf(dicDefaultSelect);
                         //如果有默认选中值，将byId确定
                         byId = getById(dicList, byId, dicDefaultSelectInt);
-                    } else {
-                        byId = 0;
                     }
                     //字典按钮点击选择Arrays.asList("One", "Two", "Three", "Four", "Five")
                     List<String> dataset = new LinkedList<>();
@@ -272,6 +270,9 @@ public class OperateDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     for (int i = 0; i < dicList.size(); i++) {
                         dataset.add(valueOf(dicList.get(i).get("DIC_NAME")));
                     }
+                    Log.e(TAG, "onBindViewHolder: byId "+byId);
+
+                    Log.e(TAG, "onBindViewHolder: mDatas.get(position) "+mDatas.get(position).toString());
                     mDatas.get(position).put(Constant.itemValue, valueOf(dicList.get(byId).get("DIC_ID")));
                     mDatas.get(position).put(Constant.itemName, valueOf(dicList.get(byId).get("DIC_ID")));
                     String dicName=String.valueOf(dicList.get(byId).get("DIC_NAME"));
