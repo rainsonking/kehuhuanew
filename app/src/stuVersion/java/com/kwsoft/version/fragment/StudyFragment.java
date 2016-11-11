@@ -154,10 +154,12 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         // initData();
 
     }
-    public int isResume=0;
+
+    public int isResume = 0;
+
     @Override
     public void onResume() {
-        isResume=1;
+        isResume = 1;
         Log.e("isLogin=", isLogin + "");
         super.onResume();
         if (!isLogin) {
@@ -186,8 +188,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if ((simpleAdapter.getCount() == (i + 1))) {
-                            // if (i == 7) {
+                        Log.e("simp11", simpleAdapter.getCount() + "/" + i);
+                        //if ((simpleAdapter.getCount() == (i + 1))) {
+                        if (i == 7) {
                             StuMainActivity activity = (StuMainActivity) getActivity();
                             activity.fragmentClick();
                         } else {
@@ -455,12 +458,12 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 // Call onRefreshComplete when the list has been refreshed.
                 //在更新UI后，无需其它Refresh操作，系统会自己加载新的listView
                 pull_refresh_scrollview.onRefreshComplete();
-                if (isResume==0) {
+                if (isResume == 0) {
                     Toast.makeText(getActivity(), "数据已刷新", Toast.LENGTH_SHORT).show();
                 }
 
             }
-            isResume=0;
+            isResume = 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
