@@ -66,7 +66,7 @@ public class ListActivity2 extends BaseActivity {
     private String operaButtonSet;
     private List<List<Map<String, String>>> datas;
     private ListAdapter2 mAdapter;
-    private List<Map<String, Object>> childTab = new ArrayList<>();
+    private List<Map<String, Object>> childTab ;
     private List<Map<String, Object>> childList = new ArrayList<>();
 
     private int totalNum = 0;
@@ -305,11 +305,15 @@ public class ListActivity2 extends BaseActivity {
             }
 //获得子表格：childTabs
             String childTabs;
+            Log.e(TAG, "setStore: pageSet.get(\"childTabs\")  "+pageSet.get("childTabs").toString());
             if (pageSet.get("childTabs") != null) {
                 childTabs = String.valueOf(pageSet.get("childTabs"));
+                Log.e(TAG, "setStore: childTabs "+childTabs);
+                childTab= new ArrayList<>();
                 childTab = JSON.parseObject(childTabs,
                         new TypeReference<List<Map<String, Object>>>() {
                         });
+                Log.e(TAG, "setStore: childTab "+childTab.toString());
             }
 
 //数据左侧配置数据
@@ -402,7 +406,7 @@ public class ListActivity2 extends BaseActivity {
                 if (mAdapter != null) {
 
                     mAdapter.clearData();
-                    mAdapter.addData(datas);
+                    mAdapter.addData(datas,childTab);
                     mRecyclerView.scrollToPosition(0);
                     mRefreshLayout.finishRefresh();
                     if (datas.size() == 0) {
@@ -428,7 +432,7 @@ public class ListActivity2 extends BaseActivity {
 
     private static final String TAG = "ListActivity2";
     public void normalRequest() {
-        Log.e(TAG, "normalRequest: ");
+        Log.e(TAG, "normalRequest: childTab " +childTab.toString());
         mAdapter = new ListAdapter2(datas, childTab);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(ListActivity2.this));

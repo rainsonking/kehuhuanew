@@ -113,9 +113,10 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                     }
                 }
                 requestSet();
-            } else {
-                Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
             }
+//            else {
+//                Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
+//            }
             Log.e("TAG", "获得学员端菜单数据：" + meStr);
 
         }
@@ -146,9 +147,10 @@ public class MeFragment extends Fragment implements View.OnClickListener {
 //                    }
                 }
                // requestSet();
-            } else {
-                Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
             }
+//            else {
+//                Toast.makeText(getActivity(), "无菜单数据", Toast.LENGTH_SHORT).show();
+//            }
             Log.e("TAG", "获得学员端菜单数据：" + meStr);
 
         }

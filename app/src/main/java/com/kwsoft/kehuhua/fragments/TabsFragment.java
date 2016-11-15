@@ -157,7 +157,7 @@ public class TabsFragment extends Fragment {
     }
 
 
-    private List<Map<String, Object>> childTab = new ArrayList<>();
+    private List<Map<String, Object>> childTab;
     private List<List<Map<String, String>>> datas;
 
 
@@ -212,6 +212,7 @@ public class TabsFragment extends Fragment {
             String childTabs;
             if (pageSet.get("childTabs") != null) {
                 childTabs = String.valueOf(pageSet.get("childTabs"));
+                childTab=new ArrayList<>();
                 childTab = JSON.parseObject(childTabs,
                         new TypeReference<List<Map<String, Object>>>() {
                         });
@@ -293,7 +294,7 @@ public class TabsFragment extends Fragment {
                 if (mAdapter != null) {
 
                     mAdapter.clearData();
-                    mAdapter.addData(datas);
+                    mAdapter.addData(datas,childTab);
                     mRecyclerView.scrollToPosition(0);
                     mRefreshLayout.finishRefresh();
                     if (datas.size() == 0) {

@@ -172,7 +172,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     public void initData() {
         parentList = getkanbanData(arrStr);
         setKanbanAdapter(parentList);
-        Log.e("isLogin=", isLogin + "");
+//        Log.e("isLogin=", isLogin + "");
         //菜单列表中的gridview数据
 
         if (menuStr != null) {

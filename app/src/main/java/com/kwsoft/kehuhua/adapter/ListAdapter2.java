@@ -140,12 +140,14 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //判断跳转子表格
             final String titleName = item.get(0).get("fieldCnName2");
             final String mainId = item.get(0).get("mainId");
+            Log.e(TAG, "onBindViewHolder: childTab "+childTab.toString());
             if (childTab.size() > 0) {
                 holder.dash_ll.setVisibility(View.VISIBLE);
                 holder.click_open.setVisibility(View.VISIBLE);
                 holder.click_open_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.e(TAG, "onClick: childTab "+childTab.toString());
                         Intent intent = new Intent();
                         intent.setClass(mContext, TabActivity.class);
                         intent.putExtra("mainId", mainId);
@@ -156,6 +158,9 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                     }
                 });
+            }else{
+                holder.dash_ll.setVisibility(View.GONE);
+                holder.click_open.setVisibility(View.GONE);
             }
 
             holder.itemView.setTag(item);
@@ -163,6 +168,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
+    private static final String TAG = "ListAdapter2";
     /**
      * 获取单项数据
      */
@@ -193,9 +199,10 @@ public class ListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     /**
      * 下拉刷新更新数据
      */
-    public void addData(List<List<Map<String, String>>> datas) {
-
+    public void addData(List<List<Map<String, String>>> datas, List<Map<String, Object>> childTab) {
+        this.childTab=childTab;
         addData(0, datas);
+
     }
 
     /**

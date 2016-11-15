@@ -9,6 +9,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.kwsoft.kehuhua.urlCnn.EdusLoggerInterceptor;
+import com.pgyersdk.crash.PgyCrashManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
 import com.zhy.http.okhttp.cookie.store.PersistentCookieStore;
@@ -38,6 +39,7 @@ public class MyApplication extends Application {
         JPushInterface.init(this);            // 初始化 JPush
         initOkHttp();
         initIpPort();
+        PgyCrashManager.register(this);
 
     }
     @SuppressWarnings("unchecked")

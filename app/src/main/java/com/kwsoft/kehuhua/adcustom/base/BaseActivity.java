@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.kwsoft.kehuhua.application.MyApplication;
 import com.kwsoft.kehuhua.loadDialog.LoadingDialog;
+import com.pgyersdk.crash.PgyCrashManager;
 
 /**
  * Activity的基类，实现了IActivitySupport接口
@@ -46,7 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseAct
         dialog=new LoadingDialog(mContext,"玩命加载中...");
         myApplication = (MyApplication) getApplication();
         myApplication.addActivity(this);
-
+        PgyCrashManager.register(this);
     }
 
     /**
@@ -79,6 +80,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseAct
     @Override
     public void onDestroy() {
         super.onDestroy();
+        PgyCrashManager.unregister();
     }
 
     /**
