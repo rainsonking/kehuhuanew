@@ -40,7 +40,9 @@ import com.kwsoft.version.androidRomType.AndtoidRomUtil;
 import com.kwsoft.version.view.StudyGridView;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +73,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     private PullToRefreshScrollView pull_refresh_scrollview;
     private SharedPreferences sPreferences;
     private TextView tvUserrole, tvMonth, tvDay;
+    private String monthstr, daystr;
     private Boolean isLogin = false;
     public String arrStr;
     public Bundle arrBundle;
@@ -95,6 +98,13 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         try {
             String username = Constant.loginName;
             stuName.setText(username);
+            String roleNames = Constant.roleNamesTeach;
+            String spStr[] = roleNames.split(",");
+            tvUserrole.setText(spStr[0]);
+            initDateWeek();
+            tvMonth.setText(monthstr);
+            tvDay.setText(daystr);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,6 +152,17 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         setMenuModel();
         // initData();
     }
+
+    private void initDateWeek() {
+        long time = System.currentTimeMillis();
+        Date date = new Date(time);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒 EEEE");
+        format = new SimpleDateFormat("yyyy/MM/dd");
+        monthstr = format.format(date).substring(5);
+        format = new SimpleDateFormat("EEEE");
+        daystr = format.format(date);
+    }
+
     public int isResume=0;
     @Override
     public void onResume() {
@@ -163,36 +184,36 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 
     private void setMenuModel() {
         //菜单列表中的gridview数据
-        if ((homePageListstr != null) && (homePageListstr.length() > 0)) {
-            List<Map<String, Object>> listMap = JSON.parseObject(homePageListstr,
-                    new TypeReference<List<Map<String, Object>>>() {
-                    });
-            if ((listMap != null) && (listMap.size() > 0)) {
-                int leg;
-                menuListAll.clear();
-                for (int i = 0; i < listMap.size(); i++) {
-                    Map<String, Object> map = listMap.get(i);
-                    leg = (map.get("menuName").toString()).length();
-                    map.put("menuName", map.get("menuName").toString().substring(0,leg-5));
-                    map.put("image", image[i]);
-                    menuListAll.add(map);
-                }
-            } else {
-                initModel();
-            }
-        } else {
+//        if ((homePageListstr != null) && (homePageListstr.length() > 0)) {
+//            List<Map<String, Object>> listMap = JSON.parseObject(homePageListstr,
+//                    new TypeReference<List<Map<String, Object>>>() {
+//                    });
+//            if ((listMap != null) && (listMap.size() > 0)) {
+//                int leg;
+//                menuListAll.clear();
+//                for (int i = 0; i < listMap.size(); i++) {
+//                    Map<String, Object> map = listMap.get(i);
+//                    leg = (map.get("menuName").toString()).length();
+//                    map.put("menuName", map.get("menuName").toString().substring(0,leg-5));
+//                    map.put("image", image[i]);
+//                    menuListAll.add(map);
+//                }
+//            } else {
+//                initModel();
+//            }
+//        } else {
             initModel();
 
-        }
+     //   }
         setMenuAdapter(menuListAll);
     }
 
     private void initModel() {
         Map<String, Object> map = new HashMap<>();
-        map.put("menuName", "扫码考勤");
-        map.put("image", image[0]);
-        menuListAll.add(map);
-        map = new HashMap<>();
+//        map.put("menuName", "扫码考勤");
+//        map.put("image", image[0]);
+//        menuListAll.add(map);
+//        map = new HashMap<>();
         map.put("menuName", "报表管理");
         map.put("image", image[1]);
         menuListAll.add(map);
@@ -221,21 +242,22 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                if (i == 0) {
+//                    PermissionGen.needPermission(StudyFragment.this, 106,
+//                            new String[]{
+//                                    Manifest.permission.CAMERA,
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                            }
+//                    );
+//                } else
                 if (i == 0) {
-                    PermissionGen.needPermission(StudyFragment.this, 106,
-                            new String[]{
-                                    Manifest.permission.CAMERA,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                            }
-                    );
-                } else if (i == 1) {
                     Intent intent = new Intent(getActivity(), ChartActivity.class);
                     intent.putExtra("titleName", String.valueOf(menuListMaps.get(i).get("menuName")));
                     startActivity(intent);
-                } else if (i == 2) {
+                } else if (i == 1) {
                     Intent intent = new Intent(getActivity(), MessagAlertActivity.class);
                     startActivity(intent);
-                } else if (i == 3) {
+                } else if (i == 2) {
                     Intent intent = new Intent(getActivity(), BlankActivity.class);
                     intent.putExtra("titleName", String.valueOf(menuListMaps.get(i).get("menuName")));
                     startActivity(intent);
@@ -295,7 +317,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 map.put("penetratePageId", listMap.get(i).get("phonePageId"));
                 map.put("tableId", listMap.get(i).get("tableId"));
                 List<Map<String, Object>> listMap1 = (List<Map<String, Object>>) listMap.get(i).get("valueMap");
-                String name = "";
+                String name = 0 + "";
                 if (listMap1.size() > 0) {
                     if (listMap1.get(0) != null && listMap1.get(0).size() > 0) {
                         name = String.valueOf(listMap1.get(0).get("name"));

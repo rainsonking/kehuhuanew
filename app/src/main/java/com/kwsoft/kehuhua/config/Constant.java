@@ -57,6 +57,8 @@ public class Constant {
     public final static String proIdName = "proId";
 
     public static String loginName = "";
+    public static String roleNamesTeach = "";
+
     public static String menuData = "";
     public static String proId = "";
     public static String proName = "";
