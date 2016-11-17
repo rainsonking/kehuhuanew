@@ -19,6 +19,7 @@ import com.kwsoft.kehuhua.utils.CloseActivityClass;
 import com.kwsoft.kehuhua.widget.CommonToolbar;
 import com.kwsoft.kehuhua.zxing.CaptureActivity;
 import com.kwsoft.version.androidRomType.AndtoidRomUtil;
+import com.kwsoft.version.fragment.CourseFragment;
 import com.kwsoft.version.fragment.MeFragment;
 import com.kwsoft.version.fragment.MenuFragment;
 import com.kwsoft.version.fragment.StuFragmentTabAdapter;
@@ -38,7 +39,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
     private RadioGroup radioGroup;
     private RadioButton radio3;
     private String arrStr;
-    private String menuDataMap;//看板数据、课程表数据、主菜单数据
+    private String menuDataMap,menuList;//看板数据、课程表数据、主菜单数据
     private CommonToolbar mToolbar;
     private String hideMenuList;//获取我的界面中的tableid pageid 个人资料
     private String homePageList;//首页标题
@@ -89,7 +90,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
         Intent intent = getIntent();
         arrStr = intent.getStringExtra("jsonArray");
-        String menuList = intent.getStringExtra("menuList");
+         menuList = intent.getStringExtra("menuList");
 
         menuDataMap = intent.getStringExtra("menuDataMap");
         hideMenuList = intent.getStringExtra("hideMenuList");
@@ -124,6 +125,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
     public void initFragment() {
         Fragment studyFragment = new StudyFragment();
+        Fragment courseFragment = new CourseFragment();
         MenuFragment menuFragment = new MenuFragment();
         Fragment meFragment = new MeFragment();
 
@@ -135,9 +137,15 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         studyBundle.putBoolean("isLogin",true);
         studyFragment.setArguments(studyBundle);
 
+
         Bundle menuBundle = new Bundle();
         menuBundle.putString("menuDataMap", menuDataMap);
         menuFragment.setArguments(menuBundle);
+
+
+        Bundle courseBundle = new Bundle();
+        courseBundle.putString("menuList", menuList);
+        courseFragment.setArguments(courseBundle);
 
         Bundle meBundle = new Bundle();
         meBundle.putString("hideMenuList", hideMenuList);
@@ -147,6 +155,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         List<Fragment> mFragments = new ArrayList<>();
         mFragments.add(studyFragment);
         mFragments.add(menuFragment);
+        mFragments.add(courseFragment);
         mFragments.add(meFragment);
         stutabAdapter = new StuFragmentTabAdapter(this, mFragments, R.id.content, radioGroup);
 
