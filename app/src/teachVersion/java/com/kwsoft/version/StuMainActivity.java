@@ -39,7 +39,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
     private RadioGroup radioGroup;
     private RadioButton radio3;
     private String arrStr;
-    private String menuDataMap,menuList;//看板数据、课程表数据、主菜单数据
+    private String menuDataMap, menuList;//看板数据、课程表数据、主菜单数据
     private CommonToolbar mToolbar;
     private String hideMenuList;//获取我的界面中的tableid pageid 个人资料
     private String homePageList;//首页标题
@@ -90,12 +90,12 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
         Intent intent = getIntent();
         arrStr = intent.getStringExtra("jsonArray");
-         menuList = intent.getStringExtra("menuList");
+        menuList = intent.getStringExtra("menuList");
 
         menuDataMap = intent.getStringExtra("menuDataMap");
         hideMenuList = intent.getStringExtra("hideMenuList");
-        homePageList=intent.getStringExtra("homePageList");
-        feedbackInfoList=intent.getStringExtra("feedbackInfoList");
+        homePageList = intent.getStringExtra("homePageList");
+        feedbackInfoList = intent.getStringExtra("feedbackInfoList");
 
         mToolbar = (CommonToolbar) findViewById(R.id.common_toolbar);
 //        Resources resources = mContext.getResources().getDrawable(R.drawable.nav_news);
@@ -132,9 +132,9 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
         Bundle studyBundle = new Bundle();
         studyBundle.putString("arrStr", arrStr);
         studyBundle.putString("menuDataMap", menuDataMap);
-        studyBundle.putString("homePageList",homePageList);
-        Log.e("homlie",homePageList);
-        studyBundle.putBoolean("isLogin",true);
+        studyBundle.putString("homePageList", homePageList);
+        Log.e("homlie", homePageList);
+        studyBundle.putBoolean("isLogin", true);
         studyFragment.setArguments(studyBundle);
 
 
@@ -149,7 +149,7 @@ public class StuMainActivity extends BaseActivity implements View.OnClickListene
 
         Bundle meBundle = new Bundle();
         meBundle.putString("hideMenuList", hideMenuList);
-        meBundle.putString("feedbackInfoList",feedbackInfoList);
+        meBundle.putString("feedbackInfoList", feedbackInfoList);
         meFragment.setArguments(meBundle);
 
         List<Fragment> mFragments = new ArrayList<>();
