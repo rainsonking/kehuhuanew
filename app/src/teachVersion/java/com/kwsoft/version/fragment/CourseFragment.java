@@ -256,8 +256,8 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
 
     private void getIntentData() {
         try {
-            menuListBundle = getArguments();
-            String buttonSetItemStr = menuListBundle.getString("menuList");
+//            menuListBundle = getArguments();
+//            String buttonSetItemStr = menuListBundle.getString("menuList");
 //          Map<String, Object> itemData = JSON.parseObject(buttonSetItemStr);
 //            String urlHalf = String.valueOf(itemData.get("menuPageUrl"));
 //            // "dataPlAdd_toShowPage.do?tableId=19&ifAjax=1",
@@ -265,8 +265,8 @@ public class CourseFragment extends Fragment implements OnDataListener, WeekDate
 //            String[] jieGuo1 = urlHalf.split("tableId=");
 //            String[] jieGuo2 = jieGuo1[1].split("&");
 //            tableId = jieGuo2[0];
-            tableId = Constant.stuCourseTableId;
-            Log.e("tableidsd", Constant.stuCourseTableId);
+            tableId = Constant.teachCourseTableId;
+            Log.e("tableidsd", Constant.teachCourseTableId);
             Log.e("useidsd", Constant.USERID);
         } catch (Exception e) {
             e.printStackTrace();

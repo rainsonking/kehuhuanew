@@ -65,6 +65,7 @@ public class Constant {
     //    public static String stuProId = "57159822f07e75084cb8a1fe";//陈蒙学员端
     //public static String stuProId="5704e45c7cf6c0b2d9873da6";//主项目
     public static String stuCourseTableId = "19";
+    public static String teachCourseTableId = "2";
     public static String stuCourseUserId = "";
 
     public static String timeName = "alterTime";
