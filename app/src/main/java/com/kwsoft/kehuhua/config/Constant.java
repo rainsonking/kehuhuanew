@@ -22,7 +22,7 @@ import java.util.regex.PatternSyntaxException;
  *
  */
 public class Constant {
-        public static String sysUrl = "http://182.92.108.162:8129/edus_auto/";//外网项目
+        public static String sysUrl = "http://123.56.231.101:8000/edus_auto/";//小产品
 //    public static String sysUrl = "http://182.92.108.162/edus_auto/";//外网项目
     // public static String sysUrl = "http://192.168.6.171:8080/edus_auto/";//小庞项目
    // public static String sysUrl = "http://192.168.6.129:8080/edus_auto/";//红伟项目
