@@ -354,10 +354,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 
     private class TestNormalAdapter extends StaticPagerAdapter {
         private int[] imgs = {
-                R.drawable.stu_see_banner,
-                R.drawable.stu_see_banner,
-                R.drawable.stu_see_banner,
-                R.drawable.stu_see_banner,
+                R.drawable.stu_see_banner_first,
+                R.drawable.stu_see_banner_sec,
+                R.drawable.stu_see_banner_third
         };
 
 
